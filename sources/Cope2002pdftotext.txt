@@ -1,0 +1,4239 @@
+United States              EPA Region 10           EPA 910-R-02-008
+Environmental Protection   OEA-095                 September 2002
+Agency
+
+
+
+
+Temperature Simulation of the
+Snake River Above Lower
+Granite Dam Using Transect
+Measurements and the
+CE-QUAL-W2 Model
+
+
+
+
+                                  September 2002
+
+
+                                  Office of Environmental Assessment
+                                  EPA Region 10
+                                  1200 Sixth Avenue
+                                  Seattle, Washington 98101
+EPA has developed this report as part of a multi-agency effort to improve our
+understanding of temperature regimes in the Columbia and Snake Rivers. For
+more information about this work, visit the EPA Region 10 website for the Total
+Maximum Daily Load for the Columbia and Snake River mainstems:
+
+www.epa.gov/r10earth/columbiamainstemtmdl/htm
+
+For more information about this report, contact:
+
+Ben Cope
+Office of Environmental Assessment
+EPA Region 10
+1200 Sixth Ave, OEA-095
+Seattle, Washington 98101
+(206) 553-1442
+cope.ben@epa.gov
+TABLE OF CONTENTS
+
+Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+
+Transect Measurements . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+
+Dworshak Operations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+
+CE-QUAL-W2 Model Representation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .                     2
+     Waterbody Segmentation for CE-QUAL-W2 . . . . . . . . . . . . . . . . . . . . . . . . . . .                                2
+     Impoundment Bathymetry . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .                   2
+     Boundary Characteristics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .               3
+     River Flows . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        3
+     River Temperatures . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .             4
+     Dam Structures . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .           4
+     Meteorology . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .        5
+
+Comparison of Model Simulations and Transect Measurements . . . . . . . . . . . . . . . . . 5
+
+Contour Plots of Simulated Temperatures . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+
+Simulation of Spill Releases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+
+Summary . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8
+
+References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+Maps and Figures . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10
+
+
+List of Figures
+
+Figure 1: Map of Study Area
+Figure 2: Spatial Resolution for Lower Granite Pool Model
+Figure 3: Elevation/Pool Volume Relationship for Lower Granite Pool
+Figure 4: Flow from Dworshak Dam during Summer/Fall 1992
+Figure 5: Flow in Clearwater and Snake Rivers
+Figure 6: Cross-sectional Average Temperature of Clearwater and Snake Rivers
+Figure 7: Air Temperature at Lewiston Airport
+Figure 8: Comparison of Measured and Simulated Temperatures at Lower Granite Tailrace
+Figure 9: Comparisons of Measured and Simulated Vertical Temperature Profiles (RM 130)
+Figure 10: Comparisons of Measured and Simulated Vertical Temperature Profiles (RM 120)
+Figure 11: Comparisons of Measured and Simulated Vertical Temperature Profiles (RM 110)
+
+Appendix A : Contour Plots of Simulated Temperatures
+Appendix B : Contour Plots of Powerhouse Release and Spill Release Scenarios
+Appendix C: CE-QUAL-W2 Input Files - Bathymetry and Control Files
+Snake River Temperature Evaluation                                               Page 1
+
+
+
+Introduction
+
+EPA has recently evaluated water temperature regimes of the mainstem Snake River
+using transect measurements and the RBM10 one-dimensional heat budget model
+(Cope, 2001). This work relied on detailed monitoring information collected by the
+Columbia River Inter-Tribal Fish Commission (CRITFC) and Fisheries and Aquatic
+Sciences in the early 1990s at 18 locations in the Snake River (Karr et al, 1998). This
+transect data can also be used to examine and simulate vertical temperature structures
+in the mainstem river. In this report, the two-dimensional CE-QUAL-W2 model
+framework developed by the U.S. Army Corps of Engineers (Cole and Buchak, 1995) is
+used to simulate temperature regimes in Lower Granite Pool, from the confluence of the
+Clearwater and Snake Rivers to Lower Granite Dam. The study period is July through
+October of 1992.
+
+
+Transect Measurements
+
+Long term monitoring of temperature has been conducted since the construction of the
+Snake River dams, but these temperature measurements have been collected at single,
+fixed depths in the vicinity of the dams (e.g, forebays, tailraces, and scroll cases).
+Evaluation of the performance of heat budget models has been hampered somewhat by
+the absence of transect data (Yearsley 2001, Cope 2001). The transect data from the
+CRITFC study offers an opportunity to evaluate model performance with a detailed
+sampling of cross-sectional average temperatures and vertical temperature gradients.
+
+The data used for this evaluation was collected from July 1 to October 22, 1992.
+Transect measurements were collected at 14 stations in the lower Snake River and four
+stations in the Clearwater River (see Figure 1). The distance between each Snake
+River station is approximately 10 miles, with some adjusted distances based on dam
+locations. Measurements were collected at varying time intervals ranging from one day
+to several days between samples.
+
+At each transect, temperature was measured at three locations (1/4, 1/2, and 3/4 river
+width) and at four depths (surface, 1/3 river depth, 2/3 river depth, and near bottom).
+Because of the varying depth to the bottom at the three sampling locations of a
+particular transect, the sampling depths can vary widely between the monitoring
+locations of a given transect. CE-QUAL-W2 is a two-dimensional modeling framework
+that simulates laterally-averaged temperatures for a waterbody. In this evaluation, all of
+the discrete temperature measurements are included in the vertical profiles for
+comparison to CE-QUAL-W2 estimates. For this reason, the vertical plots of
+temperature at a given transect location may have duplicate measurements at or near
+the same depth. In some cases, the variation in duplicate samples at a given depth
+indicates that there can be significant lateral variation in water temperature. These
+variations are not simulated by a two-dimensional model framework.
+Snake River Temperature Evaluation                                                  Page 2
+
+In addition to comparisons between measured and simulated vertical profiles within the
+impoundment, the simulated outflow temperature from Lower Granite Dam was
+compared to the transect measurements at the site downstream of the dam. This was
+accomplished by calculating the area-weighted average temperature at this transect site
+(Station 6) over time and then comparing it to the single-value outflow temperature from
+the CE-QUAL-W2 simulation.
+
+
+Dworshak Operations
+
+The release pattern from Dworshak Dam over the study period can be divided into three
+flow augmentation periods. The first period began July 5th, when outflow was
+increased from approximately 1,600 cfs to 11,000 cfs and held at that level until July
+11th. After dropping back to approximately 2,000 cfs for three days, the second
+augmentation period began on July 15th, with outflows of approximately 20,000 cfs for
+three days (and 10,000 cfs on the fourth day). After this second augmentation period
+ended, the period from July 19th to September 9th was characterized by low outflows
+ranging from approximately 1,500 cfs to 3,000 cfs. A third augmentation period began
+on September 10, with outflows increased to approximately 12,000 cfs for eleven days,
+after which outflows were reduced to 1,600 cfs. A graphical depiction of the outflows
+from Dworshak is included in Figure 4.
+
+
+CE-QUAL-W2 Model Representation
+
+
+Waterbody Segmentation for CE-QUAL-W2
+
+The Snake River from the confluence of the Clearwater River to Lower Granite Dam is
+represented by 34 longitudinal segments with a uniform length of one mile. In the
+vertical dimension, the river is divided into cells with a uniform layer thickness of 6 feet.
+At its deepest point, the river is represented by 22 vertical layers. A graphic of the
+model grid is provided in Figure 2.
+
+
+Impoundment Bathymetry
+
+Cross-sectional profiles of the river bottom were measured at approximately 40
+locations in 1995 and 1996, but the measurements are not uniformly segmented as is
+the model representation of the system. In order to provide width/depth relationships for
+CE-QUAL-W2 grid cells with uniform lengths equal to one mile, the available cross-
+sections were interpolated to provide uniformly spaced cross-sections using the HEC-
+RAS model (U.S. Army Corps of Engineers, 2001).
+
+The width/depth relationships were estimated by iteratively running HEC-RAS with the
+water elevation fixed at the depths of each model layer (i.e., from the maximum pool
+elevation to the bottom in 6 foot increments). Very low flows were used to provide a flat
+Snake River Temperature Evaluation                                            Page 3
+
+water surface. The resulting top-width outputs from these HEC-RAS runs provide the
+desired widths associated with each vertical layer of the CE-QUAL-W2 model. The
+bathymetry and control files with the pertinent geometry information are included in
+Appendix C of this report.
+
+The elevation/pool volume relationship for the geometric grid representation of Lower
+Granite Pool in CE-QUAL-W2 was compared to the elevation/pool volume relationship
+used in HEC-5Q modeling assessments in the Columbia River System Operation
+Review (USACE, BPA, BOR, 1994). This comparison is shown in Figure 3.
+
+
+Boundary Characteristics
+
+The upstream boundary segment of the model represents the Snake River immediately
+downstream of the confluence of the Snake River and the Clearwater River. Each river
+is treated as a distinct input. In CE-QUAL-W2 terminology, the Snake River is a branch
+boundary, and the Clearwater River is a tributary input.
+
+
+River Flows
+
+Daily average river flows for the upstream boundary were obtained from the National
+Water Information System website maintained by the U.S. Geological Survey (USGS).
+Snake River flows into the upstream model segment are represented by daily flows for
+1992 from the USGS station at Anatone, Washington. The daily flows recorded at the
+USGS station at Spalding, Idaho, were used as inputs from Clearwater River. Figure 4
+depicts the outflow from Dworshak Dam during the study period, and Figure 5 depicts
+the boundary input flows for the Clearwater and Snake Rivers.
+
+For the downstream boundary, powerhouse flows and spill flows from Lower Granite
+Dam are recorded by the U.S. Army Corps of Engineers (Corps) and shared with the
+public on a University of Washington website (DART - Data Access in Real Time,
+http://www.cqs.washington.edu/dart/river.html).
+
+The Corps also records the water surface elevation at the dam. This information can be
+used in conjunction with river flows and geometry information from a pre-processing
+module of CE-QUAL-W2 to perform a water balance on the model system. The pre-
+processor outputs elevation/volume relationships for the model system. In order to
+match the simulated water surface elevation to the measured elevation, the measured
+inflows and outflows were adjusted. When the volume was too high, the powerhouse
+outflow was increased by the necessary amount to match the daily average elevation.
+When the volume was too low, the Snake and Clearwater flows were increased by the
+necessary amount to match the elevation.
+
+Another option, simply adjusting the outflow to match the elevation, was evaluated. The
+model runs using these alternate outflows did not substantially alter the simulated
+Snake River Temperature Evaluation                                               Page 4
+
+temperatures of the outlet, so the flows from the first adjustment method above were
+used for the simulations reported in this document.
+
+
+River Temperatures
+
+The CRITFC study (Karr et al, 1998) included temperature sampling in the Snake River
+above the Clearwater confluence (RM 140.5) and in the Clearwater River near its mouth
+(RM 0.8). As discussed above, at each transect, temperature was measured at three
+locations (1/4, 1/2, and 3/4 river width) and at four depths (surface, 1/3 river depth, 2/3
+river depth, and near bottom). In order to calculate a cross-sectional average
+temperature for the CE-QUAL-W2 boundary representation, rectangular cross sections
+around each sampling point were assumed and the area-weighted average temperature
+was calculated for the transect. The resulting discrete sample values were input into
+CE-QUAL-W2 as daily average temperatures (Figure 6).
+
+CE-QUAL-W2 has two options for placement of boundary inflows to the model layers.
+Inflows can be placed evenly from top to bottom in the boundary cell layers of the
+model, or they can be placed according to their relative density. Both options were
+evaluated, and even distribution (top-to-bottom) resulted in slightly better agreement
+between simulated and measured temperatures below the dam. The only notable
+difference between the two options was a pattern of colder outlet temperatures during
+flow augmentation in the model runs using density-based placement.
+
+As discussed above, transect measurements were collected at varying time intervals
+ranging from one day to several days between samples. Gaps in the measurement
+record were filled by linear interpolation between sample points.
+
+CRITFC also sampled temperatures below Lower Granite Dam (RM 101). Based on an
+assumption that temperatures do not change significantly between the dam tailrace
+(RM107) and this location six miles downstream, these measurements can be
+compared against the dam outlet temperatures simulated in CE-QUAL-W2 to evaluate
+model performance. They were area-weighted in the same manner as the
+measurements upstream.
+
+
+Dam Structures
+
+The releases at Lower Granite Dam are represented using the Selective Withdrawal
+option in CE-QUAL-W2. Two structures are defined: powerhouse outflows and spill
+outflows. Powerhouse withdrawals are drawn from bays that extend 75 feet vertically
+from the bottom of the dam. For the model, the outlet structure is set between the
+bottom and top of the powerhouse bays, with no constraints on the elevation from which
+water can be drawn. The spill withdrawal elevation is set at a point near the pool
+elevation and withdrawals are constrained to the top half of the water column. It should
+be noted that the effect of spill is not a factor in the evaluation of model performance in
+Snake River Temperature Evaluation                                               Page 5
+
+this report, because spills in 1992 occurred in the early spring and measurements were
+not collect until mid-summer.
+
+
+Meteorology
+
+There are a limited number of meteorological stations in the Northwest where all of the
+parameters of the heat budget (air temperature, relative humidity, wind speed, cloud
+cover, and barometric pressure) are reported. Hourly average observations in 1992
+from the closest Surface Airways (SAMSON) station, which is located at the Lewiston
+airport, were used in this analysis. Figure 7 depicts the hourly air temperature for the
+simulation timeframe.
+
+
+Comparison of Model Simulations and Transect Measurements
+
+The initial model evaluation involves an evaluation of simulated and measured outlet
+temperatures. As shown in Figure 8, the simulated outlet temperature is consistent with
+the timing and trajectory of the measured temperatures during periods of flow
+augmentation. This similarity in the temporal response to flow augmentation contrasts
+with previous simulations using a one-dimensional model (RBM10) that employs
+continuity-based hydrodynamics (EPA, 2001). In that analysis, the model predicted
+arrival of cold water fronts later than the measured arrival time. It was surmised that
+higher velocities of the cold water density underflow through the bottom of the
+impoundment may account for the earlier arrival time. The results using CE-QUAL-W2,
+which accounts for effects of vertical density gradients on velocities, support this
+hypothesis.
+
+While the simulations capture the timing and pattern of measured temperature change
+over time, the simulated temperatures are generally lower than the measured
+temperatures. CE-QUAL-W2 includes an option for adjusting the heat budget terms
+associated with wind speed, which is relatively uncertain at the river location and has a
+bearing on river temperatures. Even after adjusting the wind sheltering coefficient to
+zero (which would result in less evaporation and higher water temperatures), the
+simulated temperatures were lower than the measured temperatures. The mean
+difference between simulated and measured temperatures (measured - simulated) for
+the 29 sampling days was 0.7 °C with a standard deviation of 0.6 °C. The root mean
+square difference was 0.2 °C.
+
+Some of the under-prediction could be due to the direct comparison of outlet
+temperatures with measurements from a transect location six miles downstream from
+the dam. In order to determine the potential heating occurring between the dam and the
+transect location, particularly during flow augmentation, RBM10 model outputs from a
+previous report (Cope, 2001) were examined. On average, during the July
+augmentation periods, the cross-sectional average river temperature is predicted to
+warm by approximately 0.2 °C between River Miles 107 and 101. This result, for the
+Snake River Temperature Evaluation                                                 Page 6
+
+period of highest heat transfer, indicates that the location of the measurement station in
+relation to the dam outlet does not explain the under-prediction in outlet temperatures.
+
+Graphical presentations of measured and simulated vertical temperature profiles at the
+three transect sampling locations within Lower Granite pool are shown in Figures 9
+through 11. The first profile on each page includes a graphic of the Dworshak outflow
+for 1992 (see Figure 4) and a vertical line on the date of the first profile. An overview of
+all of the graphical comparisons indicates that the model generally captures the
+observed temperature patterns in the pool. However, some of the profiles show a
+consistent deviation from the measured temperatures. For example, the profiles for
+River Mile 110 from July 28 to August 11 show colder simulated temperatures than
+measured temperatures below a depth of 40 feet.
+
+The vertical profiles offers insights into the effect of Dworshak releases on temperature
+stratification, and the profiles also indicate some uncertainties in both model and
+measurement estimates of temperature. As described in the previous analysis of the
+effects of flow augmentation (Cope, 2001), the releases of cold water increase the
+thermal stratification within the pool. For example, large cold water releases (over
+20,000 cfs) from July 15 to July 17 resulted in a measured vertical temperature gradient
+(surface/bottom difference) of 9.5 °C on August 1 at River Mile 120. In contrast, on
+August 29, after the cold water had moved through the pool, the measured gradient was
+only 2.5 °C. The simulation results were consistent with this change, with the vertical
+temperature gradient diminishing over this period from 6.9 °C on August 1 to 1.5 °C on
+August 29.
+
+As noted above, the transect measurements on each graph include measurements from
+three monitoring stations along the transect. Since the sampling depths at each station
+were non-uniform, the graphs include duplicate data at certain depths. In some cases
+(e.g., RM130, 7/13/92), the duplicates vary substantially, suggesting that there are
+lateral temperature variations in the river. At the same time, the scale of the
+temperature difference at a given depth and/or the departure from the simulated
+temperature in some cases (e.g., RM120, 7/23/92) could be the result of measurement
+or recording errors.
+
+
+Contour Plots of Simulated Temperatures
+
+The dynamic changes in river temperature regime caused by flow augmentation from
+Dworshak Dam can also be examined using contour plots. One advantage of
+simulation estimates is that they can be obtained for each day during the period of
+interest; as noted above, the measurement record is more sporadic. Daily contour plots
+were generated using outputs from CE-QUAL-W2 for the augmentation period during
+July; August and September plots were generated in 4-day increments. The plots are
+constructed using CE-QUAL-W2 outputs for every 5 miles of river length. These plots
+are provided in Appendix A.
+Snake River Temperature Evaluation                                               Page 7
+
+The contour plots for the July flow augmentation period indicate that the cold water front
+from Dworshak remains well-mixed from the upstream boundary (where the Clearwater
+and Snake are assumed to be completely mixed) to point approximately 15 miles
+downstream of Lewiston (River Mile 125). The contour plots for July 6th and July 16th
+show the arrival of the cold water front between miles 5 and 15, and the temperature
+contours in this stretch are vertical. In subsequent plots, the surface layer downstream
+of mile 15 remains relatively stable, while the cold water plunges underneath this stable
+layer. There is little change in the surface layer temperatures during the period of flow
+augmentation. In addition, stratification lingers for some time after cessation of flow
+augmentation.
+
+Another set of contour plots reflects the effects of changes in weather on pool
+temperatures. After a period of warm temperatures and no flow augmentaion in early
+August, the weather changes in late August (See Figure 7 for drop in air temperatures).
+The plots for August 26th and August 30th show the effects of this change on the river.
+The pattern of change is similar to the changes during to flow augmentation, with a
+stable surface layer developing in the pool. This time the stable surface layer extends
+from mile 5 below Lewiston (River mile 135). This pattern may be explained by the
+more rapid effects of weather changes on the upstream rivers than on the pool. The
+faster cooling upstream waters plunge under the warmer pool similar to the pattern seen
+during the flow augmentation periods.
+
+
+Simulation of Spill Releases
+
+
+Water quality models can be used to predict the water quality effects of alternate river
+management. For this report, a simple alternate management plan was simulated to
+illustrate the potential predictive use of the CE-QUAL-W2 model. The assumption for
+this simulation was that all flows would be sent over the spillway instead of the
+powerhouse. This scenario was chosen to investigate the possible effects of release
+through the spillway on the stable surface layer that occupies the lower half of the pool
+during flow augmentation.
+
+For this experiment, all model parameters and boundary inputs were identical to the
+simulations of powerhouse releases (i.e., actual conditions in 1992), and only the
+release structure was altered. Contour maps for selected days during the augmentation
+period, presented side-by-side with the simulations of actual conditions, are included in
+Appendix B. The effect of releasing water from the spillway on the surface layer is
+apparent, particularly during the first augmentation period, when the stratification and
+maximum temperatures are reduced in the surface waters of the lower portion of the
+pool. It is more difficult to discern differences during the second, more pronounced, flow
+augmentation episode.
+
+In the future, the CE-QUAL-W2 framework or other available model frameworks can be
+used to evaluate the effects of alternative operations at Dworshak Dam, the Hells
+Snake River Temperature Evaluation                                                Page 8
+
+Canyon Complex dams, and Lower Granite Dam on water temperature regimes within
+Lower Granite Pool.
+
+
+Summary
+
+Based on the measurements and simulation outputs using CE-QUAL-W2, the following
+observations are offered:
+
+(1)    The CE-QUAL-W2 model framework captures most of the observed patterns of
+       stratification occurring in the pool in 1992. The model also predicts the time-of-
+       arrival of cold water underflows at the dam after commencement of flow
+       augmentation from Dworshak Dam to within approximately one day of the
+       observed time-of-arrival.
+
+(2)    Using the model domain geometry, boundaries and inputs described herein, the
+       predicted outlet temperature was generally lower than the measured
+       temperature, even with the wind sheltering coefficient set to zero.
+
+(3)    During flow augmentation, measurements and simulations indicate that a stable
+       surface layer sets up beginning at approximately River Mile 125 to 135 and
+       extends to downstream to the dam at River Mile 107. Flow augmentation
+       appears to have little effect on temperatures within this surface layer; in fact,
+       augmentation may cause temperature increases at the surface.
+
+(4)    The temperature regime in the pool after the passing of a cold air mass
+       resembled the pattern observed during flow augmentation, with cooler input
+       waters at the upstream boundary plunging beneath a warmer surface layer within
+       the pool.
+
+(5)    An exploratory simulation assuming the release of all water over the spillway
+       (instead of the powerhouse) resulted in slightly lower surface temperatures at the
+       downstream end of the pool during the first augmentation period in July 1992,
+       when compared to the simulation of actual conditions (releases through the
+       powerhouse). Differences between the two simulations were harder to discern
+       during the other augmentation episodes.
+Snake River Temperature Evaluation                                            Page 9
+
+References
+
+Cope, B., et al. Site Visits to Six Dams on the Columbia and Snake Rivers, EPA Region
+10, Memorandum to the file dated 4/18/2001.
+
+Cope, B. Evaluation of Water Temperature Regimes in the Snake River using Transect
+Measurements and the RBM10 Model. EPA 910-R-01-008. December 2001.
+
+Cole, T. and Buchak, E. CE-QUAL-W2: A Two-Dimensional, Laterally-Averaged,
+Hydrodynamic and Water Quality Model, Version 2.0. User Manual. U.S. Army Corps
+of Engineers. June 1995.
+
+Karr M., Fryer J., and Mundy, P. Snake River Water Temperature Control Project.
+Phase II. Methods for managing and monitoring water temperatures in relation to
+salmon in the lower Snake River. May 21, 1998.
+
+Yearsley, J. An Outline of a Monitoring Program for Estimating the State of Water
+Temperature In the Columbia and Snake Rivers, EPA Region 10. 2001.
+
+U.S. Army Corps of Engineers, Hydrologic Engineering Center. HEC-RAS River
+Analysis System: User Manual. Version 3.0. January 2001.
+
+U.S. Army Corps of Engineers, Bureau of Reclamation, and Bonneville Power
+Administration. Columbia River System Operation Review. Draft Environmental Impact
+Statement. Appendix M. Water Quality. July 1994.
+
+U.S. EPA Region 10. Application of a 1-D Heat Budget Model to the Columbia River
+System. May, 2001.
+Snake River Temperature Evaluation                      Page 10
+
+
+
+
+                                     Maps and Figures
+Snake River Temperature Evaluation                                                                                                            Page 11
+
+
+
+                      Lower Granite Dam
+
+
+
+
+                                                                                         Washington
+                                                                                                      Idaho
+                                          CE
+                                               -Q
+                                                    UA
+                                                         L-
+                                                              W
+                                                                  2
+                                                                      M
+                                                                          od
+                                                                               el                                                       Dworshak Dam
+                                                                                    Do
+                                                                                         m
+                                                                                              ai
+                                                                                                      n
+
+                                                                                                                        Clearwater R.
+
+                                                                                                        Lewiston
+
+
+
+                           Transect Sampling Location
+
+                                                                                             Sn
+                                                                                                      ak
+                                                                                                        eR
+
+                      Approx. 10 mi.
+                                                                                                              .
+
+
+
+
+                                                              Figure 1: Study Area
+
+
+
+
+             -5
+
+
+
+
+            -10
+
+
+
+
+            -15
+depth (m)
+
+
+
+
+            -20
+
+
+
+
+            -25
+
+
+
+
+            -30
+
+
+
+
+            -35
+
+
+
+
+                  0              5                  10                                   15                        20           25          30
+
+
+
+                                                miles from upstream boundary
+
+                               Figure 2: Spatial Resolution for Lower Granite Pool Model
+Snake River Temperature Evaluation                                                                    Page 12
+
+
+
+
+                                  Figure 3: Area Capacity Relationship for Lower Granite Pool
+
+                         600000
+
+                                                System Operation Review (USACE)
+                         500000
+                                                CE-QUAL Grid
+      Volume (acre-ft)
+
+
+
+
+                         400000
+
+
+                         300000
+
+
+                         200000
+
+
+                         100000
+
+
+                             0
+                              580       600    620     640       660      680     700   720   740   760
+                                                                Elevation (ft)
+Snake River Temperature Evaluation                                                                                                            Page 13
+
+
+                                                                              Figure 4 :
+                                                           Flow from Dworshak Dam During Summer/Fall 1992
+                                                                        (July 1 - October 15)
+                                            700
+                                            600
+                                            500
+                             Flow (m3/s)
+
+
+
+
+                                            400
+                                            300
+                                            200
+                                            100
+                                                   0
+                                                   1-Jul              1-Aug                      1-Sep                               2-Oc t
+                                                                                      Date
+
+
+
+                                                                                 Figure 5 :
+                                                                  Flow in Clearwater and Snake Rivers
+                                                                       (July 1 - October 15, 1992)
+                                           900
+
+                                           800                                                             Clearwater River@ S palding
+
+                                           700                                                             S nak e River@ A natone
+
+                                           600
+                        Flow (m 3/s)
+
+
+
+
+                                           500
+
+                                           400
+
+                                           300
+
+                                           200
+
+                                           100
+
+                                             0
+                                              1-Jul                  1-A ug                      1-S ep                              2-Oc t
+                                                                                     Da te
+
+
+
+                                                                                Figure 6 :
+                                                           Interpolated Cross-sectional Average Temperature of
+                                                               Clearwater and Snake Rivers (Karr et al, 1998)
+                                 25
+
+
+                                 20
+  Te m pe ra ture (de g C)
+
+
+
+
+                                 15
+
+
+                                 10
+                                                                               Clearwater River (RM 0.8)
+
+                                       5                                       S nak e River (RM 140.5)
+
+
+                                       0
+                                           1-Jul                   1-A ug                      1-S ep                                2-Oc t
+                                                                                   Da te
+Snake River Temperature Evaluation                                                                                                        Page 14
+
+
+
+                                                                                        Figure 7 :
+                                                                       Air T emperature at Lewiston Airport (1992)
+                                     45
+
+                                     40
+
+                                     35
+   Te m pe ra ture (de g C)
+
+
+
+
+                                     30
+
+                                     25
+
+                                     20
+
+                                     15
+
+                                     10
+
+                                                  5
+
+                                                  0
+                                                         1-Jul                  1-A ug              1-S ep                     2-Oc t
+                                                                                            Da te
+
+
+
+
+                                                                    Figure 8: Comparison of M easured and Simulated
+                                                                         T emperatures at Lower G ranite T ailrace
+                                                          24
+
+
+
+                                                          22                                                           Measurements
+                                                                                                                       CE-QUAL-W 2
+                                                          20
+                              Te m pe ra ture (de g C)
+
+
+
+
+                                                          18
+
+
+
+                                                          16
+
+
+
+                                                          14
+
+
+
+                                                          12
+
+
+
+                                                          10
+                                                           23-Jun          23-Jul        22-A ug             21-S ep            21-Oc t
+
+                                                                                          Da te
+                          Snake River Temperature Evaluation                                                                Page 15
+
+             Figure 9 : Comparison of Summer 1992 Measured and Simulated Temperatures - River Mile 130
+
+
+
+
+                                         Tem p (C )                                                       Tem p (C)
+                     10         15          20        25            30                      10   15           20       25            30
+                 0                                                                      0
+
+                10                                                                     10
+
+                20                                                                     20
+
+                30                                                                     30
+
+
+
+
+                                                                          Depth (ft)
+  D epth (ft)
+
+
+
+
+                40                                                                     40
+
+                50                                                                     50
+
+                60                                                                     60
+                                                       Measured                                                         Measured
+                70                                                                     70                               Sim ulated
+                                                       Sim ulated
+                80                                                                     80
+                                     RM130 - 7/5/92                                                   RM130 - 7/6/92
+
+
+                                         Tem p (C)                                                         Tem p (C)
+                     10         15          20        25            30                      10   15           20       25            30
+                 0                                                                      0
+                10                                                                     10
+                20                                                                     20
+                30                                                                     30
+D epth (ft)
+
+
+
+
+                                                                          Depth (ft)
+
+
+
+
+                40                                                                     40
+                50                                                                     50
+                60                                                                     60
+                                                       Measured                                                         Measured
+                70                                     Sim ulated                      70                               Sim ulated
+                80                                                                     80
+                                  RM130 - 7/8/92                                                  RM130 - 7/10/92
+
+
+                                         Tem p (C)                                                        Tem p (C)
+                     10         15          20        25            30                      10   15           20       25            30
+                 0                                                                      0
+
+                10                                                                     10
+
+                20                                                                     20
+
+                30                                                                     30
+Depth (ft)
+
+
+
+
+                                                                         Depth (ft)
+
+
+
+
+                40                                                                     40
+
+                50                                                                     50
+
+                60                                                                     60
+                                                       Measured                                                         Measured
+                70                                     Sim ulated                      70                               Sim ulated
+                80                                                                     80
+                                 RM130 - 7/13/92                                                 RM130 - 7/16/92
+                         Snake River Temperature Evaluation                                                           Page 16
+
+
+
+                                      Tem p (C )                                                    Tem p (C)
+                    10         15        20        25            30                      10   15       20        25            30
+                0                                                                    0
+
+               10                                                                   10
+
+               20                                                                   20
+
+               30                                                                   30
+ D epth (ft)
+
+
+
+
+                                                                      D epth (ft)
+               40                                                                   40
+
+               50                                                                   50
+
+               60                                                                   60
+                                                    Measured                                                      Measured
+               70                                   Sim ulated                      70                            Sim ulated
+               80                                                                   80
+                                RM130 - 7/19/92                                                RM130 - 7/21/92
+
+
+                                      Tem p (C)                                                     Tem p (C)
+                    10         15        20        25            30                      10   15       20        25            30
+                0                                                                    0
+
+               10                                                                   10
+
+               20                                                                   20
+
+               30                                                                   30
+D epth (ft)
+
+
+
+
+                                                                      D epth (ft)
+
+
+
+
+               40                                                                   40
+
+               50                                                                   50
+
+               60                                                                   60
+                                                    Measured                                                      Measured
+               70                                   Sim ulated                      70                            Sim ulated
+               80                                                                   80
+                                RM130 - 7/23/92                                                RM130 - 7/25/92
+
+
+                                      Tem p (C )                                                    Tem p (C )
+                    10         15        20        25            30                      10   15       20        25            30
+                0                                                                    0
+
+               10                                                                   10
+
+               20                                                                   20
+
+               30                                                                   30
+                                                                      D epth (ft)
+D epth (ft)
+
+
+
+
+               40                                                                   40
+
+               50                                                                   50
+
+               60                                                                   60
+                                                    Measured                                                      Measured
+               70                                                                   70                            Sim ulated
+                                                    Sim ulated
+               80                                                                   80
+                                RM130 - 7/28/92                                                RM130 - 7/30/92
+                        Snake River Temperature Evaluation                                                              Page 17
+
+
+
+
+                                       Temp (C)                                                      Tem p (C)
+
+                       10      15         20        25            30                      10   15       20        25            30
+                   0                                                                  0
+
+               10                                                                    10
+
+               20                                                                    20
+
+               30                                                                    30
+ Depth (ft)
+
+
+
+
+                                                                       Depth (ft)
+               40                                                                    40
+
+               50                                                                    50
+
+               60                                                                    60
+                                                     Measured                                                      Measured
+               70                                                                    70
+                                                     Sim ulated                                                    Sim ulated
+               80                                                                    80
+                                   RM130 - 8/1/92                                               RM130 - 8/4/92
+
+
+                                       Tem p (C)                                                     Tem p (C)
+                   10          15         20        25            30                      10   15       20        25                30
+               0                                                                      0
+
+              10                                                                     10
+
+              20                                                                     20
+
+              30                                                                     30
+Depth (ft)
+
+
+
+
+                                                                       D epth (ft)
+
+
+
+
+              40                                                                     40
+              50                                                                     50
+
+              60                                                                     60
+                                                     Measured                                                      Measured
+              70                                                                     70
+                                                     Sim ulated                                                    Sim ulated
+              80                                                                     80
+                                   RM130 - 8/6/92                                               RM130 - 8/11/92
+
+
+
+
+                   10         15          20        25            30                      10   15        20       25                30
+               0                                                                      0
+
+              10                                                                     10
+
+              20                                                                     20
+              30                                                                     30
+
+              40                                                                     40
+
+              50                                                                     50
+
+              60                                                                     60
+                                                     Measured                                                          Measured
+              70                                                                     70
+                                                     Sim ulated                                                        Sim ulated
+              80                                                                     80
+                               RM130 - 8/18/92                                                  RM130 - 8/20/92
+                       Snake River Temperature Evaluation                                                            Page 18
+
+
+
+
+                  10         15          20        25            30                     10   15       20        25                30
+              0                                                                     0
+
+             10                                                                    10
+
+             20                                                                    20
+
+             30                                                                    30
+
+             40                                                                    40
+
+             50                                                                    50
+             60                                                                    60
+                                                    Measured                                                     Measured
+             70                                     Sim ulated                     70                            Sim ulated
+             80                                                                    80
+                              R M130 - 8/26/92                                                RM130 - 8/29/92
+
+
+                                      Tem p (C)                                                    Tem p (C)
+                  10         15          20        25            30                     10   15       20        25                30
+              0                                                                     0
+
+             10                                                                    10
+
+             20                                                                    20
+             30                                                                    30
+Depth (ft)
+
+
+
+
+                                                                      Depth (ft)
+
+
+
+
+             40                                                                    40
+             50                                                                    50
+
+             60                                                                    60
+                                                    Measured                                                         Measured
+             70                                                                    70
+                                                    Sim ulated                                                       Sim ulated
+             80                                                                    80
+                                  RM130 - 9/3/92                                              RM130 - 9/11/92
+
+
+                                      Tem p (C)                                                    Tem p (C)
+                  10         15          20        25            30                     10   15       20        25            30
+              0                                                                     0
+
+             10                                                                    10
+
+             20                                                                    20
+
+             30                                                                    30
+Depth (ft)
+
+
+
+
+                                                                      Depth (ft)
+
+
+
+
+             40                                                                    40
+
+             50                                                                    50
+
+             60                                                                    60
+                                                    Measured                                                     Measured
+             70                                     Sim ulated                     70                            Sim ulated
+             80                                                                    80
+                               RM130 - 9/13/92                                                RM130 - 9/15/92
+          Snake River Temperature Evaluation                                             Page 19
+
+
+
+
+     10         15        20        25            30        10   15      20         25            30
+ 0                                                      0
+
+10                                                     10
+
+20                                                     20
+
+30                                                     30
+
+40                                                     40
+
+50                                                     50
+
+60                                                     60
+                                     Measured                                        Measured
+70                                                     70
+                                     Sim ulated                                      Sim ulated
+80                                                     80
+                  RM130 - 9/17/92                                RM130 - 9/21/92
+
+
+
+     10         15        20        25            30        10   15       20        25            30
+ 0                                                      0
+
+10                                                     10
+
+20                                                     20
+
+30                                                     30
+
+40                                                     40
+
+50                                                     50
+
+60                                                     60
+                                     Measured                                        Measured
+70                                   Sim ulated        70                            Sim ulated
+80                                                     80
+                 RM130 - 9/25/92                                  RM130 - 10/8/92
+                     Snake River Temperature Evaluation                                                          Page 20
+
+              Figure 10 : Comparison of Summer 1992 Measured and Simulated Temperatures - River Mile 120
+
+
+                                  Tem p (C)                                                     Tem p (C)
+                    10      15       20       25            30                       10   15       20       25            30
+                0                                                                0
+               10                                                               10
+               20                                                               20
+               30                                                               30
+                                                                                40
+
+
+
+
+                                                                  Depth (ft)
+               40
+D epth (ft)
+
+
+
+
+               50                                                               50
+               60                                                               60
+               70                                                               70
+               80                              Measured                         80                           Measured
+               90                              Sim ulated                       90                           Sim ulated
+              100                                                              100
+                             RM120 - 7/5/92                                                RM120 - 7/6/92
+
+
+                                  Tem p (C)                                                     Tem p (C)
+                    10      15       20       25            30                       10   15       20       25            30
+                0                                                                0
+               10                                                               10
+               20                                                               20
+               30                                                               30
+               40                                                               40
+Depth (ft)
+
+
+
+
+                                                                 Depth (ft)
+
+
+
+
+               50                                                               50
+               60                                                               60
+               70                                                               70
+               80                              Measured                         80                           Measured
+               90                              Sim ulated                       90                           Sim ulated
+              100                                                              100
+                             RM120 - 7/8/92                                               RM120 - 7/10/92
+
+
+                                  Tem p (C)                                                     Tem p (C)
+                    10      15       20       25            30                       10   15       20       25            30
+                0                                                                0
+               10                                                               10
+               20                                                               20
+               30                                                               30
+               40                                                               40
+D epth (ft)
+
+
+
+
+                                                                 D epth (ft)
+
+
+
+
+               50                                                               50
+               60                                                               60
+               70                                                               70
+               80                              Measured                         80                           Measured
+               90                              Sim ulated                       90                           Sim ulated
+              100                                                              100
+                            RM120 - 7/13/92                                               RM120 - 7/16/92
+                      Snake River Temperature Evaluation                                                             Page 21
+
+
+
+
+                                    Tem p (C)                                                      Tem p (C)
+                     10      15        20       25            30                        10   15       20        25            30
+                 0                                                                  0
+                10                                                                 10
+                20                                                                 20
+                30                                                                 30
+                40                                                                 40
+ D epth (ft)
+
+
+
+
+                                                                   D epth (ft)
+                50                                                                 50
+                60                                                                 60
+                70                                                                 70
+                80                               Measured                          80                            Measured
+                90                               Sim ulated                        90                            Sim ulated
+               100                                                                100
+                             RM120 - 7/18/92                                                 R M120 - 7/21/92
+
+
+                                    Tem p (C)                                                      Tem p (C)
+                     10      15        20       25            30                        10   15       20        25            30
+                 0                                                                  0
+                10                                                                 10
+                20                                                                 20
+                30                                                                 30
+                40
+Depth (ft)
+
+
+
+
+                                                                                   40
+                                                                   D epth (ft)
+
+
+
+
+                50                                                                 50
+                60                                                                 60
+                70                                                                 70
+                80                               Measured                          80                            Measured
+                90                               Sim ulated                        90                            Sim ulated
+               100                                                                100
+                             R M120 - 7/23/92                                                R M120 - 7/25/92
+
+
+                                    Tem p (C)                                                      Tem p (C)
+                     10      15        20       25            30                        10   15       20        25            30
+                 0                                                                  0
+                10                                                                 10
+                20                                                                 20
+                30                                                                 30
+                40                                                                 40
+D epth (ft)
+
+
+
+
+                                                                    D epth (ft)
+
+
+
+
+                50                                                                 50
+                60                                                                 60
+                70                                                                 70
+                80                               Measured                          80                            Measured
+                90                               Sim ulated                        90                            Sim ulated
+               100                                                                100
+                             RM120 - 7/28/92                                                 RM120 - 7/30/92
+                           Snake River Temperature Evaluation                                                               Page 22
+
+
+
+                                         Temp (C)                                                         Tem p (C)
+                           10      15       20       25            30                          10   15       20        25            30
+                       0                                                                   0
+                   10                                                                     10
+                   20                                                                     20
+                   30                                                                     30
+    Depth (ft)
+
+
+
+
+                                                                                          40
+
+
+
+
+                                                                         Depth (ft)
+                   40
+                   50                                                                     50
+                   60                                                                     60
+                   70                                                                     70
+                   80                                 Measured                            80                            Measured
+                   90                                 Sim ulated                          90                            Sim ulated
+                  100                                                                    100
+                                   RM120 - 8/1/92                                                    RM120 - 8/4/92
+
+
+                                         Tem p (C)                                                        Tem p (C )
+                       10         15        20       25            30                          10   15       20        25            30
+                   0                                                                       0
+                  10                                                                      10
+                  20                                                                      20
+                  30                                                                      30
+                  40
+  Depth (ft)
+
+
+
+
+                                                                                          40
+                                                                           D epth (ft)
+
+
+
+
+                  50                                                                      50
+                  60                                                                      60
+                  70                                                                      70
+                  80                                  Measured                            80                            Measured
+                  90                                  Sim ulated                          90                            Sim ulated
+                 100                                                                     100
+                                   RM120 - 8/6/92                                                    RM120 - 8/11/92
+
+
+                                        Tem p (C)                                                         Tem p (C)
+                       10         15       20        25            30                          10   15       20        25            30
+                   0                                                                       0
+                  10                                                                      10
+                  20                                                                      20
+                  30                                                                      30
+                  40
+D epth (ft)
+
+
+
+
+                                                                                          40
+                                                                        Depth (ft)
+
+
+
+
+                  50                                                                      50
+                  60                                                                      60
+                  70                                                                      70
+                  80                                  Measured                            80                            Measured
+                  90                                  Sim ulated                          90                            Sim ulated
+                 100                                                                     100
+                                  RM120 - 8/18/92                                                   RM120 - 8/20/92
+                       Snake River Temperature Evaluation                                                           Page 23
+
+
+                                    Tem p (C)                                                     Tem p (C )
+                      10      15       20        25            30                       10   15       20       25            30
+                  0                                                                 0
+                 10                                                                10
+                 20                                                                20
+                 30                                                                30
+                 40                                                                40
+Depth (ft)
+
+
+
+
+                                                                    D epth (ft)
+                 50                                                                50
+                 60                                                                60
+                 70                                                                70
+                 80                               Measured                         80                           Measured
+                 90                               Sim ulated                       90                           Sim ulated
+                100                                                               100
+                              R M120 - 8/26/92                                               RM110 - 8/29/92
+
+
+                                    Tem p (C)                                                     Tem p (C)
+                      10      15       20        25            30                       10   15       20       25            30
+                  0                                                                 0
+                 10                                                                10
+                 20                                                                20
+                 30                                                                30
+                 40
+  D epth (ft)
+
+
+
+
+                                                                                   40
+                                                                    Depth (ft)
+
+
+
+
+                 50                                                                50
+                 60                                                                60
+                 70                                                                70
+                 80                               Measured                         80                           Measured
+                 90                               Sim ulated                       90                           Sim ulated
+                100                                                               100
+                               RM120 - 9/3/92                                                RM120 - 9/11/92
+
+
+                                    Tem p (C)                                                      Tem p (C)
+                      10      15       20        25            30                       10   15       20       25            30
+                  0                                                                 0
+                 10                                                                10
+                 20                                                                20
+                 30                                                                30
+                 40
+D epth (ft)
+
+
+
+
+                                                                                   40
+                                                                    Depth (ft)
+
+
+
+
+                 50                                                                50
+                 60                                                                60
+                 70                                                                70
+                 80                               Measured                         80                           Measured
+                 90                               Sim ulated                       90                           Sim ulated
+                100                                                               100
+                              RM120 - 9/13/92                                                RM120 - 9/15/92
+                    Snake River Temperature Evaluation                                                          Page 24
+
+
+
+                                 Tem p (C)                                                    Tem p (C)
+                   10      15       20       25            30                       10   15      20        25            30
+               0                                                                0
+              10                                                               10
+              20                                                               20
+              30                                                               30
+                                                                               40
+
+
+
+
+                                                                D epth (ft)
+              40
+Depth (ft)
+
+
+
+
+              50                                                               50
+              60                                                               60
+              70                                                               70
+              80                              Measured                         80                           Measured
+              90                              Sim ulated                       90                           Sim ulated
+             100                                                              100
+                           RM120 - 9/17/92                                               RM120 - 9/21/92
+                      Snake River Temperature Evaluation                                                                Page 25
+
+
+Figure 11 : Comparison of Summer 1992 Measured and Simulated Temperatures - River Mile 110
+
+                                   Tem p (C)                                                       Tem p (C)
+                     10      15       20        25            30                         10   15       20        25            30
+                 0                                                                   0
+
+                20                                                                  20
+
+                40                                                                  40
+ D epth (ft)
+
+
+
+
+                                                                   D epth (ft)
+                60                                                                  60
+
+                80                                                                  80
+
+               100                                                                 100
+                                                 Measured                                                         Measured
+               120                                                                 120
+                                                 Sim ulated                                                       Sim ulated
+               140                                                                 140
+                              RM110 - 7/8/92                                                  RM110 - 7/10/92
+
+
+                                   Tem p (C)                                                        Tem p (C)
+                     10      15       20        25            30                         10   15       20        25              30
+                 0                                                                   0
+
+                20                                                                  20
+
+                40                                                                  40
+                                                                   D epth (ft)
+ D epth (ft)
+
+
+
+
+                60                                                                  60
+
+                80                                                                  80
+
+               100                                                                 100
+                                                 Measured                                                         Measured
+               120                                                                 120
+                                                 Sim ulated                                                       Sim ulated
+               140                                                                 140
+                             R M110 - 7/13/92                                                 R M110 - 7/16/92
+
+
+                                   Tem p (C)                                                        Tem p (C )
+                     10      15       20        25            30                         10   15       20        25                30
+                 0                                                                   0
+
+                20                                                                  20
+
+                40                                                                  40
+ D epth (ft)
+
+
+
+
+                                                                     D epth (ft)
+
+
+
+
+                60                                                                  60
+
+                80                                                                  80
+
+               100                                                                 100
+                                                 Measured                                                             Measured
+               120                                                                 120
+                                                 Sim ulated                                                           Sim ulated
+               140                                                                 140
+                             R M110 - 7/19/92                                                 RM110 - 7/21/92
+                      Snake River Temperature Evaluation                                                           Page 26
+
+
+                                    Tem p (C)                                                    Tem p (C )
+                     10      15        20       25            30                       10   15       20       25            30
+                 0                                                                 0
+
+                20                                                                20
+
+                40                                                                40
+D epth (ft)
+
+
+
+
+                                                                   D epth (ft)
+                60                                                                60
+
+                80                                                                80
+
+               100                                                               100
+                                                 Measured                                                      Measured
+               120                                                               120
+                                                 Sim ulated                                                    Sim ulated
+               140                                                               140
+                             RM110 - 7/23/92                                                RM110 - 7/25/92
+
+
+                                    Tem p (C)                                                     Tem p (C)
+                     10      15        20       25            30                       10   15       20       25              30
+                 0                                                                 0
+
+                20                                                                20
+
+                40                                                                40
+Depth (ft)
+
+
+
+
+                                                                   Depth (ft)
+
+
+
+
+                60                                                                60
+
+                80                                                                80
+
+               100                                                               100
+                                                 Measured                                                      Measured
+               120                                                               120
+                                                 Sim ulated                                                    Sim ulated
+               140                                                               140
+                             RM110 - 7/28/92                                                RM110 - 7/30/92
+
+
+                                    Tem p (C)                                                     Tem p (C)
+                     10      15        20       25            30                       10   15       20       25                30
+                 0                                                                 0
+
+                20                                                                20
+
+                40                                                                40
+  Depth (ft)
+
+
+
+
+                                                                    Depth (ft)
+
+
+
+
+                60                                                                60
+
+                80                                                                80
+
+               100                                                               100
+                                                 Measured                                                          Measured
+               120                                                               120
+                                                 Sim ulated                                                        Sim ulated
+               140                                                               140
+                               RM110 - 8/1/92                                                RM110 - 8/4/92
+                     Snake River Temperature Evaluation                                                          Page 27
+
+
+
+                                  Tem p (C)                                                    Tem p (C)
+                    10      15       20       25            30                       10   15      20        25            30
+                0                                                                0
+
+               20                                                               20
+
+               40                                                               40
+D epth (ft)
+
+
+
+
+                                                                 D epth (ft)
+               60                                                               60
+
+               80                                                               80
+
+              100                                                              100
+                                               Measured                                                      Measured
+              120                                                              120
+                                               Sim ulated                                                    Sim ulated
+              140                                                              140
+                             RM110 - 8/6/92                                               RM110 - 8/11/92
+
+
+                                  Tem p (C)                                                    Tem p (C)
+                    10      15       20       25            30                       10   15      20        25            30
+                0                                                                0
+
+               20                                                               20
+
+               40                                                               40
+D epth (ft)
+
+
+
+
+                                                                 D epth (ft)
+
+
+
+
+               60                                                               60
+
+               80                                                               80
+
+              100                                                              100
+                                               Measured                                                      Measured
+              120                                                              120
+                                               Sim ulated                                                    Sim ulated
+              140                                                              140
+                            RM110 - 8/18/92                                               RM110 - 8/20/92
+
+
+                                  Tem p (C)                                                    Tem p (C)
+                    10      15       20       25            30                       10   15      20        25            30
+                0                                                                0
+
+               20                                                               20
+
+               40                                                               40
+D epth (ft)
+
+
+
+
+                                                                 D epth (ft)
+
+
+
+
+               60                                                               60
+
+               80                                                               80
+
+              100                                                              100
+                                               Measured                                                      Measured
+              120                                                              120
+                                               Sim ulated                                                    Sim ulated
+              140                                                              140
+                            RM110 - 8/26/92                                               RM110 - 8/29/92
+                           Snake River Temperature Evaluation                                                              Page 28
+
+
+
+                                         Temp (C)                                                      Tem p (C)
+                           10      15       20       25            30                        10   15       20        25            30
+                       0                                                                 0
+
+                   20                                                                   20
+
+                   40                                                                   40
+    Depth (ft)
+
+
+
+
+                                                                        Depth (ft)
+                   60                                                                   60
+
+                   80                                                                   80
+
+                  100                                                                  100
+                                                      Measured                                                        Measured
+                  120                                                                  120
+                                                      Sim ulated                                                      Sim ulated
+                  140                                                                  140
+                                   RM110 - 9/3/92                                                 RM110 - 9/11/92
+
+
+                                         Tem p (C)                                                      Tem p (C )
+                       10         15        20       25            30                        10   15       20        25              30
+                   0                                                                     0
+
+                  20                                                                    20
+
+                  40                                                                    40
+  Depth (ft)
+
+
+
+
+                                                                         D epth (ft)
+
+
+
+
+                  60                                                                    60
+
+                  80                                                                    80
+
+                 100                                                                   100
+                                                      Measured                                                        Measured
+                 120                                                                   120
+                                                      Sim ulated                                                      Sim ulated
+                 140                                                                   140
+                                   RM110 - 9/13/92                                                RM110 - 9/15/92
+
+
+                                        Tem p (C)                                                       Tem p (C)
+                       10         15       20        25            30                        10   15        20       25                30
+                   0                                                                     0
+
+                  20                                                                    20
+
+                  40                                                                    40
+D epth (ft)
+
+
+
+
+                                                                         Depth (ft)
+
+
+
+
+                  60                                                                    60
+
+                  80                                                                    80
+
+                 100                                                                   100
+                                                      Measured                                                            Measured
+                 120                                                                   120
+                                                      Sim ulated                                                          Sim ulated
+                 140                                                                   140
+                                  RM110 - 9/17/92                                                 RM110 - 9/21/92
+                    Snake River Temperature Evaluation                                                     Page 29
+
+
+                                 Tem p (C)                                                   Tem p (C)
+                   10      15       20       25            30                      10   15      20        25            30
+               0                                                               0
+
+              20                                                              20
+
+              40                                                              40
+Depth (ft)
+
+
+
+
+                                                                Depth (ft)
+              60                                                              60
+
+              80                                                              80
+
+             100                                                             100
+                                              Measured                                                     Measured
+             120                                                             120
+                                              Sim ulated                                                   Sim ulated
+             140                                                             140
+                           RM110 - 9/29/92                                              RM110 - 10/8/92
+          Snake River Temperature Evaluation                                               Page 30
+
+
+
+
+                           Appendix A: Contour Plots of Simulated Temperatures
+
+
+
+
+Notes regarding plots:
+
+The x-axis in the following graphs is distance from Lewiston in miles. Miles 10, 20, and 30 on the plots
+correspond to River Mile 130, 120, and 110, respectively.
+
+The y-axis is river depth in meters. Temperatures contours are in degrees Celsius. Contours are drawn for
+each 0.5 degree Celsius increment, and contours are labeled at 1 degree Celsius increments.
+Snake River Temperature Evaluation                               Page 31
+
+
+
+                              Day 185 - July 4, 1992                  24
+                                                                      23.5
+                                                                      23
+                                                                      22.5
+                                                                      22
+       -5                                                             21.5
+                                                                      21
+                                                                      20.5
+     -10
+                                                                      20
+                                                                      19.5
+     -15                                                              19
+                                                                      18.5
+                                                                      18
+     -20
+                                                                      17.5
+                                                                      17
+     -25
+                                                                      16.5
+                                                                      16
+                                                                      15.5
+     -30                                                              15
+                                                                      14.5
+                                                                      14
+            5         10             15       20       25   30
+
+
+
+                             Day 186 - July 5, 1992
+
+       -5
+
+
+
+     -10
+
+
+
+     -15
+
+
+
+     -20
+
+
+
+     -25
+
+
+
+     -30
+
+
+
+
+            5         10             15       20       25   30
+
+
+                              Day 187 - July 6, 1992
+
+       -5
+
+
+
+     -10
+
+
+
+     -15
+
+
+
+     -20
+
+
+
+     -25
+
+
+
+     -30
+
+
+
+
+            5         10             15       20       25   30
+
+
+                              Day 188 - July 7, 1992
+
+       -5
+
+
+
+     -10
+
+
+
+     -15
+
+
+
+     -20
+
+
+
+     -25
+
+
+
+     -30
+
+
+
+
+            5         10             15       20       25   30
+Snake River Temperature Evaluation                               Page 32
+                            Day 189 - July 8, 1992                   24
+                                                                     23.5
+                                                                     23
+                                                                     22.5
+                                                                     22
+      -5                                                             21.5
+                                                                     21
+                                                                     20.5
+     -10
+                                                                     20
+                                                                     19.5
+     -15                                                             19
+                                                                     18.5
+                                                                     18
+     -20
+                                                                     17.5
+                                                                     17
+     -25
+                                                                     16.5
+                                                                     16
+                                                                     15.5
+     -30                                                             15
+                                                                     14.5
+                                                                     14
+           5         10              15      20        25   30
+
+
+
+                            Day 190 - July 9, 1992
+
+      -5
+
+
+
+     -10
+
+
+
+     -15
+
+
+
+     -20
+
+
+
+     -25
+
+
+
+     -30
+
+
+
+
+           5         10              15      20        25   30
+
+
+                            Day 191 - July 10, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5         10          15         20         25   30
+
+
+
+                             Day 192 - July 11, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5         10          15         20         25   30
+Snake River Temperature Evaluation                               Page 33
+
+                            Day 193 - July 12, 1992                  24
+                                                                     23.5
+                                                                     23
+                                                                     22.5
+                                                                     22
+      -5                                                             21.5
+                                                                     21
+                                                                     20.5
+    -10
+                                                                     20
+                                                                     19.5
+    -15                                                              19
+                                                                     18.5
+                                                                     18
+    -20
+                                                                     17.5
+                                                                     17
+    -25
+                                                                     16.5
+                                                                     16
+                                                                     15.5
+    -30                                                              15
+                                                                     14.5
+                                                                     14
+           5         10          15         20         25   30
+
+
+                             Day 194 - July 13, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5         10          15         20         25   30
+
+
+                            Day 195 - July 14, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15         20         25   30
+
+
+
+                             Day 196 - July 15, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15         20         25   30
+Snake River Temperature Evaluation                                Page 34
+
+                                                                      24
+                             Day 197 - July 16, 1992                  23.5
+                                                                      23
+                                                                      22.5
+                                                                      22
+      -5                                                              21.5
+                                                                      21
+                                                                      20.5
+    -10
+                                                                      20
+                                                                      19.5
+    -15                                                               19
+                                                                      18.5
+                                                                      18
+    -20
+                                                                      17.5
+                                                                      17
+    -25
+                                                                      16.5
+                                                                      16
+                                                                      15.5
+    -30                                                               15
+                                                                      14.5
+                                                                      14
+           5         10          15          20         25   30
+
+
+
+                              Day 198 - July 17, 1992
+
+      -5
+
+
+
+     -10
+
+
+
+     -15
+
+
+
+     -20
+
+
+
+     -25
+
+
+
+     -30
+
+
+
+
+           5         10          15          20         25   30
+
+
+                             Day 199 - July 18, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15         20          25   30
+
+
+
+                             Day 200 - July 19, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15         20          25   30
+Snake River Temperature Evaluation                               Page 35
+
+                                                                    24
+
+                             Day 201 - July 20, 1992                23.5
+                                                                    23
+                                                                    22.5
+                                                                    22
+      -5                                                            21.5
+                                                                    21
+                                                                    20.5
+    -10
+                                                                    20
+                                                                    19.5
+    -15                                                             19
+                                                                    18.5
+                                                                    18
+    -20
+                                                                    17.5
+                                                                    17
+    -25
+                                                                    16.5
+                                                                    16
+                                                                    15.5
+    -30                                                             15
+                                                                    14.5
+                                                                    14
+           5        10           15         20         25   30
+
+
+
+                            Day 202 - July 21, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15         20         25   30
+
+
+                            Day 203 - July 22, 1992
+
+     -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10          15          20         25   30
+
+
+
+
+                            Day 204 - July 23, 1992
+     -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10          15          20         25   30
+Snake River Temperature Evaluation                               Page 36
+
+                                                                     24
+                            Day 205 - July 24, 1992                  23.5
+                                                                     23
+                                                                     22.5
+                                                                     22
+      -5                                                             21.5
+                                                                     21
+                                                                     20.5
+    -10
+                                                                     20
+                                                                     19.5
+    -15                                                              19
+                                                                     18.5
+                                                                     18
+    -20
+                                                                     17.5
+                                                                     17
+    -25
+                                                                     16.5
+                                                                     16
+                                                                     15.5
+    -30                                                              15
+                                                                     14.5
+                                                                     14
+           5         10          15         20         25   30
+
+
+
+
+                            Day 206 - July 25, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5         10          15         20         25   30
+
+
+                             Day 207 - July 26, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15         20         25   30
+
+
+
+                            Day 208 - July 27, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15         20         25   30
+Snake River Temperature Evaluation                             Page 37
+                                                                  24
+                           Day 209 - July 28, 1992                23.5
+                                                                  23
+                                                                  22.5
+                                                                  22
+     -5                                                           21.5
+                                                                  21
+                                                                  20.5
+    -10
+                                                                  20
+                                                                  19.5
+    -15                                                           19
+                                                                  18.5
+                                                                  18
+    -20
+                                                                  17.5
+                                                                  17
+    -25
+                                                                  16.5
+                                                                  16
+                                                                  15.5
+    -30                                                           15
+                                                                  14.5
+                                                                  14
+          5         10           15         20       25   30
+
+
+
+
+                           Day 210 - July 29, 1992
+
+     -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+          5         10           15         20       25   30
+
+
+
+                           Day 211 - July 30, 1992
+     -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+          5         10          15         20        25   30
+
+
+
+
+                           Day 212 - July 31, 1992
+
+     -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+          5         10          15         20        25   30
+Snake River Temperature Evaluation                               Page 38
+                                                                    24
+                            Day 214 - August 2, 1992                23.5
+                                                                    23
+                                                                    22.5
+                                                                    22
+      -5                                                            21.5
+                                                                    21
+                                                                    20.5
+     -10
+                                                                    20
+                                                                    19.5
+     -15                                                            19
+                                                                    18.5
+                                                                    18
+     -20
+                                                                    17.5
+                                                                    17
+     -25
+                                                                    16.5
+                                                                    16
+                                                                    15.5
+     -30                                                            15
+                                                                    14.5
+                                                                    14
+           5         10          15         20         25   30
+
+
+
+
+                            Day 218 - August 6, 1992
+
+      -5
+
+
+
+     -10
+
+
+
+     -15
+
+
+
+     -20
+
+
+
+     -25
+
+
+
+     -30
+
+
+
+
+           5         10          15         20         25   30
+
+
+
+                           Day 222 - August 10, 1992
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15        20          25   30
+
+
+
+
+                           Day 226 - August 14, 1992
+
+      -5
+
+
+
+    -10
+
+
+
+    -15
+
+
+
+    -20
+
+
+
+    -25
+
+
+
+    -30
+
+
+
+
+           5        10           15        20          25   30
+Snake River Temperature Evaluation                               Page 39
+                                                                    24
+                           Day 230 - August 18, 1992                23.5
+                                                                    23
+                                                                    22.5
+                                                                    22
+     -5                                                             21.5
+                                                                    21
+                                                                    20.5
+   -10
+                                                                    20
+                                                                    19.5
+   -15                                                              19
+                                                                    18.5
+                                                                    18
+   -20
+                                                                    17.5
+                                                                    17
+   -25
+                                                                    16.5
+                                                                    16
+                                                                    15.5
+   -30                                                              15
+                                                                    14.5
+                                                                    14
+          5        10           15        20           25   30
+
+
+
+
+                           Day 234 - August 22, 1992
+
+     -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+          5        10           15        20           25   30
+
+
+
+                          Day 238 - August 26, 1992
+    -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+          5        10           15        20           25   30
+
+
+
+
+                          Day 242 - August 30, 1992
+
+    -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+          5        10           15        20           25   30
+Snake River Temperature Evaluation                             Page 40
+                                                                 24
+                           Day 246 - September 3, 1992           23.5
+                                                                 23
+                                                                 22.5
+                                                                 22
+     -5                                                          21.5
+                                                                 21
+                                                                 20.5
+   -10
+                                                                 20
+                                                                 19.5
+   -15                                                           19
+                                                                 18.5
+                                                                 18
+   -20
+                                                                 17.5
+                                                                 17
+   -25
+                                                                 16.5
+                                                                 16
+                                                                 15.5
+   -30                                                           15
+                                                                 14.5
+                                                                 14
+          5        10           15        20         25   30
+
+
+
+
+                           Day 250 - September 7, 1992
+
+     -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+          5        10           15        20         25   30
+
+
+                         Day 254 - September 11, 1992
+
+     -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+          5        10           15        20         25   30
+
+
+
+
+                         Day 258 - September 15, 1992
+
+    -5
+
+
+
+   -10
+
+
+
+   -15
+
+
+
+   -20
+
+
+
+   -25
+
+
+
+   -30
+
+
+
+
+         5         10          15         20         25   30
+Snake River Temperature Evaluation                            Page 41
+                                                               24
+                          Day 262 - September 19, 1992         23.5
+                                                               23
+                                                               22.5
+                                                               22
+                                                               21.5
+    -5                                                         21
+                                                               20.5
+                                                               20
+                                                               19.5
+  -10
+                                                               19
+                                                               18.5
+                                                               18
+  -15                                                          17.5
+                                                               17
+                                                               16.5
+  -20                                                          16
+                                                               15.5
+                                                               15
+  -25                                                          14.5
+                                                               14
+                                                               13.5
+  -30
+                                                               13
+                                                               12.5
+                                                               12
+                                                               11.5
+         5         10          15        20         25   30
+
+
+
+
+                          Day 266 - September 23, 1992
+
+    -5
+
+
+
+  -10
+
+
+
+  -15
+
+
+
+  -20
+
+
+
+  -25
+
+
+
+  -30
+
+
+
+
+         5         10          15        20         25   30
+
+
+                        Day 270 - September 27, 1992
+
+    -5
+
+
+
+  -10
+
+
+
+  -15
+
+
+
+  -20
+
+
+
+  -25
+
+
+
+  -30
+
+
+
+
+         5        10           15        20         25   30
+
+
+                        Day 274 - October 1, 1992
+
+
+   -5
+
+
+
+  -10
+
+
+
+  -15
+
+
+
+  -20
+
+
+
+  -25
+
+
+
+  -30
+
+
+
+
+        5         10           15        20         25   30
+Snake River Temperature Evaluation                                          Page 42
+
+
+
+
+   Appendix B:    Contour Plots for Powerhouse Release and Spill Release Scenarios
+Snake River Temperature Evaluation                                         Page 43
+
+
+
+                                 Day 185
+                      TOP = Actual, BOTTOM = Spill Scenario
+                                                                             24
+                                                                             23.5
+                                                                             23
+     -5
+                                                                             22.5
+                                                                             22
+                                                                             21.5
+    -10                                                                      21
+                                                                             20.5
+                                                                             20
+    -15
+                                                                             19.5
+                                                                             19
+                                                                             18.5
+    -20
+                                                                             18
+                                                                             17.5
+    -25
+                                                                             17
+                                                                             16.5
+                                                                             16
+    -30                                                                      15.5
+                                                                             15
+                                                                             14.5
+           5        10              15           20              25   30
+                                                                             14
+
+
+
+
+     -5
+
+
+
+
+    -10
+
+
+
+
+    -15
+
+
+
+
+    -20
+
+
+
+
+    -25
+
+
+
+
+    -30
+
+
+
+
+           5        10              15           20              25   30
+
+
+
+
+                                    Day 189
+                         TOP = Actual, BOTTOM = Spill Scenario
+
+      -5
+
+
+
+
+     -10
+
+
+
+
+     -15
+
+
+
+
+     -20
+
+
+
+
+     -25
+
+
+
+
+     -30
+
+
+
+
+           5         10              15           20             25   30
+
+
+
+
+      -5
+
+
+
+
+     -10
+
+
+
+
+     -15
+
+
+
+
+     -20
+
+
+
+
+     -25
+
+
+
+
+     -30
+
+
+
+
+           5        10              15            20             25   30
+Snake River Temperature Evaluation                                          Page 44
+
+                                     Day 193
+                          TOP = Actual, BOTTOM = Spill Scenario
+
+                                                                              24
+      -5                                                                      23.5
+                                                                              23
+                                                                              22.5
+     -10                                                                      22
+                                                                              21.5
+                                                                              21
+     -15
+                                                                              20.5
+                                                                              20
+                                                                              19.5
+     -20
+                                                                              19
+                                                                              18.5
+     -25
+                                                                              18
+                                                                              17.5
+                                                                              17
+     -30                                                                      16.5
+                                                                              16
+                                                                              15.5
+                                                                              15
+           5         10             15            20              25   30
+                                                                              14.5
+                                                                              14
+
+      -5
+
+
+
+
+     -10
+
+
+
+
+     -15
+
+
+
+
+     -20
+
+
+
+
+     -25
+
+
+
+
+     -30
+
+
+
+
+           5        10              15            20              25   30
+
+
+
+
+                                     Day 197
+                          TOP = Actual, BOTTOM = Spill Scenario
+
+      -5
+
+
+
+
+     -10
+
+
+
+
+     -15
+
+
+
+
+     -20
+
+
+
+
+     -25
+
+
+
+
+     -30
+
+
+
+
+           5        10              15            20              25   30
+
+
+
+
+      -5
+
+
+
+
+     -10
+
+
+
+
+     -15
+
+
+
+
+     -20
+
+
+
+
+     -25
+
+
+
+
+     -30
+
+
+
+
+           5         10              15           20              25   30
+Snake River Temperature Evaluation                                        Page 45
+
+
+                                       Day 201
+                            TOP = Actual, BOTTOM = Spill Scenario
+
+        -5
+
+
+
+
+       -10
+
+
+
+
+       -15
+
+
+
+
+       -20
+
+
+
+
+       -25
+
+
+
+
+       -30
+
+
+
+
+             5         10            15            20           25   30
+
+
+
+
+        -5
+
+
+
+
+       -10
+
+
+
+
+       -15
+
+
+
+
+       -20
+
+
+
+
+       -25
+
+
+
+
+       -30
+
+
+
+
+             5         10            15            20           25   30
+
+
+
+
+                                       Day 205
+                            TOP = Actual, BOTTOM = Spill Scenario
+
+        -5
+
+
+
+
+       -10
+
+
+
+
+       -15
+
+
+
+
+       -20
+
+
+
+
+       -25
+
+
+
+
+       -30
+
+
+
+
+             5         10            15            20           25   30
+
+
+
+
+        -5
+
+
+
+
+       -10
+
+
+
+
+       -15
+
+
+
+
+       -20
+
+
+
+
+       -25
+
+
+
+
+       -30
+
+
+
+
+             5         10            15            20           25   30
+Snake River Temperature Evaluation                                        Page 46
+
+
+
+
+   Appendix C:    CE-QUAL-W2 Input Files - Bathymetry and Control Files
+           Snake River Temperature Evaluation                                               Page 47
+Lower Granite Geometry for CE-QUAL-W2 (segment lengths=1 mile, thickness=6 ft)
+
+Segment Lengths
+  1609.3 1609.3         1609.3   1609.3   1609.3   1609.3   1609.3   1609.3   1609.3   1609.3
+  1609.3 1609.3         1609.3   1609.3   1609.3   1609.3   1609.3   1609.3   1609.3   1609.3
+  1609.3 1609.3         1609.3   1609.3   1609.3   1609.3   1609.3   1609.3   1609.3   1609.3
+  1609.3 1609.3         1609.3   1609.3   1609.3
+
+W.S. Elevation
+   224.3   224.3         224.3    224.3    224.3    224.3    224.3    224.3    224.3    224.3
+   224.3   224.3         224.3    224.3    224.3    224.3    224.3    224.3    224.3    224.3
+   224.3   224.3         224.3    224.3    224.3    224.3    224.3    224.3    224.3    224.3
+   224.3   224.3         224.3    224.3    224.3
+
+Seg Orientation
+     1.6     1.6           1.6      1.6      1.6      1.6      1.6      1.6      1.6      1.6
+     1.6     1.6           1.6      1.6      1.6      1.6      1.6      1.6      1.6      1.6
+     1.6     1.6           1.6      1.6      1.6      1.6      1.6      1.6      1.6      1.6
+     1.6     1.6           1.6      1.6      1.6
+
+Seg Thickness
+    1.83    1.83          1.83     1.83     1.83     1.83     1.83     1.83     1.83     1.83
+    1.83    1.83          1.83     1.83     1.83     1.83     1.83     1.83     1.83     1.83
+    1.83    1.83          1.83     1.83
+
+Segment     1
+      .0           .0       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     2
+      .0        748.4    735.4    717.1    690.3    673.2    484.6    102.3       .0       .0
+      .0           .0       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     3
+      .0        515.8    504.8    491.9    478.7    467.0    308.6    227.8    105.8       .0
+      .0           .0       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     4
+      .0        504.5    470.2    450.7    398.7    302.1    248.8    201.9    145.2       .0
+      .0           .0       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     5
+      .0        617.1    609.4    601.6    594.1    527.2    440.6    276.7    177.1     25.6
+      .0           .0       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     6
+      .0        452.2    442.8    434.4    422.7    411.3    350.4    316.7    276.3    210.8
+      .0           .0       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     7
+      .0        503.0    458.6    395.4    336.0    303.3    287.3    270.3    246.6    204.9
+   166.6        134.8       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     8
+      .0        414.9    405.4    390.2    345.0    308.2    273.1    243.9    218.3    201.3
+   180.2        146.6       .0       .0       .0       .0       .0       .0       .0       .0
+      .0           .0       .0       .0
+
+Segment     9
+      .0        553.1    511.6    393.9    330.3    299.2    284.0    256.8    237.9    210.1
+   176.7        133.8       .0       .0       .0       .0       .0       .0       .0       .0
+           Snake River Temperature Evaluation                                       Page 48
+      .0        .0        .0       .0
+
+Segment 10
+      .0   418.5      407.7    401.8    385.0   370.6   364.4   356.9   342.9   322.3
+   276.9   148.9         .0       .0       .0      .0      .0      .0      .0      .0
+      .0      .0         .0       .0
+
+Segment 11
+      .0   522.5      487.6    440.3    418.6   354.0   317.8   297.7   280.0   241.0
+   213.4   179.2      128.6     83.4     38.3      .0      .0      .0      .0      .0
+      .0      .0         .0       .0
+
+Segment 12
+      .0   422.2      395.8    392.2    385.5   359.8   323.6   315.2   290.5   278.2
+   264.1   247.2      176.9    117.6     65.3      .0      .0      .0      .0      .0
+      .0      .0         .0       .0
+
+Segment 13
+      .0   503.9      484.2    452.9    430.8   402.7   373.1   333.1   284.6   260.2
+   237.0   212.0      190.2    165.8    115.2      .0      .0      .0      .0      .0
+      .0      .0         .0       .0
+
+Segment 14
+      .0   586.6      579.7    572.8    559.0   421.0   373.3   348.8   323.1   298.2
+   264.1   232.0      197.1    157.7       .0      .0      .0      .0      .0      .0
+      .0      .0         .0       .0
+
+Segment 15
+      .0   512.5      504.2    499.0    493.9   488.5   473.8   416.1   400.3   380.9
+   363.0   345.3      299.3    234.1    159.6   103.8      .0      .0      .0      .0
+      .0      .0         .0       .0
+
+Segment 16
+      .0   433.4      411.0    401.6    390.8   362.8   342.0   322.9   292.9   270.5
+   253.3   238.5      226.9    215.4    199.3   166.2    82.5    33.6      .0      .0
+      .0      .0         .0       .0
+
+Segment 17
+      .0   468.5      460.9    447.4    425.6   398.5   371.6   352.1   321.0   302.1
+   276.6   244.9      222.8    201.3    180.0   149.2   110.1    66.7      .0      .0
+      .0      .0         .0       .0
+
+Segment 18
+      .0   431.0      425.3    417.0    408.9   400.4   388.6   356.9   319.5   298.6
+   284.4   266.0      244.7    226.7    207.1   184.7   148.5    72.9      .0      .0
+      .0      .0         .0       .0
+
+Segment 19
+      .0   434.1      426.5    417.0    406.6   399.5   392.9   383.5   370.5   355.1
+   307.8   289.9      276.3    264.3    252.6   235.4   184.3   117.9      .0      .0
+      .0      .0         .0       .0
+
+Segment 20
+      .0   516.6      509.0    498.9    488.5   477.8   464.1   445.6   428.2   408.9
+   342.8   313.9      291.7    270.1    239.5   195.4   143.7    86.1      .0      .0
+      .0      .0         .0       .0
+
+Segment 21
+      .0   651.9      642.2    631.4    609.3   482.5   445.4   422.5   400.4   368.3
+   334.6   289.1      267.9    235.9    198.3   169.0   145.5   113.8      .0      .0
+      .0      .0         .0       .0
+
+Segment 22
+      .0   658.2      638.9    618.5    590.9   564.9   529.8   492.6   455.4   430.4
+   405.1   349.8      322.7    287.5    260.5   233.9   181.3   114.6      .0      .0
+      .0      .0         .0       .0
+
+Segment    23
+           Snake River Temperature Evaluation                                        Page 49
+      .0     677.5    657.8    635.6    609.4    585.7   557.8   521.9   484.4   459.7
+   439.1     416.9    362.7    332.1    290.0    260.6   223.8   161.1      .0      .0
+      .0        .0       .0       .0
+
+Segment 24
+      .0   696.7      678.0    653.2    628.5    607.0   584.7   553.1   517.8   487.2
+   468.9   450.6      432.8    379.2    342.3    292.5   258.1   211.6   106.0      .0
+      .0      .0         .0       .0
+
+Segment 25
+      .0   716.0      700.0    671.0    648.0    628.5   609.4   586.9   550.2   519.8
+   496.2   481.5      464.3    451.3    402.2    353.4   293.8   252.4   175.4      .0
+      .0      .0         .0       .0
+
+Segment 26
+      .0   735.5      723.7    688.9    668.0    650.3   633.2   615.3   587.6   548.4
+   527.0   508.2      494.8    481.4    470.8    440.1   366.2   291.0   237.8    29.4
+      .0      .0         .0       .0
+
+Segment 27
+      .0   703.0      682.5    663.7    646.7    628.6   604.7   576.0   537.0   515.8
+   496.0   479.9      466.8    452.4    420.3    379.4   323.1   277.8   236.1   163.6
+      .0      .0         .0       .0
+
+Segment 28
+      .0   615.3      603.0    592.6    578.1    553.6   539.0   526.6   511.8   487.4
+   455.7   422.5      389.2    355.8    324.8    310.0   298.6   284.9   266.3   225.2
+   128.0      .0         .0       .0
+
+Segment 29
+      .0   700.5      685.6    672.3    649.2    616.2   587.9   568.0   546.4   521.3
+   490.3   445.6      383.1    348.4    323.7    312.8   304.3   296.0   284.6   255.9
+   188.7    91.1         .0       .0
+
+Segment 30
+      .0   900.7      884.1    854.3    836.6    804.5   770.9   738.8   693.7   618.8
+   387.3   360.1      348.7    336.2    321.4    313.9   306.5   297.3   286.6   269.5
+   236.8   150.4         .0       .0
+
+Segment 31
+      .0   918.9      907.2    894.0    878.6    863.9   850.3   835.2   818.8   802.7
+   784.5   712.2      618.4    434.2    391.2    371.5   349.1   325.5   286.7   276.8
+   253.6   115.7         .0       .0
+
+Segment 32
+      .0   933.8      922.6    912.1    899.0    884.7   871.8   856.1   841.2   829.1
+   814.4   787.5      736.8    690.4    614.9    429.9   377.1   315.7   302.1   289.6
+   250.0    83.9         .0       .0
+
+Segment 33
+      .0   948.9      938.8    928.9    917.5    903.5   889.7   875.5   856.9   844.1
+   832.1   814.8      717.1    702.3    691.8    637.9   527.1   364.6   331.2   316.1
+   229.6      .0         .0       .0
+
+Segment 34
+      .0   958.9      951.1    942.0    923.0    912.3   902.0   890.1   879.5   869.1
+   858.7   845.6      822.3    815.5    780.1    769.8   527.5   511.1   497.4   477.6
+   243.0   202.4      106.1       .0
+
+Segment 35
+      .0        .0        .0       .0       .0      .0      .0      .0      .0      .0
+      .0        .0        .0       .0       .0      .0      .0      .0      .0      .0
+      .0        .0        .0       .0
+
+                                   Lower Granite Pool
+
+TITLE C ...............................TITLE....................................
+        Lower Granite (RM 107-140) - Jan.1 to Dec.31, 1992
+           Snake River Temperature Evaluation                                             Page 50
+           Evenly distributed Clr,Sna inflow, line sink outflow
+           Default hydraulic coefficients
+           Default light absorption/extinction coefficients
+           Temperature simulation - Lewiston weather - Selective Withdrawal
+           Ben Cope      - EPA Region 10
+
+TIME CON     TMSTRT    TMEND     YEAR
+                2.0    365.0     1992
+
+DLT CON         NTD   DLTMIN
+                  1      1.0
+
+DLT DATE       DLTD     DLTD     DLTD     DLTD     DLTD     DLTD     DLTD     DLTD     DLTD
+                1.0
+
+DLT MAX      DLTMAX   DLTMAX   DLTMAX   DLTMAX   DLTMAX   DLTMAX   DLTMAX   DLTMAX   DLTMAX
+             3600.0
+
+DLT FRN        DLTF     DLTF     DLTF     DLTF     DLTF     DLTF     DLTF     DLTF     DLTF
+               0.85
+
+BRANCH G         US       DS      UHS      DHS       NL
+Br 1              2       34        0        0        2
+
+LOCATION        LAT     LONG    ELBOT
+               46.6    117.4   185.01
+
+INIT CND        T2I     ICEI   WTYPEC
+                3.7      0.0    FRESH
+
+CALCULAT        VBC      EBC      MBC      WBC    PQINC      EVC      PRC
+                OFF      OFF      OFF      OFF      OFF       ON      OFF
+
+INTERPOL      QINIC     TRIC     DTIC     HDIC   QOUTIC     WDIC    METIC
+                 ON       ON       ON      OFF       ON       ON       ON
+
+DEAD SEA      WINDC     QINC    QOUTC    HEATC
+                 ON       ON       ON       ON
+
+ICE COVER      ICEC   SLICEC    SLHTC   ALBEDO    HWICE     BICE     GICE   ICEMIN    ICET2
+                OFF   DETAIL     TERM     0.25     10.0      0.6     0.07     0.05      3.0
+
+TRANSPORT SLTRC        THETA
+        QUICKEST        0.55
+
+WSC NUMB       NWSC    WINDH
+                  1     10.0
+
+WSC DATE       WSCD     WSCD     WSCD     WSCD     WSCD     WSCD     WSCD     WSCD     WSCD
+                1.0
+
+WSC COEF        WSC      WSC      WSC      WSC      WSC      WSC      WSC      WSC      WSC
+                0.0
+
+HYD COEF         AX       DX    CHEZY     CBHE     TSED     BTHM   TINADJ    TINST     TINE
+                1.0      1.0     70.0   7.0E-8     14.0     0.90      0.0    200.0    300.0
+
+SEL WITH        SWC      SWC      SWC      SWC      SWC      SWC      SWC      SWC      SWC
+                 ON
+
+N STRUC        NSTR     NSTR     NSTR     NSTR     NSTR     NSTR     NSTR     NSTR     NSTR
+                  2
+
+K BOTTOM       KBSW     KBSW     KBSW     KBSW     KBSW     KBSW     KBSW     KBSW     KBSW
+Br 1             34       15
+
+SINK TYPE     SINKC    SINKC    SINKC    SINKC    SINKC    SINKC    SINKC    SINKC    SINKC
+Br 1           LINE     LINE
+           Snake River Temperature Evaluation                                         Page 51
+
+E STRUC       ESTR     ESTR     ESTR      ESTR     ESTR    ESTR    ESTR    ESTR    ESTR
+Br 1         202.0    220.0
+
+W STRUC       WSTR     WSTR     WSTR      WSTR     WSTR    WSTR    WSTR    WSTR    WSTR
+Br 1         168.0    156.0
+
+N OUTLET      NOUT     NOUT     NOUT      NOUT     NOUT    NOUT    NOUT    NOUT    NOUT
+
+
+O LAYER       KOUT     KOUT     KOUT      KOUT     KOUT    KOUT    KOUT    KOUT    KOUT
+
+
+N WDRWAL       NWD
+                 0
+
+W SEGMNT       IWD      IWD       IWD      IWD      IWD     IWD     IWD     IWD     IWD
+                 0
+
+W LAYER        KWD      KWD       KWD      KWD      KWD     KWD     KWD     KWD     KWD
+                 0
+
+N TRIBS        NTR
+                 1
+
+TRIB PLACE PQTRC      PQTRC    PQTRC    PQTRC     PQTRC   PQTRC   PQTRC   PQTRC   PQTRC
+           DISTR
+
+TRIB SEG       ITR      ITR       ITR      ITR      ITR     ITR     ITR     ITR     ITR
+                 2
+
+TRIB TOP      ETRT     ETRT     ETRT      ETRT     ETRT    ETRT    ETRT    ETRT    ETRT
+
+
+TRIB BOT      ETRB     ETRB     ETRB      ETRB     ETRB    ETRB    ETRB    ETRB    ETRB
+
+
+DST TRIB      DTRC     DTRC     DTRC      DTRC     DTRC    DTRC    DTRC    DTRC    DTRC
+               OFF
+
+SCR PRINT     SCRC     NSCR
+                ON        1
+
+SCR DATE      SCRD     SCRD     SCRD      SCRD     SCRD    SCRD    SCRD    SCRD    SCRD
+               1.5
+
+SCR FREQ      SCRF     SCRF     SCRF      SCRF     SCRF    SCRF    SCRF    SCRF    SCRF
+               1.0
+
+SNAPSHOT      LJPC     UPRC     WPRC      TPRC   DLTPRC
+               OFF      OFF      OFF        ON       ON
+
+SNP PRINT     SNPC     NSNP    NISNP
+                ON        1        6
+
+SNP DATE      SNPD     SNPD     SNPD      SNPD     SNPD    SNPD    SNPD    SNPD    SNPD
+               1.5
+
+SNP FREQ      SNPF     SNPF     SNPF      SNPF     SNPF    SNPF    SNPF    SNPF    SNPF
+               1.0
+
+SNP SEG       ISNP     ISNP     ISNP      ISNP     ISNP    ISNP    ISNP    ISNP    ISNP
+                 5       10       15        20       25      30
+
+PRF PLOT      PRFC     NPRF    NIPRF
+                ON        1        1
+
+PRF DATE      PRFD     PRFD     PRFD      PRFD     PRFD    PRFD    PRFD    PRFD    PRFD
+           Snake River Temperature Evaluation                                        Page 52
+               1.5
+
+PRF FREQ      PRFF     PRFF     PRFF      PRFF    PRFF    PRFF    PRFF    PRFF    PRFF
+               1.0
+
+PRF SEG       IPRF     IPRF     IPRF      IPRF    IPRF    IPRF    IPRF    IPRF    IPRF
+                34
+
+SPR PLOT      SPRC     NSPR    NISPR
+                ON       31        3
+
+SPR DATE      SPRD     SPRD     SPRD     SPRD     SPRD    SPRD    SPRD    SPRD    SPRD
+             182.0    186.0    187.0    189.0    191.0   194.0   197.0   199.0   202.0
+             204.0    206.0    209.0    211.0    213.0   216.0   218.0   223.0   230.0
+             232.0    238.0    241.0    246.0    254.0   256.0   258.0   260.0   264.0
+             268.0    272.0    281.0    365.0
+
+SPR FREQ      SPRF     SPRF     SPRF      SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
+               4.0      1.0      2.0       2.0     3.0     3.0     2.0     3.0     2.0
+
+               2.0      3.0       2.0      2.0     3.0     2.0     5.0     7.0     2.0
+
+               6.0      3.0       5.0      8.0     2.0     2.0     2.0     4.0     4.0
+
+               4.0      9.0     84.0
+
+SPR SEG       ISPR     ISPR     ISPR      ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
+                11       21       31
+
+TSR PLOT      TSRC     NTSR
+                ON        1
+
+TSR DATE      TSRD     TSRD     TSRD      TSRD    TSRD    TSRD    TSRD    TSRD    TSRD
+               2.0
+
+TSR FREQ      TSRF     TSRF     TSRF      TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
+               1.0
+
+VPL PLOT      VPLC     NVPL
+               OFF        0
+
+VPL DATE      VPLD     VPLD     VPLD      VPLD    VPLD    VPLD    VPLD    VPLD    VPLD
+
+
+VPL FREQ      VPLF     VPLF     VPLF      VPLF    VPLF    VPLF    VPLF    VPLF    VPLF
+
+
+CPL PLOT      CPLC     NCPL
+               OFF        0
+
+CPL DATE      CPLD     CPLD     CPLD      CPLD    CPLD    CPLD    CPLD    CPLD    CPLD
+
+
+CPL FREQ      CPLF     CPLF     CPLF      CPLF    CPLF    CPLF    CPLF    CPLF    CPLF
+
+
+RESTART       RSOC     NRSO     RSIC
+               OFF        0      OFF
+
+RSO DATE      RSOD     RSOD     RSOD      RSOD    RSOD    RSOD    RSOD    RSOD    RSOD
+
+
+RSO FREQ      RSOF     RSOF     RSOF      RSOF    RSOF    RSOF    RSOF    RSOF    RSOF
+
+
+CST COMP       CCC     LIMC       SDC      CUF
+               OFF      OFF       OFF        3
+           Snake River Temperature Evaluation                                        Page 53
+CST ACT        CAC      CAC       CAC      CAC     CAC     CAC     CAC     CAC     CAC
+               OFF      OFF       OFF      OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF       OFF      OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF       OFF
+
+CST ICON       C2I      C2I      C2I       C2I     C2I     C2I     C2I     C2I     C2I
+              30.0      2.0     10.0      51.0     0.7   2.022     1.0     0.1   0.001
+             0.002     0.14      1.0       0.0   11.91    31.0     0.0     0.0     0.0
+               0.0      0.1      0.0
+
+CST PRINT     CPRC     CPRC     CPRC      CPRC    CPRC    CPRC    CPRC    CPRC    CPRC
+               OFF      OFF      OFF       OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF       OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CIN CON      CINAC    CINAC    CINAC    CINAC    CINAC   CINAC   CINAC   CINAC   CINAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CTR CON      CTRAC    CTRAC    CTRAC    CTRAC    CTRAC   CTRAC   CTRAC   CTRAC   CTRAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CDT CON      CDTAC    CDTAC    CDTAC    CDTAC    CDTAC   CDTAC   CDTAC   CDTAC   CDTAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CPR CON      CPRAC    CPRAC    CPRAC    CPRAC    CPRAC   CPRAC   CPRAC   CPRAC   CPRAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+EX COEF      EXH2O     EXSS     EXOM      BETA
+              0.45     0.01      0.1      0.45
+
+COLIFORM    COLQ10    COLDK
+              1.04      1.4
+
+S SOLIDS       SSS
+               1.0
+
+ALGAE           AG       AM       AE        AR      AS    ASAT    APOM
+               2.0     0.10     0.04      0.04    0.10   100.0    0.80
+
+ALG RATE       AT1      AT2      AT3       AT4     AK1     AK2     AK3     AK4
+               5.0     30.0     35.0      40.0     0.1    0.99    0.99     0.1
+
+DOM         LDOMDK     LRDK   RDOMDK
+              0.30    0.010    0.001
+
+POM         LPOMDK     POMS
+              0.08     0.30
+
+OM RATE       OMT1     OMT2     OMK1      OMK2
+               5.0     30.0      0.1      0.99
+
+SEDIMENT       SDK     FSOD
+              0.08      1.0
+
+S DEMAND       SOD      SOD       SOD      SOD     SOD     SOD     SOD     SOD     SOD
+1              0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3     0.3
+10             0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3     0.3
+19             0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3     0.3
+28             0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3
+           Snake River Temperature Evaluation                                  Page 54
+CBOD          KBOD     TBOD     RBOD
+              0.25   1.0147     1.85
+
+PHOSPHOR      PO4R    PARTP     AHSP
+             0.015      1.2    0.003
+
+AMMONIUM      NH4R    NH4DK     AHSN
+              0.05     0.10    0.014
+
+NH4 RATE     NH4T1    NH4T2    NH4K1    NH4K2
+               5.0     25.0      0.1     0.99
+
+NITRATE      NO3DK
+              0.05
+
+NO3 RATE     NO3T1    NO3T2    NO3K1    NO3K2
+               5.0     25.0      0.1     0.99
+
+SED CO2       CO2R
+               0.1
+
+IRON           FER      FES
+               0.5      2.0
+
+STOICHMT     O2NH4     O2OM     O2AR      O2AG    BIOP   BION   BIOC
+              4.57      1.4      1.1       1.4   0.005   0.08   0.45
+
+O2 LIMIT     O2LIM
+              0.10
+
+BTH FILE...............................BTHFN....................................
+        bth.npt
+
+VPR FILE...............................VPRFN....................................
+        vpr.npt - not used
+
+LPR FILE...............................LPRFN....................................
+        lpr.npt - not used
+
+RSI FILE...............................RSIFN....................................
+        rsi.npt - not used
+
+MET FILE...............................METFN....................................
+        met.npt
+
+QWD FILE...............................QWDFN....................................
+        qwd.npt - not used
+
+ELO FILE...............................ELOFN....................................
+        elo.npt
+
+QIN FILE...............................QINFN....................................
+Br 1    qin_br1.npt
+
+TIN FILE...............................TINFN....................................
+Br 1    tin_br1.npt
+
+CIN FILE...............................CINFN....................................
+Br 1    cin_br1.npt - not used
+
+QOT FILE...............................QOTFN....................................
+Br 1    qot_br1.npt
+
+QTR FILE...............................QTRFN....................................
+Tr 1    qtr_tr1.npt
+
+TTR FILE...............................TTRFN....................................
+Tr 1    ttr_tr1.npt
+        Snake River Temperature Evaluation                                     Page 55
+
+CTR FILE...............................CTRFN....................................
+Tr 1    ctr_br1.npt - not used
+
+QDT FILE...............................QDTFN....................................
+Br 1    qdt_br1.npt - not used
+
+TDT FILE...............................TDTFN....................................
+Br 1    tdt_br1.npt - not used
+
+CDT FILE...............................CDTFN....................................
+Br 1    cdt_br1.npt - not used
+
+PRE FILE...............................PREFN....................................
+Br 1    pre_br1.npt - not used
+
+TPR FILE...............................TPRFN....................................
+Br 1    tpr_br1.npt - not used
+
+CPR FILE...............................CPRFN....................................
+Br 1    cpr_br1.npt - not used
+
+EUH FILE...............................EUHFN....................................
+Br 1    euh_br1.npt - not used
+
+TUH FILE...............................TUHFN....................................
+Br 1    tuh_br1.npt - not used
+
+CUH FILE...............................CUHFN....................................
+Br 1    euh_br1.npt - not used
+
+EDH FILE...............................EDHFN....................................
+Br 1    edh_br1.npt - not used
+
+TDH FILE...............................TDHFN....................................
+Br 1    tdh_br1.npt - not used
+
+CDH FILE...............................CDHFN....................................
+Br 1    cdh_br1.npt - not used
+
+SNP FILE...............................SNPFN....................................
+        snp.opt
+
+TSR FILE...............................TSRFN....................................
+        tsr.opt
+
+PRF FILE...............................PRFFN....................................
+        prf.opt
+
+VPL FILE...............................VPLFN....................................
+        vpl.opt
+
+CPL FILE...............................CPLFN....................................
+        cpl.opt
+
+SPR FILE...............................SPRFN....................................
+        spr.opt
+
