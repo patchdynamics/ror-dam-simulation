@@ -7,7 +7,7 @@ TITLE C ...............................TITLE....................................
           Default light absorption/extinction coefficients
           Temperature simulation - Lewiston weather - Selective Withdrawal
           Ben Cope      - EPA Region 10
-					Matthew Shultz - Stanford University 
+          Matthew Shultz - Stanford University 
 
 
 
@@ -15,7 +15,7 @@ GRID         NWB     NBR     IMX     KMX   NPROC  CLOSEC
                1       1      35      24       2     OFF
 
 IN/OUTFL     NTR     NST     NIW     NWD     NGT     NSP     NPI     NPU
-							 1       1       0       2       0       1       0       0       
+               1       1       0       2       0       1       0       0       
 
 CONSTITU     NGC     NSS     NAL     NEP    NBOD     NMC     NZP
                0       0       0       0       0       0       0
@@ -63,10 +63,10 @@ BR1           ON      ON     OFF
 HEAT EXCH  SLHTC    SROC  RHEVAP   METIC  FETCHC     AFW     BFW     CFW   WINDH
 WB 1          ET     OFF     OFF      ON     OFF 9.20000 0.46000 2.00000 10.0000
 
-ICE COVER    ICEC  SLICEC  ALBEDO   HWICE    BICE    GICE  ICEMIN   ICET2
-              OFF  DETAIL    0.25    10.0     0.6    0.07    0.05     3.0
+ICE COVER   ICEC  SLICEC  ALBEDO   HWICE    BICE    GICE  ICEMIN   ICET2
+             OFF  DETAIL    0.25    10.0     0.6    0.07    0.05     3.0
 
-TRANSPOR   SLTRC   THETA
+TRANSPORT  SLTRC   THETA
 WB 1    ULTIMATE 0.50000
 
 HYD COEF      AX      DX    CBHE    TSED      FI   TSEDF   FRICC      Z0
@@ -214,9 +214,9 @@ WB 1          ON       1
 
 SCR DATE    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD
            182.0   186.0   187.0   189.0   191.0   194.0   197.0   199.0   202.0
-           204.0    206.0    209.0    211.0    213.0   216.0   218.0   223.0   230.0
-           232.0    238.0    241.0    246.0    254.0   256.0   258.0   260.0   264.0
-           268.0    272.0    281.0    365.0
+           204.0   206.0   209.0   211.0   213.0   216.0   218.0   223.0   230.0
+           232.0   238.0   241.0   246.0   254.0   256.0   258.0   260.0   264.0
+           268.0   272.0   281.0   365.0
 
 SCR FREQ    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF
              4.0     1.0     2.0     2.0     3.0     3.0     2.0     3.0     2.0
@@ -245,11 +245,11 @@ SPR DATE    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD
 SPR FREQ    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
              4.0     1.0     2.0     2.0     3.0     3.0     2.0     3.0     2.0
 
-             2.0      3.0       2.0      2.0     3.0     2.0     5.0     7.0     2.0
+             2.0     3.0     2.0     2.0     3.0     2.0     5.0     7.0     2.0
 
-             6.0      3.0       5.0      8.0     2.0     2.0     2.0     4.0     4.0
+             6.0     3.0     5.0     8.0     2.0     2.0     2.0     4.0     4.0
 
-             4.0      9.0     84.0
+             4.0     9.0     84.0
 
 SPR SEG     ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
               11      21      31
@@ -308,10 +308,10 @@ RESTART     RSOC    NRSO    RSIC
               ON       1     OFF
 
 RSO DATE    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD
-						 1.0        
+             1.0        
 
 RSO FREQ    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF
-						 1.0	 
+             1.0
 
 CST COMP     CCC    LIMC     CUF
              OFF     OFF       3
@@ -640,7 +640,9 @@ MACRO EX     EXM     EXM     EXM     EXM     EXM     EXM
 
 GENERIC    CGQ10   CG0DK   CG1DK     CGS
 
+
 S SOLIDS     SSS   SEDRC   TAUCR
+
 
 ALGAL RATE    AG      AR      AE      AM      AS    AHSP    AHSN   AHSSI    ASAT
 
@@ -894,7 +896,7 @@ WB 1    flx.opt
 TSR FILE..................................TSRFN.................................
         tsr.opt
 
-WDO FILE..................................WDOFN.................................
+WDO FILE..............................WDOFN.....................................
         wdo.opt
 
 
