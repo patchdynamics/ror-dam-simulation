@@ -1,0 +1,436 @@
+  W2 Model Version 3.71
+
+TITLE C ...............................TITLE....................................
+       Lower Granite (RM 107-140) - Jan.1 to Dec.31, 1992
+          Evenly distributed Clr,Sna inflow, line sink outflow
+          Default hydraulic coefficients
+          Default light absorption/extinction coefficients
+          Temperature simulation - Lewiston weather - Selective Withdrawal
+          Ben Cope      - EPA Region 10
+					Matthew Shultz - Stanford University 
+
+
+
+GRID         NWB     NBR     IMX     KMX   NPROC  CLOSEC
+               1       1      35      24       2     OFF
+
+IN/OUTFL     NTR     NST     NIW     NWD     NGT     NSP     NPI     NPU
+							 1       1       0       2       0       1       0       0       
+
+CONSTITU     NGC     NSS     NAL     NEP    NBOD     NMC     NZP
+               0       0       0       0       0       0       0
+
+MISCELL     NDAY SELECTC HABTATC ENVIRPC AERATEC INITUWL
+             100     OFF     OFF     OFF     OFF     OFF
+
+TIME CON  TMSTRT   TMEND    YEAR
+             2.0   365.0    2015 
+
+DLT CON      NDT  DLTMIN DLTINTR
+               1 1.00000     OFF
+
+DLT DATE    DLTD    DLTD    DLTD    DLTD    DLTD    DLTD    DLTD    DLTD    DLTD
+             1.0
+
+DLT MAX   DLTMAX  DLTMAX  DLTMAX  DLTMAX  DLTMAX  DLTMAX  DLTMAX  DLTMAX  DLTMAX
+          3600.0
+
+DLT FRN     DLTF    DLTF    DLTF    DLTF    DLTF    DLTF    DLTF    DLTF    DLTF
+            0.85
+
+DLT LIMI    VISC    CELC
+WB 1          ON      ON
+
+BRANCH G      US      DS     UHS     DHS     UQB     DQB   NLMIN   SLOPE  SLOPEC
+Br 1           2      34       0       0       0       0       2 0.00000   0.000
+ 
+
+LOCATION     LAT    LONG    EBOT      BS      BE    JBDN
+            46.6   117.4  185.01       1       1       1
+
+INIT CND     T2I    ICEI  WTYPE    GRIDC
+             3.7     0.0  FRESH     RECT
+ 
+CALCULAT     VBC     EBC     MBC     PQC     EVC     PRC
+             OFF      ON     OFF     OFF      ON     OFF
+
+DEAD SEA   WINDC    QINC   QOUTC   HEATC
+WB 1          ON      ON      ON      ON
+
+INTERPOL   QINIC   DTRIC    HDIC
+BR1           ON      ON     OFF
+
+HEAT EXCH  SLHTC    SROC  RHEVAP   METIC  FETCHC     AFW     BFW     CFW   WINDH
+WB 1          ET     OFF     OFF      ON     OFF 9.20000 0.46000 2.00000 10.0000
+
+ICE COVER    ICEC  SLICEC  ALBEDO   HWICE    BICE    GICE  ICEMIN   ICET2
+              OFF  DETAIL    0.25    10.0     0.6    0.07    0.05     3.0
+
+TRANSPOR   SLTRC   THETA
+WB 1    ULTIMATE 0.50000
+
+HYD COEF      AX      DX    CBHE    TSED      FI   TSEDF   FRICC      Z0
+             1.0     1.0  7.0E-8    14.0     0.0     0.0   CHEZY   0.001
+
+EDDY VISC    AZC   AZSLC   AZMAX     FBC       E   ARODI STRCKLR BOUNDFR  TKECAL
+WB 1          W2     EXP  1.0E-4                                                
+
+N STRUC     NSTR 
+               2
+
+STR INT    STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC
+BR 1         OFF     OFF 
+
+STR TOP    KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR
+BR1            2       2
+
+STR BOT    KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR
+BR1           23      23
+****
+
+WSC NUMB       NWSC    WINDH
+                  1     10.0
+
+WSC DATE       WSCD     WSCD     WSCD     WSCD     WSCD     WSCD     WSCD     WSCD     WSCD
+                1.0
+
+WSC COEF        WSC      WSC      WSC      WSC      WSC      WSC      WSC      WSC      WSC
+                0.0
+
+
+SEL WITH        SWC      SWC      SWC      SWC      SWC      SWC      SWC      SWC      SWC
+                 ON
+
+
+K BOTTOM       KBSW     KBSW     KBSW     KBSW     KBSW     KBSW     KBSW     KBSW     KBSW
+Br 1             34       15
+
+SINK TYPE     SINKC    SINKC    SINKC    SINKC    SINKC    SINKC    SINKC    SINKC    SINKC
+Br 1           LINE     LINE
+
+E STRUC       ESTR     ESTR     ESTR      ESTR     ESTR    ESTR    ESTR    ESTR    ESTR
+Br 1         202.0    220.0
+
+W STRUC       WSTR     WSTR     WSTR      WSTR     WSTR    WSTR    WSTR    WSTR    WSTR
+Br 1         168.0    156.0
+
+N OUTLET      NOUT     NOUT     NOUT      NOUT     NOUT    NOUT    NOUT    NOUT    NOUT
+
+
+O LAYER       KOUT     KOUT     KOUT      KOUT     KOUT    KOUT    KOUT    KOUT    KOUT
+
+
+N WDRWAL       NWD
+                 0
+
+W SEGMNT       IWD      IWD       IWD      IWD      IWD     IWD     IWD     IWD     IWD
+                 0
+
+W LAYER        KWD      KWD       KWD      KWD      KWD     KWD     KWD     KWD     KWD
+                 0
+
+N TRIBS        NTR
+                 1
+
+TRIB PLACE PQTRC      PQTRC    PQTRC    PQTRC     PQTRC   PQTRC   PQTRC   PQTRC   PQTRC
+           DISTR
+
+TRIB SEG       ITR      ITR       ITR      ITR      ITR     ITR     ITR     ITR     ITR
+                 2
+
+TRIB TOP      ETRT     ETRT     ETRT      ETRT     ETRT    ETRT    ETRT    ETRT    ETRT
+
+
+TRIB BOT      ETRB     ETRB     ETRB      ETRB     ETRB    ETRB    ETRB    ETRB    ETRB
+
+
+DST TRIB      DTRC     DTRC     DTRC      DTRC     DTRC    DTRC    DTRC    DTRC    DTRC
+               OFF
+
+SCR PRINT     SCRC     NSCR
+                ON        1
+
+SCR DATE      SCRD     SCRD     SCRD      SCRD     SCRD    SCRD    SCRD    SCRD    SCRD
+               1.5
+
+SCR FREQ      SCRF     SCRF     SCRF      SCRF     SCRF    SCRF    SCRF    SCRF    SCRF
+               1.0
+
+SNAPSHOT      LJPC     UPRC     WPRC      TPRC   DLTPRC
+               OFF      OFF      OFF        ON       ON
+
+SNP PRINT     SNPC     NSNP    NISNP
+                ON        1        6
+
+SNP DATE      SNPD     SNPD     SNPD      SNPD     SNPD    SNPD    SNPD    SNPD    SNPD
+               1.5
+
+SNP FREQ      SNPF     SNPF     SNPF      SNPF     SNPF    SNPF    SNPF    SNPF    SNPF
+               1.0
+
+SNP SEG       ISNP     ISNP     ISNP      ISNP     ISNP    ISNP    ISNP    ISNP    ISNP
+                 5       10       15        20       25      30
+
+PRF PLOT      PRFC     NPRF    NIPRF
+                ON        1        1
+
+PRF DATE      PRFD     PRFD     PRFD      PRFD     PRFD    PRFD    PRFD    PRFD    PRFD
+               1.5
+
+PRF FREQ      PRFF     PRFF     PRFF      PRFF    PRFF    PRFF    PRFF    PRFF    PRFF
+               1.0
+
+PRF SEG       IPRF     IPRF     IPRF      IPRF    IPRF    IPRF    IPRF    IPRF    IPRF
+                34
+
+SPR PLOT      SPRC     NSPR    NISPR
+                ON       31        3
+
+SPR DATE      SPRD     SPRD     SPRD     SPRD     SPRD    SPRD    SPRD    SPRD    SPRD
+             182.0    186.0    187.0    189.0    191.0   194.0   197.0   199.0   202.0
+             204.0    206.0    209.0    211.0    213.0   216.0   218.0   223.0   230.0
+             232.0    238.0    241.0    246.0    254.0   256.0   258.0   260.0   264.0
+             268.0    272.0    281.0    365.0
+
+SPR FREQ      SPRF     SPRF     SPRF      SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
+               4.0      1.0      2.0       2.0     3.0     3.0     2.0     3.0     2.0
+
+               2.0      3.0       2.0      2.0     3.0     2.0     5.0     7.0     2.0
+
+               6.0      3.0       5.0      8.0     2.0     2.0     2.0     4.0     4.0
+
+               4.0      9.0     84.0
+
+SPR SEG       ISPR     ISPR     ISPR      ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
+                11       21       31
+
+TSR PLOT      TSRC     NTSR
+                ON        1
+
+TSR DATE      TSRD     TSRD     TSRD      TSRD    TSRD    TSRD    TSRD    TSRD    TSRD
+               2.0
+
+TSR FREQ      TSRF     TSRF     TSRF      TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
+               1.0
+
+VPL PLOT      VPLC     NVPL
+               OFF        0
+
+VPL DATE      VPLD     VPLD     VPLD      VPLD    VPLD    VPLD    VPLD    VPLD    VPLD
+
+
+VPL FREQ      VPLF     VPLF     VPLF      VPLF    VPLF    VPLF    VPLF    VPLF    VPLF
+
+
+CPL PLOT      CPLC     NCPL
+               OFF        0
+
+CPL DATE      CPLD     CPLD     CPLD      CPLD    CPLD    CPLD    CPLD    CPLD    CPLD
+
+
+CPL FREQ      CPLF     CPLF     CPLF      CPLF    CPLF    CPLF    CPLF    CPLF    CPLF
+
+
+RESTART       RSOC     NRSO     RSIC
+               OFF        0      OFF
+
+RSO DATE      RSOD     RSOD     RSOD      RSOD    RSOD    RSOD    RSOD    RSOD    RSOD
+
+
+RSO FREQ      RSOF     RSOF     RSOF      RSOF    RSOF    RSOF    RSOF    RSOF    RSOF
+
+
+CST COMP       CCC     LIMC       SDC      CUF
+               OFF      OFF       OFF        3
+CST ACT        CAC      CAC       CAC      CAC     CAC     CAC     CAC     CAC     CAC
+               OFF      OFF       OFF      OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF       OFF      OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF       OFF
+
+CST ICON       C2I      C2I      C2I       C2I     C2I     C2I     C2I     C2I     C2I
+              30.0      2.0     10.0      51.0     0.7   2.022     1.0     0.1   0.001
+             0.002     0.14      1.0       0.0   11.91    31.0     0.0     0.0     0.0
+               0.0      0.1      0.0
+
+CST PRINT     CPRC     CPRC     CPRC      CPRC    CPRC    CPRC    CPRC    CPRC    CPRC
+               OFF      OFF      OFF       OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF       OFF     OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CIN CON      CINAC    CINAC    CINAC    CINAC    CINAC   CINAC   CINAC   CINAC   CINAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CTR CON      CTRAC    CTRAC    CTRAC    CTRAC    CTRAC   CTRAC   CTRAC   CTRAC   CTRAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CDT CON      CDTAC    CDTAC    CDTAC    CDTAC    CDTAC   CDTAC   CDTAC   CDTAC   CDTAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+CPR CON      CPRAC    CPRAC    CPRAC    CPRAC    CPRAC   CPRAC   CPRAC   CPRAC   CPRAC
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF      OFF      OFF     OFF     OFF     OFF     OFF
+               OFF      OFF      OFF
+
+EX COEF      EXH2O     EXSS     EXOM      BETA
+              0.45     0.01      0.1      0.45
+
+COLIFORM    COLQ10    COLDK
+              1.04      1.4
+
+S SOLIDS       SSS
+               1.0
+
+ALGAE           AG       AM       AE        AR      AS    ASAT    APOM
+               2.0     0.10     0.04      0.04    0.10   100.0    0.80
+
+ALG RATE       AT1      AT2      AT3       AT4     AK1     AK2     AK3     AK4
+               5.0     30.0     35.0      40.0     0.1    0.99    0.99     0.1
+
+DOM         LDOMDK     LRDK   RDOMDK
+              0.30    0.010    0.001
+
+POM         LPOMDK     POMS
+              0.08     0.30
+
+OM RATE       OMT1     OMT2     OMK1      OMK2
+               5.0     30.0      0.1      0.99
+
+SEDIMENT       SDK     FSOD
+              0.08      1.0
+
+S DEMAND       SOD      SOD       SOD      SOD     SOD     SOD     SOD     SOD     SOD
+1              0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3     0.3
+10             0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3     0.3
+19             0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3     0.3
+28             0.3      0.3       0.3      0.3     0.3     0.3     0.3     0.3
+CBOD          KBOD     TBOD     RBOD
+              0.25   1.0147     1.85
+
+PHOSPHOR      PO4R    PARTP     AHSP
+             0.015      1.2    0.003
+
+AMMONIUM      NH4R    NH4DK     AHSN
+              0.05     0.10    0.014
+
+NH4 RATE     NH4T1    NH4T2    NH4K1    NH4K2
+               5.0     25.0      0.1     0.99
+
+NITRATE      NO3DK
+              0.05
+
+NO3 RATE     NO3T1    NO3T2    NO3K1    NO3K2
+               5.0     25.0      0.1     0.99
+
+SED CO2       CO2R
+               0.1
+
+IRON           FER      FES
+               0.5      2.0
+
+STOICHMT     O2NH4     O2OM     O2AR      O2AG    BIOP   BION   BIOC
+              4.57      1.4      1.1       1.4   0.005   0.08   0.45
+
+O2 LIMIT     O2LIM
+              0.10
+
+BTH FILE...............................BTHFN....................................
+        bth.npt
+
+VPR FILE...............................VPRFN....................................
+        vpr.npt - not used
+
+LPR FILE...............................LPRFN....................................
+        lpr.npt - not used
+
+RSI FILE...............................RSIFN....................................
+        rsi.npt - not used
+
+MET FILE...............................METFN....................................
+        met.npt
+
+QWD FILE...............................QWDFN....................................
+        qwd.npt - not used
+
+ELO FILE...............................ELOFN....................................
+        elo.npt
+
+QIN FILE...............................QINFN....................................
+Br 1    qin_br1.npt
+
+TIN FILE...............................TINFN....................................
+Br 1    tin_br1.npt
+
+CIN FILE...............................CINFN....................................
+Br 1    cin_br1.npt - not used
+
+QOT FILE...............................QOTFN....................................
+Br 1    qot_br1.npt
+
+QTR FILE...............................QTRFN....................................
+Tr 1    qtr_tr1.npt
+
+TTR FILE...............................TTRFN....................................
+Tr 1    ttr_tr1.npt
+
+CTR FILE...............................CTRFN....................................
+Tr 1    ctr_br1.npt - not used
+
+QDT FILE...............................QDTFN....................................
+Br 1    qdt_br1.npt - not used
+
+TDT FILE...............................TDTFN....................................
+Br 1    tdt_br1.npt - not used
+
+CDT FILE...............................CDTFN....................................
+Br 1    cdt_br1.npt - not used
+
+PRE FILE...............................PREFN....................................
+Br 1    pre_br1.npt - not used
+
+TPR FILE...............................TPRFN....................................
+Br 1    tpr_br1.npt - not used
+
+CPR FILE...............................CPRFN....................................
+Br 1    cpr_br1.npt - not used
+
+EUH FILE...............................EUHFN....................................
+Br 1    euh_br1.npt - not used
+
+TUH FILE...............................TUHFN....................................
+Br 1    tuh_br1.npt - not used
+
+CUH FILE...............................CUHFN....................................
+Br 1    euh_br1.npt - not used
+
+EDH FILE...............................EDHFN....................................
+Br 1    edh_br1.npt - not used
+
+TDH FILE...............................TDHFN....................................
+Br 1    tdh_br1.npt - not used
+
+CDH FILE...............................CDHFN....................................
+Br 1    cdh_br1.npt - not used
+
+SNP FILE...............................SNPFN....................................
+        snp.opt
+
+TSR FILE...............................TSRFN....................................
+        tsr.opt
+
+PRF FILE...............................PRFFN....................................
+        prf.opt
+
+VPL FILE...............................VPLFN....................................
+        vpl.opt
+
+CPL FILE...............................CPLFN....................................
+        cpl.opt
+
+SPR FILE...............................SPRFN....................................
+        spr.opt
