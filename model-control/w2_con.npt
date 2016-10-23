@@ -45,7 +45,6 @@ WB 1          ON      ON
 BRANCH G      US      DS     UHS     DHS     UQB     DQB   NLMIN   SLOPE  SLOPEC
 Br 1           2      34       0       0       0       0       2 0.00000   0.000
  
-
 LOCATION     LAT    LONG    EBOT      BS      BE    JBDN
             46.6   117.4  185.01       1       1       1
 
@@ -214,13 +213,10 @@ SCR PRINT   SCRC    NSCR
 WB 1          ON       1
 
 SCR DATE    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD    SCRD
-           182.0   186.0   187.0   189.0   191.0   194.0   197.0   199.0   202.0
-           204.0   206.0   209.0   211.0   213.0   216.0   218.0   223.0   230.0
-           232.0   238.0   241.0   246.0   254.0   256.0   258.0   260.0   264.0
-           268.0   272.0   281.0   365.0
+						 1.5
 
 SCR FREQ    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF    SCRF
-             4.0     1.0     2.0     2.0     3.0     3.0     2.0     3.0     2.0
+             1.0
 
 PRF PLOT    PRFC    NPRF   NIPRF
               ON       1       1
@@ -245,11 +241,8 @@ SPR DATE    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD
 
 SPR FREQ    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
              4.0     1.0     2.0     2.0     3.0     3.0     2.0     3.0     2.0
-
              2.0     3.0     2.0     2.0     3.0     2.0     5.0     7.0     2.0
-
              6.0     3.0     5.0     8.0     2.0     2.0     2.0     4.0     4.0
-
              4.0     9.0     84.0
 
 SPR SEG     ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
@@ -269,14 +262,18 @@ CPL PLOT    CPLC    NCPL
 
 CPL DATE    CPLD    CPLD    CPLD    CPLD    CPLD    CPLD    CPLD    CPLD    CPLD
 
+
 CPL FREQ    CPLF    CPLF    CPLF    CPLF    CPLF    CPLF    CPLF    CPLF    CPLF
+
 
 FLUXES      FLXC    NFLX
 WB 1         OFF       1
 
 FLX DATE    FLXD    FLXD    FLXD    FLXD    FLXD    FLXD    FLXD    FLXD    FLXD
 
+
 FLX FREQ    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF
+
 
 TSR PLOT    TSRC    NTSR
              OFF       1
