@@ -16,7 +16,7 @@ GRID         NWB     NBR     IMX     KMX   NPROC  CLOSEC
                1       1      35      24       2     OFF
 
 IN/OUTFL     NTR     NST     NIW     NWD     NGT     NSP     NPI     NPU
-               1       1       0       2       0       1       0       0       
+               0       2       0       0       0       0       0       0       
 
 CONSTITU     NGC     NSS     NAL     NEP    NBOD     NMC     NZP
                0       0       0       0       0       0       0
@@ -316,10 +316,6 @@ CST COMP     CCC    LIMC     CUF
 
 CST ACTIVE   CAC
 TDS          OFF
-Gen1         OFF
-Gen2         OFF
-Gen3         OFF
-ISS1         OFF
 PO4          OFF
 NH4          OFF
 NO3          OFF
@@ -330,11 +326,9 @@ LDOM         OFF
 RDOM         OFF
 LPOM         OFF
 RPOM         OFF
-ALG1         OFF
 DO           OFF
 TIC          OFF
 ALK          OFF
-ZOO1         OFF
 LDOM_P       OFF
 RDOM_P       OFF
 LPOM_P       OFF
@@ -446,10 +440,6 @@ SODDK        OFF
 
 CST ICON   C2IWB   C2IWB   C2IWB   C2IWB   C2IWB   C2IWB   C2IWB   C2IWB   C2IWB
 TDS      51.0000
-Gen1     100.000
-Gen2     0.00000
-Gen3     10.0000
-ISS1     2.00000
 PO4      0.00100
 NH4      0.00200
 NO3      0.14000
@@ -460,11 +450,9 @@ LDOM     0.70000
 RDOM     2.02200
 LPOM     0.10000
 RPOM     0.00000
-ALG1     -1.0000
 DO       -1.0000
 TIC      11.9100
 ALK      31.0000
-ZOO1      0.1000
 LDOM_P    0.0005
 RDOM_P    0.0005
 LPOM_P    0.0005
@@ -476,10 +464,6 @@ RPOM_N    0.0080
 
 CST PRIN  CPRWBC  CPRWBC  CPRWBC  CPRWBC  CPRWBC  CPRWBC  CPRWBC  CPRWBC  CPRWBC
 TDS          OFF
-Gen1         OFF
-Gen2         OFF
-Gen3         OFF
-ISS1         OFF
 PO4          OFF
 NH4          OFF
 NO3          OFF
@@ -490,11 +474,9 @@ LDOM         OFF
 RDOM         OFF
 LPOM         OFF
 RPOM         OFF
-ALG1         OFF
 DO           OFF
 TIC          OFF
 ALK          OFF
-ZOO1         OFF
 LDOM_P       OFF
 RDOM_P       OFF
 LPOM_P       OFF
@@ -506,10 +488,6 @@ RPOM_N       OFF
 
 CIN CON   CINBRC  CINBRC  CINBRC  CINBRC  CINBRC  CINBRC  CINBRC  CINBRC  CINBRC
 TDS          OFF
-Gen1         OFF
-Gen2         OFF
-Gen3         OFF
-ISS1         OFF
 PO4          OFF
 NH4          OFF
 NO3          OFF
@@ -520,11 +498,9 @@ LDOM         OFF
 RDOM         OFF
 LPOM         OFF
 RPOM         OFF
-ALG1         OFF
 DO           OFF
 TIC          OFF
 ALK          OFF
-ZOO1         OFF
 LDOM_P       OFF
 RDOM_P       OFF
 LPOM_P       OFF
@@ -536,10 +512,6 @@ RPOM_N       OFF
 
 CTR CON   CTRTRC  CTRTRC  CTRTRC  CTRTRC  CTRTRC  CTRTRC  CTRTRC  CTRTRC  CTRTRC
 TDS          OFF
-Gen1         OFF
-Gen2         OFF
-Gen3         OFF
-ISS1         OFF
 PO4          OFF
 NH4          OFF
 NO3          OFF
@@ -550,11 +522,9 @@ LDOM         OFF
 RDOM         OFF
 LPOM         OFF
 RPOM         OFF
-ALG1         OFF
 DO           OFF
 TIC          OFF
 ALK          OFF
-ZOO1         OFF
 LDOM_P       OFF
 RDOM_P       OFF
 LPOM_P       OFF
@@ -566,10 +536,6 @@ RPOM_N       OFF
 
 CDT CON   CDTBRC  CDTBRC  CDTBRC  CDTBRC  CDTBRC  CDTBRC  CDTBRC  CDTBRC  CDTBRC
 TDS          OFF
-Gen1         OFF
-Gen2         OFF
-Gen3         OFF
-ISS1         OFF
 PO4          OFF
 NH4          OFF
 NO3          OFF
@@ -580,11 +546,9 @@ LDOM         OFF
 RDOM         OFF
 LPOM         OFF
 RPOM         OFF
-ALG1         OFF
 DO           OFF
 TIC          OFF
 ALK          OFF
-ZOO1         OFF
 LDOM_P       OFF
 RDOM_P       OFF
 LPOM_P       OFF
@@ -596,10 +560,6 @@ RPOM_N       OFF
 
 CPR CON   CPRBRC  CPRBRC  CPRBRC  CPRBRC  CPRBRC  CPRBRC  CPRBRC  CPRBRC  CPRBRC
 TDS          OFF
-Gen1         OFF
-Gen2         OFF
-Gen3         OFF
-ISS1         OFF
 PO4          OFF
 NH4          OFF
 NO3          OFF
@@ -610,11 +570,9 @@ LDOM         OFF
 RDOM         OFF
 LPOM         OFF
 RPOM         OFF
-ALG1         OFF
 DO           OFF
 TIC          OFF
 ALK          OFF
-ZOO1         OFF
 LDOM_P       OFF
 RDOM_P       OFF
 LPOM_P       OFF
@@ -781,6 +739,9 @@ SOD RATE   SODT1   SODT2   SODK1   SODK2
 
 
 S DEMAND     SOD     SOD     SOD     SOD     SOD     SOD     SOD     SOD     SOD
+
+
+
 
 
 REAERATION  TYPE    EQN#   COEF1   COEF2   COEF3   COEF4
