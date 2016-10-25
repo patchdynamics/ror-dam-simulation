@@ -76,16 +76,16 @@ EDDY VISC    AZC   AZSLC   AZMAX     FBC       E   ARODI STRCKLR BOUNDFR  TKECAL
 WB 1          W2     EXP  1.0E-4                                                
 
 N STRUC     NSTR 
-               2
+               0
 
 STR INT    STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC
 BR 1         OFF     OFF 
 
 STR TOP    KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR
-BR1           25       1  
+BR1           12       2  
 
 STR BOT    KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR
-BR1           34      15 
+BR1           23       8 
 
 STR SINK   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC
 BR1         LINE    LINE
