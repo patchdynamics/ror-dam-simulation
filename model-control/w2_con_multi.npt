@@ -13,7 +13,7 @@ TITLE C ...............................TITLE....................................
         
         
 GRID         NWB     NBR     IMX     KMX   NPROC  CLOSEC
-               1       1      35      24       2     OFF        
+               2       1      70      48       2     OFF        
 
 IN/OUTFL     NTR     NST     NIW     NWD     NGT     NSP     NPI     NPU
                0       2       0       0       0       0       0       0
@@ -44,6 +44,9 @@ WB 1          ON      ON
 
 BRANCH G      US      DS     UHS     DHS     UQB     DQB   NLMIN   SLOPE  SLOPEC
 BR1            2      34       0       0       0       0       2 0.00000 0.00000
+BR2            2      34       0       0       0       0       2 0.00000 0.00000
+BR3            2      34       0       0       0       0       2 0.00000 0.00000
+BR4            2      34       0       0       0       0       2 0.00000 0.00000
 
 LOCATION     LAT    LONG    EBOT      BS      BE    JBDN
 WB 1     46.6000 117.400 185.010       1       1       1
@@ -764,6 +767,7 @@ SHD FILE..................................SHDFN.................................
 
 BTH FILE..................................BTHFN.................................
 WB 1    bth.npt
+WB 2    bth.npt
 
 MET FILE..................................METFN.................................
 WB 1    met.npt
