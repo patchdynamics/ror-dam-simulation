@@ -1,0 +1,3 @@
+[submodule "meteorology/meteorology-util"]
+	path = meteorology/meteorology-util
+	url = git@github.com:patchdynamics/meteorology-util.git
