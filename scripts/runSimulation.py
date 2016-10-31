@@ -8,6 +8,7 @@ CONTROL_DIR = "/Users/ibush/Documents/Stanford/CS229/project/ror-dam-simulation/
 TOKENIZED_CON_FILE = CONTROL_DIR + "w2_con_tokenized.npt"
 CON_FILE = CONTROL_DIR + "w2_con.npt"
 TEMPERATURE_FILE = CONTROL_DIR + "spr.opt"
+QWO_FILE = CONTROL_DIR + "qwo_34.opt"
 # TODO: Correct these positions
 # gateStructs in form [ktstr, kbstr, estr, wstr]
 GATE_STRUCTS = np.array( [[2, 8, 220, 156],
@@ -18,8 +19,9 @@ def modifyControlFile(timeStart, timeEnd, year, restart, gatesOn):
     with open(CON_FILE, "w") as fout:
         with open(TOKENIZED_CON_FILE, "r") as fin:
             for line in fin:
+                line = line.replace("%RSIFN%", "rso"+str(int(np.ceil(timeStart)))+".opt")
                 line = line.replace("%QINFN%", "qin_br1.npt") #TODO: Will parameterize based on year
-                line = line.replace("%TINFN%", "tin_br1.npt") #TODO: Will parameterize based on year
+                line = line.replace("%TINFN%", "TIN" + str(year) +".npt")
                 line = line.replace("%METFN%", "met.npt") #TODO: Will parameterize based on year
                 line = line.replace("%TMSTRT%", str(timeStart).rjust(8))
                 line = line.replace("%TMEND_%", str(timeStart + timeStep).rjust(8))
@@ -46,9 +48,19 @@ def modifyControlFile(timeStart, timeEnd, year, restart, gatesOn):
 
                 fout.write(line)
 
-def getTemperatures():
-    sprOutputs = np.genfromtxt(TEMPERATURE_FILE, delimiter=",", skip_header=1)
-    return sprOutputs[:,4]
+def getReward(gatesOn):
+    temps = np.genfromtxt(TEMPERATURE_FILE, delimiter=",", skip_header=1, usecols = 4)
+    # TODO: This is for one dam, do the same for other dams
+    if gatesOn[0,1]:
+        powerStr = int(np.sum(gatesOn[0,:2]))
+        print powerStr
+        qPowerGate = np.genfromtxt(QWO_FILE, delimiter=",", skip_header=3, usecols=(1+powerStr))
+    else:
+        qPowerGate = 0
+    print temps
+    print qPowerGate
+    return qPowerGate - np.mean(temps) #TODO: Calculate a reward
+
 
 
 timeStart = 1
@@ -61,11 +73,13 @@ numGates = 3 # per dam
 gatesOn = np.zeros((numDams, numGates))
 gatesOn[0, 0] = 1
 gatesOn[0, 1] = 1
-gatesOn[1, 0] = 1
 
-modifyControlFile(timeStart, timeStart + timeStep, year, restart, gatesOn)
-path = os.getcwd()
-os.chdir(CE_QUAL_W2_PATH)
-subprocess.check_call(['wine', CE_QUAL_W2_EXE, CONTROL_DIR])
-os.chdir(path)
-print getTemperatures()
+for i in range(3):
+    modifyControlFile(timeStart, timeStart + timeStep, year, restart, gatesOn)
+    path = os.getcwd()
+    os.chdir(CE_QUAL_W2_PATH)
+    subprocess.check_call(['wine', CE_QUAL_W2_EXE, CONTROL_DIR])
+    os.chdir(path)
+    print getReward(gatesOn)
+    restart = True
+    timeStart = timeStart + timeStep

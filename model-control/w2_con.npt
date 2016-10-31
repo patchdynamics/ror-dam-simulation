@@ -25,7 +25,7 @@ MISCELL     NDAY SELECTC HABTATC ENVIRPC AERATEC INITUWL
              100     OFF     OFF     OFF     OFF     OFF
 
 TIME CON  TMSTRT   TMEND    YEAR
-               1       2    2015
+               2       3    2015
 
 DLT CON      NDT  DLTMIN DLTINTR
                1 1.00000     OFF
@@ -234,10 +234,10 @@ SPR PLOT    SPRC    NSPR   NISPR
 WB 1          ON       1       1
 
 SPR DATE    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD
-WB 1           2
+WB 1           3
 
 SPR FREQ    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
-WB 1         2.0
+WB 1         1.0
 
 SPR SEG     ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
 WB 1          34
@@ -288,22 +288,22 @@ WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1
 
 WITH DAT    WDOD    WDOD    WDOD    WDOD    WDOD    WDOD    WDOD    WDOD    WDOD
-         1.00000
+               3
 
 WITH FRE    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF
-         0.25000
+             1.0
 
 WITH SEG    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO
-              24
+              34
 
 RESTART     RSOC    NRSO    RSIC
-              ON       1     OFF
+              ON       1      ON
 
 RSO DATE    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD
-         1.00000
+               3
 
 RSO FREQ    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF
-         1.00000
+             1.0
 
 CST COMP     CCC    LIMC     CUF
              OFF     OFF       3
@@ -742,7 +742,7 @@ REAERATION  TYPE    EQN#   COEF1   COEF2   COEF3   COEF4
 WB 1                   0 0.00000 0.00000 0.00000 0.00000
 
 RSI FILE..................................RSIFN.................................
-        rsi.npt - not used
+        rso2.opt
 
 QWD FILE..................................QWDFN.................................
         qwd.npt - not used
@@ -775,7 +775,7 @@ QIN FILE..................................QINFN.................................
 BR1     qin_br1.npt
 
 TIN FILE..................................TINFN.................................
-BR1     tin_br1.npt
+BR1     TIN2015.npt
 
 CIN FILE..................................CINFN.................................
 BR1     cin_br1.npt
