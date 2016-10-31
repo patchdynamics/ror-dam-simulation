@@ -13,7 +13,7 @@ TITLE C ...............................TITLE....................................
         
         
 GRID         NWB     NBR     IMX     KMX   NPROC  CLOSEC
-               1       1      35      24       2     OFF        
+               1       1      35      24       2      ON        
 
 IN/OUTFL     NTR     NST     NIW     NWD     NGT     NSP     NPI     NPU
                0       2       0       0       0       0       0       0
@@ -25,7 +25,7 @@ MISCELL     NDAY SELECTC HABTATC ENVIRPC AERATEC INITUWL
              100     OFF     OFF     OFF     OFF     OFF
 
 TIME CON  TMSTRT   TMEND    YEAR
-         2.00000 365.000    2015
+         100.000 101.000    2015
 
 DLT CON      NDT  DLTMIN DLTINTR
                1 1.00000     OFF
@@ -300,7 +300,7 @@ WITH FRE    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF    WDOF
          0.25000
 
 WITH SEG    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO
-              24
+              34
 
 RESTART     RSOC    NRSO    RSIC
               ON       1     OFF
@@ -778,10 +778,10 @@ LPR FILE..................................LPRFN.................................
 WB 1    lpr.npt - not used
 
 QIN FILE..................................QINFN.................................
-BR1     qin_br1.npt
+BR1     qin.npt
 
 TIN FILE..................................TINFN.................................
-BR1     tin_br1.npt
+BR1     tin.npt
 
 CIN FILE..................................CINFN.................................
 BR1     cin_br1.npt
