@@ -25,7 +25,7 @@ MISCELL     NDAY SELECTC HABTATC ENVIRPC AERATEC INITUWL
              100     OFF     OFF     OFF     OFF     OFF
 
 TIME CON  TMSTRT   TMEND    YEAR
-          100.00  101.00    2015
+            2.00 100.000    2015
 
 DLT CON      NDT  DLTMIN DLTINTR
                1 1.00000     OFF
@@ -303,7 +303,7 @@ WITH SEG    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO
               34
 
 RESTART     RSOC    NRSO    RSIC
-              ON       1      ON
+              ON       1     OFF 
 
 RSO DATE    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD
          1.00000
