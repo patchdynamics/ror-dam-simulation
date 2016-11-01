@@ -3,6 +3,7 @@ advection = read.csv('Advection.2005.2015.csv')
 julian = advection$X + julian(as.Date('2005-01-01')) - 1
 out = month.day.year(julian)
 qin = advection$Clearwater + advection$Snake + advection$NFClearwater
+qin = qin * 0.0283168
 for (i in 1:11) {
   year = (2005:2015)[i]
   qin.year.q = qin[out$year == year]
