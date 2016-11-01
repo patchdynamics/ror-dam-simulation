@@ -1,3 +1,5 @@
+library(forecast)
+
 load('qclcd.2005.2015.Rdata')
 load('dswr.2005.2015.Rdata')
 load('clouds.2005.2015.Rdata')
@@ -29,8 +31,8 @@ df$Clouds = clouds[station.index,]/10
 df$Swr = dswr.2005.2015[station.index,]
 
 filename = 'met.npt'
-write(paste0('****************** Meteorology ****************'),
+write(paste0('$****************** Meteorology ****************'),
       file = filename, append=FALSE)
 write(paste0(''), file = filename, append=TRUE)
 write('JDAY,TAIR,TDEW,WIND,PHI,CLOUD,Solar,',  file = filename, append=TRUE)
-write.table(formatted.df, file = filename, append = TRUE, sep=',', col.name=FALSE, quote=FALSE, row.names=FALSE)
+write.table(df, file = filename, append = TRUE, sep=',', col.name=FALSE, quote=FALSE, row.names=FALSE)
