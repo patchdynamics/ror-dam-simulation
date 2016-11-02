@@ -19,7 +19,7 @@ for(project in projects){
     date = cbind(date, index(data))
   }
 }
-powerhouse.and.spill = data.frame(Powerhouse = powerhouse, Spill=spill, Date=date)
+powerhouse.and.spill = data.frame(Powerhouse = powerhouse * 0.0283168, Spill=spill * 0.0283168, Date=date)
 
 plot(powerhouse.and.spill$Spill, typ='l')
 lines(powerhouse.and.spill$Powerhouse, col='blue')
