@@ -30,9 +30,18 @@ df$Clouds = clouds[station.index,]/10
 
 df$Swr = dswr.2005.2015[station.index,]
 
-filename = 'met.npt'
-write(paste0('$****************** Meteorology ****************'),
+julian = df[,1] + julian(as.Date('2005-01-01')) - 1
+out = month.day.year(julian)
+df$Year = out$year
+
+for( i in 2005:2015 ){
+  filename = paste0('met',i,'.npt')
+  write(paste0('$****************** Meteorology ****************'),
       file = filename, append=FALSE)
-write(paste0(''), file = filename, append=TRUE)
-write('JDAY,TAIR,TDEW,WIND,PHI,CLOUD,Solar,',  file = filename, append=TRUE)
-write.table(df, file = filename, append = TRUE, sep=',', col.name=FALSE, quote=FALSE, row.names=FALSE)
+  write(paste0(''), file = filename, append=TRUE)
+  write('JDAY,TAIR,TDEW,WIND,PHI,CLOUD,Solar,',  file = filename, append=TRUE)
+  df.year = filter(df, Year == i)
+  df.year$Day = julian[out$year == i] - julian(as.Date(paste0(i,'-01-01'))) + 1
+  df.year = df.year[c("Day", "AirTemperature", "Dewpoint", 'Wind', 'WindDirection', 'Clouds', 'Swr')]
+  write.table(df.year, file = filename, append = TRUE, sep=',', col.name=FALSE, quote=FALSE, row.names=FALSE)
+}
