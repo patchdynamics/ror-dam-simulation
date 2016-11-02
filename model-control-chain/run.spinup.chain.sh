@@ -14,6 +14,7 @@ cp *.opt inputs/spinup/2015
 
 
 cd ../wb2
+pwd
 cp inputs/control/2015spinup.npt w2_con.npt
 set +e
 \rm *.opt
@@ -27,6 +28,7 @@ cp *.opt inputs/spinup/2015
 
 
 cd ../wb3
+pwd
 cp inputs/control/2015spinup.npt w2_con.npt
 set +e
 \rm *.opt
