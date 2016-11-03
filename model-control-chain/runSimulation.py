@@ -11,7 +11,7 @@ CON_FILE = "w2_con.npt"
 TEMPERATURE_FILE = "spr.opt"
 QWO_FILE = "qwo_34.opt"
 QOUT_FILE = "qot_br1.npt"
-RSI_FILE = "rso60.opt"
+RSI_FILE = "rso%STEP%.opt"
 CHAINING_FILE = CONTROL_DIR + "scripts/propagate.flow.sh"
 
 #TODO: Remove these parameters from the control file
@@ -19,7 +19,7 @@ def modifyControlFile(fileDir, timeStart, timeEnd, year):
     with open(fileDir + CON_FILE, "w") as fout:
         with open(fileDir + "inputs/control/" + TOKENIZED_CON_FILE, "r") as fin:
             for line in fin:
-                line = line.replace("%RSIFN%", RSI_FILE)
+                line = line.replace("%RSIFN%", RSI_FILE.replace("%STEP%", str(timeStart)))
                 line = line.replace("%QINFN%", "qin.npt")
                 line = line.replace("%TINFN%", "tin.npt")
                 line = line.replace("%METFN%", "met.npt")
