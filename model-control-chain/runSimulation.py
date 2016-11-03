@@ -29,7 +29,7 @@ def modifyControlFile(fileDir, timeStart, timeEnd, year):
                 fout.write(line)
 
 def setAction(fileDir, timeStart, gatesOn, wb):
-    line = str(timeStart).rjust(8)
+    line = str(timeStart+1).rjust(8)
     line += str( 1000 if gatesOn[wb][0] else 0 ).rjust(8) #TODO: How much output for "on"
     line += str( 1000 if gatesOn[wb][1] else 0 ).rjust(8)
     line += "\n"
@@ -64,7 +64,7 @@ timeStart = 60
 timeStep = 1
 year = 2015
 
-numDams = 3
+numDams = 4
 numGates = 3 # per dam
 gatesOn = np.zeros((numDams, numGates))
 gatesOn[0, 0] = 1
@@ -72,7 +72,7 @@ gatesOn[0, 1] = 1
 gatesOn[1, 0] = 1
 
 copyInYearFiles(year, numDams)
-for i in range(3):
+for i in range(30):
 
     for wb in range(numDams):
         wbDir = CONTROL_DIR + "wb" + str(wb + 1) + "/"
