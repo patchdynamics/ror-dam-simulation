@@ -1,7 +1,7 @@
   PSU W2 Model Version 3.7
 
 TITLE C ...............................TITLE....................................
-        Lower Granite (RM 107-140) - Jan.1 to Dec.31, 1992
+        Lower Granite (RM 107-140) 
         Evenly distributed Clr,Sna inflow, line sink outflow
         Default hydraulic coefficients
         Default light absorption/extinction coefficients
@@ -82,7 +82,7 @@ STR INT    STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC
 BR 1         OFF     OFF
 
 STR TOP    KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR
-BR1           12       2
+BR1           12       2    
 
 STR BOT    KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR   KBSTR
 BR1           23       8
@@ -91,10 +91,10 @@ STR SINK   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC
 BR1         LINE    LINE
 
 STR ELEV    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR
-BR1          202     220
+BR1          202     220    
 
 STR WIDT    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR
-BR1          168     156
+BR1          168     156    
 
 PIPES       IUPI    IDPI    EUPI    EDPI     WPI   DLXPI     FPI  FMINPI   WTHLC DYNPIPE
 
@@ -237,7 +237,7 @@ SPR DATE    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD
 WB 1         1.0
 
 SPR FREQ    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
-WB 1         1.0
+WB 1        0.25
 
 SPR SEG     ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
 WB 1          34
@@ -270,19 +270,19 @@ FLX FREQ    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF
 WB 1     0.00000
 
 TSR PLOT    TSRC    NTSR   NITSR
-             OFF       1       0
+              ON       1       0
 
 TSR DATE    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD
-         0.00000
+             0.0
 
 TSR FREQ    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
-         0.00000
+             0.0
 
 TSR SEG     ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR
         
 
 TSR LAYE    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR
-        
+
 
 WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1
@@ -742,7 +742,7 @@ REAERATION  TYPE    EQN#   COEF1   COEF2   COEF3   COEF4
 WB 1                   0 0.00000 0.00000 0.00000 0.00000
 
 RSI FILE..................................RSIFN.................................
-        %RSIFN%
+        rso60.opt
 
 QWD FILE..................................QWDFN.................................
         qwd.npt - not used
@@ -760,7 +760,7 @@ BTH FILE..................................BTHFN.................................
 WB 1    bth.npt
 
 MET FILE..................................METFN.................................
-WB 1    %METFN%
+WB 1    met.npt
 
 EXT FILE..................................EXTFN.................................
 WB 1    ext_1.npt - not used
@@ -772,10 +772,10 @@ LPR FILE..................................LPRFN.................................
 WB 1    lpr.npt - not used
 
 QIN FILE..................................QINFN.................................
-BR1     %QINFN%
+BR1     qin.npt
 
 TIN FILE..................................TINFN.................................
-BR1     %TINFN%
+BR1     tin.npt
 
 CIN FILE..................................CINFN.................................
 BR1     cin_br1.npt
