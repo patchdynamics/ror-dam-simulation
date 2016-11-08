@@ -1,4 +1,5 @@
 cd wb1
+pwd
 set +e
 \rm *.opt
 set -e
@@ -42,6 +43,7 @@ cp *.opt inputs/spinup/2015
 
 
 cd ../wb4
+pwd
 cp inputs/control/2015spinup.npt w2_con.npt
 cp inputs/met2015.npt met.npt
 set +e

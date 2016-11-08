@@ -2,6 +2,7 @@ import numpy as np
 import subprocess
 import os
 from shutil import copyfile
+import struct
 
 PROJECT_DIR = "../" #ror-dam-simulation directory
 CE_QUAL_W2_EXE = "../../bin/w2_ivf32_v372.exe"
@@ -30,8 +31,8 @@ def modifyControlFile(fileDir, timeStart, timeEnd, year):
 
 def setAction(fileDir, timeStart, gatesOn, wb):
     line = str(timeStart+1).rjust(8)
-    line += str( 1000 if gatesOn[wb][0] else 0 ).rjust(8) #TODO: How much output for "on"
-    line += str( 1000 if gatesOn[wb][1] else 0 ).rjust(8)
+    line += str(  500 if gatesOn[wb][0] else 0 ).rjust(8) #TODO: How much output for "on"
+    line += str(  500 if gatesOn[wb][1] else 0 ).rjust(8)
     line += "\n"
     with open(fileDir + QOUT_FILE, "a") as f:
         f.write(line)
@@ -60,6 +61,16 @@ def copyInYearFiles(year, numDams):
             if os.path.isfile(filename):
                 copyfile( filename , CONTROL_DIR + "wb" + str(wb) + "/" + f)
 
+def getState(year, day):
+    # Get QIN/TIN for today on Dam 1
+    fieldwidths = (8, 8)  
+
+
+    # Read last QIN/TIN for each of Dams 2-4
+    # Weather Judgement
+    # Water Level
+    # Output Structure +/- 65 F / 16 C
+
 timeStart = 60
 timeStep = 1
 year = 2015
@@ -72,7 +83,7 @@ gatesOn[0, 1] = 1
 gatesOn[1, 0] = 1
 
 copyInYearFiles(year, numDams)
-for i in range(30):
+for i in range(300):
 
     for wb in range(numDams):
         wbDir = CONTROL_DIR + "wb" + str(wb + 1) + "/"

@@ -25,7 +25,7 @@ MISCELL     NDAY SELECTC HABTATC ENVIRPC AERATEC INITUWL
              100     OFF     OFF     OFF     OFF     OFF
 
 TIME CON  TMSTRT   TMEND    YEAR
-            2.00 100.000    2015
+            1.00  60.000    %%%% 
 
 DLT CON      NDT  DLTMIN DLTINTR
                1 1.00000     OFF
