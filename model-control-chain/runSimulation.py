@@ -86,9 +86,16 @@ def copyInYearFiles(year, numDams):
 def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
-# TODO: Real state function here
-def getState(timeStart, year):
-    return np.random.randint(2, size=25)
+def getState(timeStart, year, actionInds, numActions):
+    state = np.random.randint(2, size=25) # TODO: Real state function here
+
+    numDams = actionInds.shape[0]
+    gateState = np.zeros((numDams, numActions)) #numDams x numActions
+    for i in range(numDams):
+        gateState[i, actionInds.astype(int)[i]] = 1
+
+    state = np.append(state, gateState.flatten())
+    return state
 
 def getAction(state, weights, possibleActions):
     if random.random() < EPSILON_GREEDY:
@@ -115,29 +122,32 @@ def calculateQopt(state, actionInd, weights):
     return weights.flatten().dot(features.flatten())
 
 # TODO: Add regularization?
-def updateWeights(state, actionInd, reward, nextState, weights, possibleActions):
-    features = getFeatures(state, actionInd, weights.shape)
-    [nextAction, Vopt] = getBestAction(nextState, weights, possibleActions)
-    error = calculateQopt(state, actionInd, weights) - (reward + FUTURE_DISCOUNT * Vopt)
-    return weights - STEP_SIZE * error * features
+def updateWeights(state, actionInds, reward, nextState, weights, possibleActions):
+    for i in range(numDams):
+        features = getFeatures(state, actionInds[i], weights[i].shape)
+        [nextAction, Vopt] = getBestAction(nextState, weights[i], possibleActions)
+        error = calculateQopt(state, actionInds[i], weights[i]) - (reward + FUTURE_DISCOUNT * Vopt)
+        weights[i] = weights[i] - STEP_SIZE * error * features
+    return weights
 
 
 timeStart = 60
 timeStep = 1
 year = 2015
-
 numDams = 4
-numGates = 3 # per dam
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
-state = getState(timeStart, year)
-weights = np.zeros((state.shape[0], possibleActions.shape[0]))
+state = getState(timeStart, year, np.zeros(numDams), possibleActions.shape[0])
+weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
 for i in range(3):
-    actionInd = getAction(state, weights, possibleActions)
-    action = possibleActions[actionInd]
 
+    actionInds = np.zeros(numDams)
     for wb in range(numDams):
+        actionInd = getAction(state, weights[wb], possibleActions)
+        actionInds[wb] = actionInd
+        action = possibleActions[actionInd]
+
         wbDir = CONTROL_DIR + "wb" + str(wb + 1) + "/"
         modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
         setAction(wbDir, timeStart, action, wb) # TODO: Different actions for different dams
@@ -149,8 +159,8 @@ for i in range(3):
             subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
 
     reward = getReward(numDams)
-    nextState = getState(timeStart + timeStep, year)
-    weights = updateWeights(state, actionInd, reward, nextState, weights, possibleActions)
+    nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
+    weights = updateWeights(state, actionInds, reward, nextState, weights, possibleActions)
 
     timeStart = timeStart + timeStep
     state = nextState
