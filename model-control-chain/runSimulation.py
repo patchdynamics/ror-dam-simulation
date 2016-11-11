@@ -91,12 +91,41 @@ def calculatePossibleActions():
 
 # TODO: Real state function here
 def getState(timeStart, year):
-    # Get QIN/TIN for today on Dam 1
-    fieldwidths = (8, 8)  
 
+    wbQIN = np.empty([numDams,2])
+    wbTIN = np.empty([numDams,2])
+
+    # Get QIN/TIN for today on Dam 1
+    wbiQIN= np.loadtxt('wb1/qin.npt', skiprows=3)
+    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==timeStart)]
+    wbiTIN= np.loadtxt('wb1/tin.npt', skiprows=3)
+    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==timeStart)] 
 
     # Read last QIN/TIN for each of Dams 2-4
+    for f in range(2, numDams+1):
+        wbiQIN = np.loadtxt('wb'+str(f)+'/qwo_34.opt', skiprows=3)
+        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),[0,1]]
+        wbiTIN = np.loadtxt('wb'+str(f)+'/two_34.opt', skiprows=3)
+        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),[0,1]]
+
     # Weather Judgement
+    # Read in next week of weather
+    # Average and noise it
+    # this is a 'fake forecast'
+    for f in range(2, numDams+1):
+        met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3)
+        nextFive = np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timestart+5))
+
+    met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3, delimiter=',')
+    futureDays = 5
+    future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
+    average = sum(future)/futureDays        
+    airTempForecast = np.random.normal(average[1], scale=2)
+    airTempJudgement = int(airTempForecast > 65)
+    solarFluxForecast = np.random.normal(average[6], scale=50)
+    solarFluxJudgement = int(solarFluxForecast > 300)
+
+
     # Water Level
     # Output Structure +/- 65 F / 16 C
     return np.random.randint(2, size=25)
