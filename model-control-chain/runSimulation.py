@@ -90,7 +90,7 @@ def copyInYearFiles(year, numDams):
 def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
-def getState(timeStart, year):
+def getState(timeStart, year, actionInds, numActions):
 
     wbQIN = np.empty([numDams,1])
     wbTIN = np.empty([numDams,1])
@@ -170,8 +170,6 @@ def getState(timeStart, year):
     stateArray = np.append(stateArray, wbQINindicators)
     stateArray = np.append(stateArray, wbTINindicators)
 
-
-    numDams = actionInds.shape[0]
     gateState = np.zeros((numDams, numActions)) #numDams x numActions
     for i in range(numDams):
         gateState[i, actionInds.astype(int)[i]] = 1
@@ -221,7 +219,7 @@ numDams = 4
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
-state = getState(timeStart, year, [4,4,4,4], possibleActions.shape[0])
+state = getState(timeStart, year, np.array([4,4,4,4]), possibleActions.shape[0])
 weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
 for i in range(3):
     actionInds = np.zeros(numDams)
