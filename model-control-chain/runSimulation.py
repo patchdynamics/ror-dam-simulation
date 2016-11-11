@@ -31,7 +31,7 @@ POWERHOUSE_OUTFLOWS = [0, 600, 1200]
 HYPOLIMNAL_OUTFLOWS = [0, 500]
 
 # Reward parameters
-MIN_ELEVATION = 200
+MIN_ELEVATION = 220
 MAX_ELEVATION = 225
 
 def modifyControlFile(fileDir, timeStart, timeEnd, year):
@@ -156,8 +156,8 @@ def getState(timeStart, year, actionInds, numActions):
             elevations = x
             break
     elevation = elevations[33]
-    elevationHigh = int(elevation > 224)
-    elevationLow = int(elevation < 222)
+    elevationHigh = int(elevation > MAX_ELEVATION)
+    elevationLow = int(elevation < MIN_ELEVATION)
 
     # Output Structure +/- 65 F / 16 C
     seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
@@ -213,9 +213,9 @@ def updateWeights(state, actionInds, reward, nextState, weights, possibleActions
 
 
 timeStart = 60
-timeStep = 1
+timeStep = 215
 year = 2015
-numDams = 4
+numDams = 1
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
