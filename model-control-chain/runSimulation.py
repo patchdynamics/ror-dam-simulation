@@ -1,7 +1,9 @@
+#!/usr/bin/python
 import numpy as np
 import subprocess
 import os
 from shutil import copyfile
+import struct
 from sklearn.utils.extmath import cartesian
 import random
 import re
@@ -14,6 +16,7 @@ CON_FILE = "w2_con.npt"
 TEMPERATURE_FILE = "spr.opt"
 QWO_FILE = "qwo_34.opt"
 QOUT_FILE = "qot_br1.npt"
+RSI_FILE = "rso%STEP%.opt"
 CHAINING_FILE = CONTROL_DIR + "scripts/propagate.flow.sh"
 ELEVATION_FILE = "wl.opt"
 
@@ -35,8 +38,9 @@ def modifyControlFile(fileDir, timeStart, timeEnd, year):
     with open(fileDir + CON_FILE, "w") as fout:
         with open(fileDir + "inputs/control/" + TOKENIZED_CON_FILE, "r") as fin:
             for line in fin:
+                line = line.replace("%RSIFN%", RSI_FILE.replace("%STEP%", str(timeStart)))
                 line = line.replace("%TMSTRT%", str(timeStart).rjust(8))
-                line = line.replace("%TMEND_%", str(timeStart + timeStep).rjust(8))
+                line = line.replace("%TMEND_%", str(timeEnd).rjust(8))
                 line = line.replace("%YEAR__%", str(year).rjust(8))
                 fout.write(line)
 
@@ -86,16 +90,95 @@ def copyInYearFiles(year, numDams):
 def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
-def getState(timeStart, year, actionInds, numActions):
-    state = np.random.randint(2, size=25) # TODO: Real state function here
+def getState(timeStart, year):
+
+    wbQIN = np.empty([numDams,1])
+    wbTIN = np.empty([numDams,1])
+
+    # Get QIN/TIN for today on Dam 1
+    wbiQIN= np.loadtxt('wb1/qin.npt', skiprows=3)
+    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
+    wbiTIN= np.loadtxt('wb1/tin.npt', skiprows=3)
+    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1] 
+
+    # Read last QIN/TIN for each of Dams 2-4
+    for f in range(2, numDams+1):
+        wbiQIN = np.loadtxt('wb'+str(f)+'/qwo_34.opt', skiprows=3)
+        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
+        wbiTIN = np.loadtxt('wb'+str(f)+'/two_34.opt', skiprows=3)
+        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
+
+    wbQINindicators = np.empty([numDams,6])
+    wbTINindicators = np.empty([numDams,6])
+    for f in range(0, numDams):
+        wbQINindicators[f,0] = int(wbQIN[f] <= 700) 
+        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] < 900)
+        wbQINindicators[f,2] = int(wbQIN[f] > 900  and wbQIN[f] < 1100)
+        wbQINindicators[f,3] = int(wbQIN[f] > 1100  and wbQIN[f] < 1300)
+        wbQINindicators[f,4] = int(wbQIN[f] > 1300  and wbQIN[f] < 1500)
+        wbQINindicators[f,5] = int(wbQIN[f] > 1500)
+        wbTINindicators[f,0] = int(wbTIN[f] <= 12)
+        wbTINindicators[f,1] = int(wbTIN[f] > 12 and wbTIN[f] <= 14)
+        wbTINindicators[f,2] = int(wbTIN[f] > 14 and wbTIN[f] <= 16) 
+        wbTINindicators[f,3] = int(wbTIN[f] > 16 and wbTIN[f] <= 18) 
+        wbTINindicators[f,4] = int(wbTIN[f] > 18 and wbTIN[f] <= 20)
+        wbTINindicators[f,5] = int(wbTIN[f] > 20)
+    #print(wbQINindicators)
+    #print(wbTINindicators)
+
+    # Weather Judgement
+    # Read in next week of weather
+    # Average and noise it
+    # this is a 'fake forecast', and we will only use the first one for now
+    weatherJudgements = np.empty([numDams,2])
+    futureDays = 5
+    for f in range(1, numDams+1):
+        met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3, delimiter=',')
+        future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
+        average = sum(future)/futureDays        
+        airTempForecast = np.random.normal(average[1], scale=2)
+        airTempJudgement = int(airTempForecast > 65)
+        solarFluxForecast = np.random.normal(average[6], scale=50)
+        solarFluxJudgement = int(solarFluxForecast > 300)
+        weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
+
+
+    # Water Level
+    ## Need to redo spinup so the starting wl is present
+    fl = open('wb'+str(f)+'/wl.opt')
+    data = fl.read()
+    rec = np.recfromcsv(data.splitlines())
+    elevations = None
+    for x in rec:
+        # Fix this later, basically the last record isn't the next timeStart, 
+        # just use last record for now, but really should match time somehow
+        #    if np.floor(x[0]) == timeStart:
+            elevations = x
+            break
+    elevation = elevations[33]
+    elevationHigh = int(elevation > 224)
+    elevationLow = int(elevation < 222)
+
+    # Output Structure +/- 65 F / 16 C
+    seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
+    temp220 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][1,1] > 65)
+    temp202 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][11,1] > 65)
+    temp191 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][17,1] > 65)
+
+    # Construct State Array
+    stateArray = [temp220, temp202, temp191, elevationHigh, elevationLow, weatherJudgements[0,0]]
+    stateArray = np.append(stateArray, wbQINindicators)
+    stateArray = np.append(stateArray, wbTINindicators)
+
 
     numDams = actionInds.shape[0]
     gateState = np.zeros((numDams, numActions)) #numDams x numActions
     for i in range(numDams):
         gateState[i, actionInds.astype(int)[i]] = 1
 
-    state = np.append(state, gateState.flatten())
-    return state
+    stateArray = np.append(stateArray, gateState.flatten())
+
+    return stateArray
 
 def getAction(state, weights, possibleActions):
     if random.random() < EPSILON_GREEDY:
@@ -138,10 +221,9 @@ numDams = 4
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
-state = getState(timeStart, year, np.zeros(numDams), possibleActions.shape[0])
+state = getState(timeStart, year, [4,4,4,4], possibleActions.shape[0])
 weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
 for i in range(3):
-
     actionInds = np.zeros(numDams)
     for wb in range(numDams):
         actionInd = getAction(state, weights[wb], possibleActions)

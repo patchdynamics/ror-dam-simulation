@@ -3,6 +3,7 @@ tin.npt
 qot.npt
 /*.opt
 W2Linkage1.w2l
-qot_br1.npt
+/qot_br1.npt
 w2_con.npt
-met.npt
+/met.npt
+w2.err

@@ -17,7 +17,7 @@ run.model()
 	#cp *.opt outputs/$1/$YEAR/$DAY
 	if [ -n $2 ]
 	then
-		cut -c 1-16 $1/qwo_34.opt > $2/qin.npt   # process q and t output into input for next water body
+		cut -c 1-16 $1/qwo_34.opt > $2/qin.npt
 		cut -c 1-16 $1/two_34.opt > $2/tin.npt
 	fi
 }

@@ -25,7 +25,7 @@ MISCELL     NDAY SELECTC HABTATC ENVIRPC AERATEC INITUWL
              100     OFF     OFF     OFF     OFF     OFF
 
 TIME CON  TMSTRT   TMEND    YEAR
-            2.00 100.000    2015
+            1.00  60.000    %%%% 
 
 DLT CON      NDT  DLTMIN DLTINTR
                1 1.00000     OFF
@@ -231,22 +231,16 @@ PRF SEG     IPRF    IPRF    IPRF    IPRF    IPRF    IPRF    IPRF    IPRF    IPRF
 WB 1          34
 
 SPR PLOT    SPRC    NSPR   NISPR
-WB 1          ON      31       3
+WB 1          ON       1       1
 
 SPR DATE    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD
-WB 1     182.000 186.000 187.000 189.000 191.000 194.000 197.000 199.000 202.000
-         204.000 206.000 209.000 211.000 213.000 216.000 218.000 223.000 230.000
-         232.000 238.000 241.000 246.000 254.000 256.000 258.000 260.000 264.000
-         268.000 272.000 281.000 365.000
+WB 1	 			 1.0 
 
 SPR FREQ    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
-WB 1     4.00000 1.00000 2.00000 2.00000 3.00000 3.00000 2.00000 3.00000 2.00000
-         2.00000 3.00000 2.00000 2.00000 3.00000 2.00000 5.00000 7.00000 2.00000
-         6.00000 3.00000 5.00000 8.00000 2.00000 2.00000 2.00000 4.00000 4.00000
-         4.00000 9.00000 84.0000 0.00000
+WB 1        0.25
 
 SPR SEG     ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
-WB 1          11      21      31
+WB 1          34
 
 VPL PLOT    VPLC    NVPL
 WB 1         OFF       0
@@ -276,19 +270,19 @@ FLX FREQ    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF
 WB 1     0.00000
 
 TSR PLOT    TSRC    NTSR   NITSR
-             OFF       1       0
+              ON       1       0
 
 TSR DATE    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD
-         0.00000
+             1.0
 
 TSR FREQ    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
-         0.00000
+             .25 
 
 TSR SEG     ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR
-        
+							34 
 
 TSR LAYE    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR
-        
+							23
 
 WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1
