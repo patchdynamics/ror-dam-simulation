@@ -273,16 +273,16 @@ TSR PLOT    TSRC    NTSR   NITSR
               ON       1       0
 
 TSR DATE    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD
-             0.0
+             1.0
 
 TSR FREQ    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
-             0.0
+             .25 
 
 TSR SEG     ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR
-        
+							34 
 
 TSR LAYE    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR
-
+							23
 
 WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1
@@ -742,7 +742,7 @@ REAERATION  TYPE    EQN#   COEF1   COEF2   COEF3   COEF4
 WB 1                   0 0.00000 0.00000 0.00000 0.00000
 
 RSI FILE..................................RSIFN.................................
-        rso60.opt
+        %RSIFN%
 
 QWD FILE..................................QWDFN.................................
         qwd.npt - not used

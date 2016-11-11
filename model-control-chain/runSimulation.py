@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import numpy as np
 import subprocess
 import os
@@ -126,7 +127,17 @@ def getState(timeStart, year):
 
 
     # Water Level
-    # Output Structure +/- 65 F / 16 C
+    # Need to redo spinup so the starting wl is present
+    #data = file.read()
+    #rec = np.recfromcsv(data.splitlines())
+    #elevations = None
+    #for x in rec:
+    #    if np.floor(x[0]) == timeStart:
+    #        elevations = x
+    #        break
+    #elevation = elevations[33]
+
+   # Output Structure +/- 65 F / 16 C
     return np.random.randint(2, size=25)
 
 def getAction(state, weights, possibleActions):
