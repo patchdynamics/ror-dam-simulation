@@ -57,7 +57,7 @@ def getReward(numDams):
     for i in range(1, numDams+1):
         wlFile = CONTROL_DIR + "wb" + str(i) + "/" + ELEVATION_FILE
         elevations = np.genfromtxt(wlFile, delimiter=",")
-        elevation = np.mean(elevations[-1,1:-1])
+        elevation = elevations[-1,33]
         if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
             return -1
     return 0
@@ -142,31 +142,28 @@ def getState(timeStart, year, actionInds, numActions):
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
+    elevationJudgements = np.empty([numDams,2])
+    temperatureJudgements = np.empty([numDams,3])
+    for f in range(1, numDams+1):
+        # Water Level
+        wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
+        elevations = np.genfromtxt(wlFile, delimiter=",")
+        elevation = elevations[-1,33]
+        elevationHigh = int(elevation > MAX_ELEVATION)
+        elevationLow = int(elevation < MIN_ELEVATION)
+        elevationJudgements[f-1] = [elevationHigh, elevationLow]
 
-    # Water Level
-    ## Need to redo spinup so the starting wl is present
-    fl = open('wb'+str(f)+'/wl.opt')
-    data = fl.read()
-    rec = np.recfromcsv(data.splitlines())
-    elevations = None
-    for x in rec:
-        # Fix this later, basically the last record isn't the next timeStart, 
-        # just use last record for now, but really should match time somehow
-        #    if np.floor(x[0]) == timeStart:
-            elevations = x
-            break
-    elevation = elevations[33]
-    elevationHigh = int(elevation > MAX_ELEVATION)
-    elevationLow = int(elevation < MIN_ELEVATION)
-
-    # Output Structure +/- 65 F / 16 C
-    seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
-    temp220 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][1,1] > 65)
-    temp202 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][11,1] > 65)
-    temp191 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][17,1] > 65)
+        # Output Structure +/- 65 F / 16 C
+        seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
+        temp220 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][seg34[0,:].size - 15,1] > 65)
+        temp202 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][seg34[0,:].size - 11,1] > 65)
+        temp191 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][seg34[0,:].size - 6 ,1] > 65)
+        temperatureJudgements[f-1] = [temp220, temp202, temp191]
 
     # Construct State Array
-    stateArray = [temp220, temp202, temp191, elevationHigh, elevationLow, weatherJudgements[0,0]]
+    stateArray = [weatherJudgements[0,0]]
+    stateArray = np.append(stateArray, elevationJudgements.flatten())
+    stateArray = np.append(stateArray, temperatureJudgements.flatten())
     stateArray = np.append(stateArray, wbQINindicators)
     stateArray = np.append(stateArray, wbTINindicators)
 
@@ -175,7 +172,7 @@ def getState(timeStart, year, actionInds, numActions):
         gateState[i, actionInds.astype(int)[i]] = 1
 
     stateArray = np.append(stateArray, gateState.flatten())
-
+    print(stateArray)
     return stateArray
 
 def getAction(state, weights, possibleActions):
@@ -213,15 +210,16 @@ def updateWeights(state, actionInds, reward, nextState, weights, possibleActions
 
 
 timeStart = 60
-timeStep = 215
+timeStep = 1
 year = 2015
-numDams = 1
+numDams = 4
+numDays = 10
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
 state = getState(timeStart, year, np.array([4,4,4,4]), possibleActions.shape[0])
 weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
-for i in range(3):
+for i in range(numDays):
     actionInds = np.zeros(numDams)
     for wb in range(numDams):
         actionInd = getAction(state, weights[wb], possibleActions)
