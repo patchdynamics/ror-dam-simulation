@@ -111,19 +111,18 @@ def getState(timeStart, year):
     # Weather Judgement
     # Read in next week of weather
     # Average and noise it
-    # this is a 'fake forecast'
-    for f in range(2, numDams+1):
-        met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3)
-        nextFive = np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timestart+5))
-
-    met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3, delimiter=',')
+    # this is a 'fake forecast', and we will only use the first one for now
+    weatherJudgements = np.empty([numDams,2])
     futureDays = 5
-    future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
-    average = sum(future)/futureDays        
-    airTempForecast = np.random.normal(average[1], scale=2)
-    airTempJudgement = int(airTempForecast > 65)
-    solarFluxForecast = np.random.normal(average[6], scale=50)
-    solarFluxJudgement = int(solarFluxForecast > 300)
+    for f in range(1, numDams+1):
+        met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3, delimiter=',')
+        future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
+        average = sum(future)/futureDays        
+        airTempForecast = np.random.normal(average[1], scale=2)
+        airTempJudgement = int(airTempForecast > 65)
+        solarFluxForecast = np.random.normal(average[6], scale=50)
+        solarFluxJudgement = int(solarFluxForecast > 300)
+        weatherJudgements[f-1] = [airTempForecast, solarFluxJudgement]
 
 
     # Water Level
@@ -170,6 +169,9 @@ numDams = 4
 numGates = 3 # per dam
 
 copyInYearFiles(year, numDams)
+possibleActions = calculatePossibleActions()
+state = getState(timeStart, year)
+weights = np.zeros((state.shape[0], possibleActions.shape[0]))
 for i in range(3):
     actionInd = getAction(state, weights, possibleActions)
     action = possibleActions[actionInd]
