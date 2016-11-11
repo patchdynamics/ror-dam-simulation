@@ -40,7 +40,7 @@ def modifyControlFile(fileDir, timeStart, timeEnd, year):
             for line in fin:
                 line = line.replace("%RSIFN%", RSI_FILE.replace("%STEP%", str(timeStart)))
                 line = line.replace("%TMSTRT%", str(timeStart).rjust(8))
-                line = line.replace("%TMEND_%", str(timeStart + timeStep).rjust(8))
+                line = line.replace("%TMEND_%", str(timeEnd).rjust(8))
                 line = line.replace("%YEAR__%", str(year).rjust(8))
                 fout.write(line)
 
@@ -93,21 +93,39 @@ def calculatePossibleActions():
 # TODO: Real state function here
 def getState(timeStart, year):
 
-    wbQIN = np.empty([numDams,2])
-    wbTIN = np.empty([numDams,2])
+    wbQIN = np.empty([numDams,1])
+    wbTIN = np.empty([numDams,1])
 
     # Get QIN/TIN for today on Dam 1
     wbiQIN= np.loadtxt('wb1/qin.npt', skiprows=3)
-    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==timeStart)]
+    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
     wbiTIN= np.loadtxt('wb1/tin.npt', skiprows=3)
-    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==timeStart)] 
+    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1] 
 
     # Read last QIN/TIN for each of Dams 2-4
     for f in range(2, numDams+1):
         wbiQIN = np.loadtxt('wb'+str(f)+'/qwo_34.opt', skiprows=3)
-        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),[0,1]]
+        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
         wbiTIN = np.loadtxt('wb'+str(f)+'/two_34.opt', skiprows=3)
-        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),[0,1]]
+        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
+
+    wbQINindicators = np.empty([numDams,6])
+    wbTINindicators = np.empty([numDams,6])
+    for f in range(0, numDams):
+        wbQINindicators[f,0] = int(wbQIN[f] <= 700) 
+        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] < 900)
+        wbQINindicators[f,2] = int(wbQIN[f] > 900  and wbQIN[f] < 1100)
+        wbQINindicators[f,3] = int(wbQIN[f] > 1100  and wbQIN[f] < 1300)
+        wbQINindicators[f,4] = int(wbQIN[f] > 1300  and wbQIN[f] < 1500)
+        wbQINindicators[f,5] = int(wbQIN[f] > 1500)
+        wbTINindicators[f,0] = int(wbTIN[f] <= 12)
+        wbTINindicators[f,1] = int(wbTIN[f] > 12 and wbTIN[f] <= 14)
+        wbTINindicators[f,2] = int(wbTIN[f] > 14 and wbTIN[f] <= 16) 
+        wbTINindicators[f,3] = int(wbTIN[f] > 16 and wbTIN[f] <= 18) 
+        wbTINindicators[f,4] = int(wbTIN[f] > 18 and wbTIN[f] <= 20)
+        wbTINindicators[f,5] = int(wbTIN[f] > 20)
+    #print(wbQINindicators)
+    #print(wbTINindicators)
 
     # Weather Judgement
     # Read in next week of weather
@@ -123,22 +141,36 @@ def getState(timeStart, year):
         airTempJudgement = int(airTempForecast > 65)
         solarFluxForecast = np.random.normal(average[6], scale=50)
         solarFluxJudgement = int(solarFluxForecast > 300)
-        weatherJudgements[f-1] = [airTempForecast, solarFluxJudgement]
+        weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
 
     # Water Level
-    # Need to redo spinup so the starting wl is present
-    #data = file.read()
-    #rec = np.recfromcsv(data.splitlines())
-    #elevations = None
-    #for x in rec:
-    #    if np.floor(x[0]) == timeStart:
-    #        elevations = x
-    #        break
-    #elevation = elevations[33]
+    ## Need to redo spinup so the starting wl is present
+    fl = open('wb'+str(f)+'/wl.opt')
+    data = fl.read()
+    rec = np.recfromcsv(data.splitlines())
+    elevations = None
+    for x in rec:
+        # Fix this later, basically the last record isn't the next timeStart, 
+        # just use last record for now, but really should match time somehow
+        #    if np.floor(x[0]) == timeStart:
+            elevations = x
+            break
+    elevation = elevations[33]
+    elevationHigh = int(elevation > 224)
+    elevationLow = int(elevation < 222)
 
-   # Output Structure +/- 65 F / 16 C
-    return np.random.randint(2, size=25)
+    # Output Structure +/- 65 F / 16 C
+    seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
+    temp220 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][1,1] > 65)
+    temp202 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][11,1] > 65)
+    temp191 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][17,1] > 65)
+
+    # Construct State Array
+    stateArray = [temp220, temp202, temp191, elevationHigh, elevationLow, weatherJudgements[0,0]]
+    stateArray = np.append(stateArray, wbQINindicators)
+    stateArray = np.append(stateArray, wbTINindicators)
+    return stateArray
 
 def getAction(state, weights, possibleActions):
     if random.random() < EPSILON_GREEDY:
@@ -183,7 +215,7 @@ copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
 state = getState(timeStart, year)
 weights = np.zeros((state.shape[0], possibleActions.shape[0]))
-for i in range(3):
+for i in range(1):
     actionInd = getAction(state, weights, possibleActions)
     action = possibleActions[actionInd]
 
