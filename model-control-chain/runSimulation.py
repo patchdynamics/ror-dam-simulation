@@ -9,7 +9,7 @@ import random
 import re
 
 PROJECT_DIR = "../" #ror-dam-simulation directory
-CE_QUAL_W2_EXE = "../../bin/w2_ivf32_v372.exe"
+CE_QUAL_W2_EXE = "../bin/cequalw2.v371.mac"
 CONTROL_DIR = PROJECT_DIR + "model-control-chain/"
 TOKENIZED_CON_FILE = "w2_con_tokenized.npt"
 CON_FILE = "w2_con.npt"
@@ -251,6 +251,7 @@ actionInds = np.zeros(numDams)
 rewards = np.zeros(numDams)
 elevations = np.zeros(numDams)
 for i in range(numDays):
+    print 'Day ' + str(i)
     for wb in range(numDams):
         actionInd = getAction(state, weights[wb], possibleActions)
         actionInds[wb] = actionInd
@@ -259,10 +260,7 @@ for i in range(numDays):
         wbDir = CONTROL_DIR + "wb" + str(wb + 1) + "/"
         modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
         setAction(wbDir, timeStart, action, wb) # TODO: Different actions for different dams
-        path = os.getcwd()
-        os.chdir(wbDir)
-        subprocess.check_call(['wine', CE_QUAL_W2_EXE])
-        os.chdir(path)
+        subprocess.check_call(['../bin/cequalw2.v371.mac', 'wb1/'], shell=True)
         if wb != (numDams - 1):
             subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
 
