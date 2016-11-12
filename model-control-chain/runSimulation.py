@@ -233,7 +233,7 @@ def outputStats(weights, rewards, elevations):
 timeStart = 60
 timeStep = 1
 year = 2015
-numDams = 4
+numDams = 1
 numDays = 50
 
 copyInYearFiles(year, numDams)
