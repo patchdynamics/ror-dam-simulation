@@ -162,9 +162,13 @@ def getState(timeStart, year, actionInds, numActions):
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
-        temp220 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][seg34[0,:].size - 15,1] > 65)
-        temp202 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][seg34[0,:].size - 11,1] > 65)
-        temp191 = int(seg34[np.where(np.floor(seg34[:,0]) == timeStart)][seg34[0,:].size - 6 ,1] > 65)
+        seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == timeStart)]
+        #temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1] > 65)
+        #temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1] > 65)
+        #temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1] > 65)
+        temp220 = 0
+        temp202 = 0
+        temp191 = 0
         temperatureJudgements[f-1] = [temp220, temp202, temp191]
 
     # Construct State Array
@@ -230,7 +234,7 @@ timeStart = 60
 timeStep = 1
 year = 2015
 numDams = 4
-numDays = 10
+numDays = 50
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()

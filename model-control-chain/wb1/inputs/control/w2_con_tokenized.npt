@@ -91,7 +91,7 @@ STR SINK   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC   SINKC
 BR1         LINE    LINE    LINE
 
 STR ELEV    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR    ESTR
-BR1          200     202     191
+BR1          220     202     191
 
 STR WIDT    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR    WSTR
 BR1          156     168     168
