@@ -238,7 +238,7 @@ numDays = 50
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
-state = getState(timeStart, year, np.array([4,4,4,4]), possibleActions.shape[0])
+state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
 
 try:
     weights = np.load(WEIGHTS_FILE)
