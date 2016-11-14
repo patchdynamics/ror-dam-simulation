@@ -61,7 +61,7 @@ INTERPOL   QINIC   DTRIC    HDIC
 BR1           ON      ON     OFF
 
 HEAT EXCH  SLHTC    SROC  RHEVAP   METIC  FETCHC     AFW     BFW     CFW   WINDH
-WB 1          ET     OFF     OFF      ON     OFF 9.20000 0.46000 2.00000 10.0000
+WB 1        TERM     OFF     OFF      ON     OFF 9.20000 0.46000 2.00000 10.0000
 
 ICE COVE    ICEC  SLICEC  ALBEDO   HWICE    BICE    GICE  ICEMIN   ICET2
 WB 1         OFF  DETAIL 0.25000 10.0000 0.60000 0.07000 0.05000 3.00000
@@ -270,7 +270,7 @@ FLX FREQ    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF
 WB 1     0.00000
 
 TSR PLOT    TSRC    NTSR   NITSR
-              ON       1       0
+              ON       1       1
 
 TSR DATE    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD
              1.0
@@ -279,10 +279,10 @@ TSR FREQ    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
              .25 
 
 TSR SEG     ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR
-              34 
+              3 
 
 TSR LAYE    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR
-              23
+               2
 
 WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1
