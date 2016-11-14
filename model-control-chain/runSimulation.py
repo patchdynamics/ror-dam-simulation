@@ -263,7 +263,7 @@ for i in range(numDays):
         os.chdir(wbDir)
         #subprocess.check_call(['../bin/cequalw2.v371.mac', wbDir])
         #subprocess.check_call(['scripts/run.cequalw2.sh', "wb"+str(wb+1)+'/'], shell=True)
-        subprocess.check_call(['../../bin/cequalw2.v371.mac', '.'], shell=True)
+        subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
         #subprocess.check_call('../scripts/run.sh', shell=True)
         os.chdir(path)
         if wb != (numDams - 1):

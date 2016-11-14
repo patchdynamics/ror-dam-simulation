@@ -38,5 +38,5 @@ cp wb1/inputs/QOUT$YEAR.npt wb3/qot_br1.npt
 cp wb1/inputs/QOUT$YEAR.npt wb4/qot_br1.npt
 run.model wb1 wb2
 run.model wb2 wb3
-run.model wb3 wb4
-run.model wb4
+#run.model wb3 wb4
+#run.model wb4
