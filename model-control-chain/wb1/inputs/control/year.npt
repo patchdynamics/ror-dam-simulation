@@ -234,7 +234,7 @@ SPR PLOT    SPRC    NSPR   NISPR
 WB 1          ON       1       1
 
 SPR DATE    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD    SPRD
-WB 1	 			 1.0 
+WB 1         1.0 
 
 SPR FREQ    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF    SPRF
 WB 1        0.25
@@ -243,13 +243,13 @@ SPR SEG     ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR    ISPR
 WB 1          34
 
 VPL PLOT    VPLC    NVPL
-WB 1         OFF       0
+WB 1          ON       0
 
 VPL DATE    VPLD    VPLD    VPLD    VPLD    VPLD    VPLD    VPLD    VPLD    VPLD
-WB 1    
+WB 1         1.0
 
 VPL FREQ    VPLF    VPLF    VPLF    VPLF    VPLF    VPLF    VPLF    VPLF    VPLF
-WB 1    
+WB 1         .25
 
 CPL PLOT    CPLC    NCPL TECPLOT
 WB 1         OFF       0     OFF
@@ -279,10 +279,10 @@ TSR FREQ    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
              .25 
 
 TSR SEG     ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR
-							34 
+              34 
 
 TSR LAYE    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR
-							23
+              23
 
 WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1

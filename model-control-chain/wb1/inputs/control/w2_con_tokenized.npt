@@ -16,7 +16,7 @@ GRID         NWB     NBR     IMX     KMX   NPROC  CLOSEC
                1       1      35      24       2      ON        
 
 IN/OUTFL     NTR     NST     NIW     NWD     NGT     NSP     NPI     NPU
-               0       2       0       0       0       0       0       0
+               0       3       0       0       0       0       0       0
 
 CONSTITU     NGC     NSS     NAL     NEP    NBOD     NMC     NZP
                0       0       0       0       0       0       0
@@ -79,7 +79,7 @@ N STRUC     NSTR DYNELEV
 BR1            3     OFF
 
 STR INT    STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC   STRIC
-BR 1         OFF     OFF
+BR 1         OFF     OFF     OFF     OFF
 
 STR TOP    KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR   KTSTR
 BR1            2      12      17
@@ -279,10 +279,10 @@ TSR FREQ    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
              .25 
 
 TSR SEG     ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR
-							34 
+              34 
 
 TSR LAYE    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR
-							23
+              23
 
 WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1
