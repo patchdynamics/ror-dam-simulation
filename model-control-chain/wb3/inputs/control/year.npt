@@ -270,7 +270,7 @@ FLX FREQ    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF    FLXF
 WB 1     0.00000
 
 TSR PLOT    TSRC    NTSR   NITSR
-              ON       1       0
+              ON       1       1
 
 TSR DATE    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD    TSRD
              1.0
