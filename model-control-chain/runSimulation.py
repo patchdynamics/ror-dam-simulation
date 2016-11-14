@@ -174,7 +174,7 @@ def getState(timeStart, year, actionInds, numActions):
     stateArray = elevationJudgements.flatten()
 #    stateArray = np.append(stateArray, weatherJudgements[0,0])
 #    stateArray = np.append(stateArray, temperatureJudgements.flatten())
-    stateArray = np.append(stateArray, wbQINindicators)
+#    stateArray = np.append(stateArray, wbQINindicators)
 #    stateArray = np.append(stateArray, wbTINindicators)
 
     gateState = np.zeros((numDams, numActions)) #numDams x numActions
@@ -237,6 +237,7 @@ numDays = 215
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
+print possibleActions
 state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
 
 try:
@@ -258,12 +259,12 @@ for i in range(numDays):
         wbDir = 'wb'+str(wb+1)+'/'
         #print wbDir
         modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
-        setAction(wbDir, timeStart, action, wb) # TODO: Different actions for different dams
+        setAction(wbDir, timeStart, action, wb)
         path = os.getcwd()
         os.chdir(wbDir)
         #subprocess.check_call(['../bin/cequalw2.v371.mac', wbDir])
         #subprocess.check_call(['scripts/run.cequalw2.sh', "wb"+str(wb+1)+'/'], shell=True)
-        subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
+        subprocess.check_call(['../../bin/cequalw2.v371.mac', '.'], shell=True)
         #subprocess.check_call('../scripts/run.sh', shell=True)
         os.chdir(path)
         if wb != (numDams - 1):
