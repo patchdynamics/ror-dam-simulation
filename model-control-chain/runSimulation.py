@@ -98,7 +98,6 @@ def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
 def getState(timeStart, year, actionInds, numActions):
-
     wbQIN = np.empty([numDams,1])
     wbTIN = np.empty([numDams,1])
 
@@ -110,9 +109,9 @@ def getState(timeStart, year, actionInds, numActions):
 
     # Read last QIN/TIN for each of Dams 2-4
     for f in range(2, numDams+1):
-        wbiQIN = np.loadtxt('wb'+str(f)+'/qwo_34.opt', skiprows=3)
+        wbiQIN = np.loadtxt('wb'+str(f)+'/qin.npt', skiprows=3)
         wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
-        wbiTIN = np.loadtxt('wb'+str(f)+'/two_34.opt', skiprows=3)
+        wbiTIN = np.loadtxt('wb'+str(f)+'/tin.npt', skiprows=3)
         wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
 
     wbQINindicators = np.empty([numDams,6])
@@ -233,8 +232,8 @@ def outputStats(weights, rewards, elevations):
 timeStart = 60
 timeStep = 1
 year = 2015
-numDams = 1
-numDays = 50
+numDams = 4
+numDays = 215
 
 copyInYearFiles(year, numDams)
 possibleActions = calculatePossibleActions()
@@ -251,16 +250,22 @@ actionInds = np.zeros(numDams)
 rewards = np.zeros(numDams)
 elevations = np.zeros(numDams)
 for i in range(numDays):
-    print 'Day ' + str(i)
+    print 'Day ' + str(timeStart)
     for wb in range(numDams):
         actionInd = getAction(state, weights[wb], possibleActions)
         actionInds[wb] = actionInd
         action = possibleActions[actionInd]
-
-        wbDir = CONTROL_DIR + "wb" + str(wb + 1) + "/"
+        wbDir = 'wb'+str(wb+1)+'/'
+        #print wbDir
         modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
         setAction(wbDir, timeStart, action, wb) # TODO: Different actions for different dams
-        subprocess.check_call(['../bin/cequalw2.v371.mac', 'wb1/'], shell=True)
+        path = os.getcwd()
+        os.chdir(wbDir)
+        #subprocess.check_call(['../bin/cequalw2.v371.mac', wbDir])
+        #subprocess.check_call(['scripts/run.cequalw2.sh', "wb"+str(wb+1)+'/'], shell=True)
+        subprocess.check_call(['../../bin/cequalw2.v371.mac', '.'], shell=True)
+        #subprocess.check_call('../scripts/run.sh', shell=True)
+        os.chdir(path)
         if wb != (numDams - 1):
             subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
 
