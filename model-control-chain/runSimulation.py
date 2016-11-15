@@ -65,12 +65,12 @@ def getReward(wb):
     elevation = elevations[-1,33]
     if elevation < MIN_ELEVATION:
         #reward =  -np.exp(MIN_ELEVATION - elevation)
-        reward = -2
+        reward = -5
     elif elevation < TARGET_LOW_ELEVATION:
         reward = 1
     elif elevation > MAX_ELEVATION:
         #reward = -np.exp(elevation - MAX_ELEVATION)
-        reward = -2
+        reward = -5
     elif elevation > TARGET_HIGH_ELEVATION:
         reward = 1
     else:
@@ -167,8 +167,8 @@ def getState(timeStart, year, actionInds, numActions):
         elevation = elevations[-1,33]
         elevationHigh = int(elevation > MAX_ELEVATION)
         elevationLow = int(elevation < MIN_ELEVATION)
-        elevationTargetHigh = not elevationHigh and (elevation >= TARGET_HIGH_ELEVATION)
-        elevationTargetLow = not elevationLow and (elevation <= TARGET_HIGH_ELEVATION)
+        elevationTargetHigh = int(not elevationHigh and (elevation >= TARGET_HIGH_ELEVATION))
+        elevationTargetLow = int(not elevationLow and (elevation <= TARGET_LOW_ELEVATION))
         elevationOK = int(elevation < TARGET_HIGH_ELEVATION and elevation > TARGET_LOW_ELEVATION)
         elevationJudgements[f-1] = [elevationHigh, elevationLow, elevationTargetHigh, elevationTargetLow, elevationOK]
 
@@ -263,7 +263,7 @@ def outputStats(weights, rewards, elevations):
 timeStartBegin = 60
 timeStep = 1
 year = 2015
-numDams = 1
+numDams = 2
 numDays = 215
 repeat = 5
 
