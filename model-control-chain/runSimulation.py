@@ -7,6 +7,7 @@ import struct
 from sklearn.utils.extmath import cartesian
 import random
 import re
+import sys
 
 PROJECT_DIR = "../" #ror-dam-simulation directory
 CE_QUAL_W2_EXE = "../bin/cequalw2.v371.mac"
@@ -25,7 +26,7 @@ REWARDS_FILE = "rewards.txt"
 
 # Hyperparameters
 EPSILON_GREEDY = 0.2 # TODO: Should start high & decrease over time
-FUTURE_DISCOUNT = 0.95
+FUTURE_DISCOUNT = 0.75
 STEP_SIZE = 0.01
 
 # Actions
@@ -36,6 +37,8 @@ HYPOLIMNAL_OUTFLOWS = [0, 500]
 # Reward parameters
 MIN_ELEVATION = 220
 MAX_ELEVATION = 225
+TARGET_HIGH_ELEVATION = 223.5
+TARGET_LOW_ELEVATION = 221.5
 
 def modifyControlFile(fileDir, timeStart, timeEnd, year):
     with open(fileDir + CON_FILE, "w") as fout:
@@ -61,11 +64,17 @@ def getReward(wb):
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
     if elevation < MIN_ELEVATION:
-        reward =  -np.exp(MIN_ELEVATION - elevation)
+        #reward =  -np.exp(MIN_ELEVATION - elevation)
+        reward = -2
+    elif elevation < TARGET_LOW_ELEVATION:
+        reward = 1
     elif elevation > MAX_ELEVATION:
-        reward = -np.exp(elevation - MAX_ELEVATION)
+        #reward = -np.exp(elevation - MAX_ELEVATION)
+        reward = -2
+    elif elevation > TARGET_HIGH_ELEVATION:
+        reward = 1
     else:
-        reward = 0
+        reward = 2
     return reward, elevation
 
 
@@ -84,8 +93,6 @@ def getReward(wb):
 '''
 
 def copyInYearFiles(year, numDams):
-    copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
-    copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
     for wb in range(1, numDams + 1):
         copyfile( CONTROL_DIR + "wb" + str(wb) + "/inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
         spinupDir =  CONTROL_DIR + "wb" + str(wb) + "/inputs/spinup/" + str(year)
@@ -93,6 +100,9 @@ def copyInYearFiles(year, numDams):
             filename = spinupDir + "/" + f
             if os.path.isfile(filename):
                 copyfile( filename , CONTROL_DIR + "wb" + str(wb) + "/" + f)
+    #copyfile( CONTROL_DIR + "wb1/inputs/QIN.CONSTANT.npt", CONTROL_DIR + "wb1/qin.npt")
+    copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
+    copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
 
 def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
@@ -148,7 +158,7 @@ def getState(timeStart, year, actionInds, numActions):
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
-    elevationJudgements = np.empty([numDams,2])
+    elevationJudgements = np.empty([numDams,5])
     temperatureJudgements = np.empty([numDams,3])
     for f in range(1, numDams+1):
         # Water Level
@@ -157,7 +167,10 @@ def getState(timeStart, year, actionInds, numActions):
         elevation = elevations[-1,33]
         elevationHigh = int(elevation > MAX_ELEVATION)
         elevationLow = int(elevation < MIN_ELEVATION)
-        elevationJudgements[f-1] = [elevationHigh, elevationLow]
+        elevationTargetHigh = not elevationHigh and (elevation >= TARGET_HIGH_ELEVATION)
+        elevationTargetLow = not elevationLow and (elevation <= TARGET_HIGH_ELEVATION)
+        elevationOK = int(elevation < TARGET_HIGH_ELEVATION and elevation > TARGET_LOW_ELEVATION)
+        elevationJudgements[f-1] = [elevationHigh, elevationLow, elevationTargetHigh, elevationTargetLow, elevationOK]
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
@@ -186,9 +199,9 @@ def getState(timeStart, year, actionInds, numActions):
     return stateArray
 
 def getAction(state, weights, possibleActions):
-    if random.random() < EPSILON_GREEDY:
+   if random.random() < EPSILON_GREEDY:
         return random.randrange(possibleActions.shape[0])
-    else:
+   else:
         [bestActionInd, Vopt] = getBestAction(state, weights, possibleActions)
         return bestActionInd
 
@@ -196,6 +209,8 @@ def getBestAction(state, weights, possibleActions):
     Qopts = np.empty(possibleActions.shape[0])
     for actionInd in range(possibleActions.shape[0]):
         Qopts[actionInd] = calculateQopt(state, actionInd, weights)
+    print 'Qopts'
+    print Qopts
     bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
     bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
     return bestActionInd, Qopts[bestActionInd]
@@ -211,11 +226,27 @@ def calculateQopt(state, actionInd, weights):
 
 # TODO: Add regularization?
 def updateWeights(state, actionInds, rewards, nextState, weights, possibleActions):
+    print 'state'
+    print state
+    print 'next state'
+    print nextState
+    print 'rewards'
+    print rewards
+    print 'actionInds'
+    print actionInds
+    print 'weights'
+    print weights
     for i in range(numDams):
         features = getFeatures(state, actionInds[i], weights[i].shape)
+        print 'features'
+        print features
         [nextAction, Vopt] = getBestAction(nextState, weights[i], possibleActions)
         error = calculateQopt(state, actionInds[i], weights[i]) - (rewards[i] + FUTURE_DISCOUNT * Vopt)
+        print 'Qopt   Vopt'
+        print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
         weights[i] = weights[i] - STEP_SIZE * error * features
+    print 'updated weights'
+    print weights
     return weights
 
 def outputStats(weights, rewards, elevations):
@@ -229,55 +260,59 @@ def outputStats(weights, rewards, elevations):
             np.savetxt(fout, weights[i].flatten(), newline=",")
             fout.write("\n")
 
-timeStart = 60
+timeStartBegin = 60
 timeStep = 1
 year = 2015
-numDams = 4
+numDams = 1
 numDays = 215
+repeat = 5
 
-copyInYearFiles(year, numDams)
-possibleActions = calculatePossibleActions()
-print possibleActions
-state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
+for r in range(0,repeat+1):
+    timeStart = timeStartBegin
+    copyInYearFiles(year, numDams)
+    possibleActions = calculatePossibleActions()
+    print possibleActions
+    state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
 
-try:
-    weights = np.load(WEIGHTS_FILE)
-    print "Restarting with existing weights"
-except IOError:
-    weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
-    print "Starting with new weights"
+    try:
+        weights = np.load(WEIGHTS_FILE)
+        print "Restarting with existing weights"
+    except IOError:
+        weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
+        print "Starting with new weights"
 
-actionInds = np.zeros(numDams)
-rewards = np.zeros(numDams)
-elevations = np.zeros(numDams)
-for i in range(numDays):
-    print 'Day ' + str(timeStart)
-    for wb in range(numDams):
-        actionInd = getAction(state, weights[wb], possibleActions)
-        actionInds[wb] = actionInd
-        action = possibleActions[actionInd]
-        wbDir = 'wb'+str(wb+1)+'/'
-        #print wbDir
-        modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
-        setAction(wbDir, timeStart, action, wb)
-        path = os.getcwd()
-        os.chdir(wbDir)
-        #subprocess.check_call(['../bin/cequalw2.v371.mac', wbDir])
-        #subprocess.check_call(['scripts/run.cequalw2.sh', "wb"+str(wb+1)+'/'], shell=True)
-        subprocess.check_call(['../../bin/cequalw2.v371.mac', '.'], shell=True)
-        #subprocess.check_call('../scripts/run.sh', shell=True)
-        os.chdir(path)
-        if wb != (numDams - 1):
-            subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
+    actionInds = np.zeros(numDams)
+    rewards = np.zeros(numDams)
+    elevations = np.zeros(numDams)
+    for i in range(numDays):
+        print 'Day ' + str(timeStart)
+        for wb in range(numDams):
+            actionInd = getAction(state, weights[wb], possibleActions)
+            actionInds[wb] = actionInd
+            action = possibleActions[actionInd]
+            wbDir = 'wb'+str(wb+1)+'/'
+            #print wbDir
+            modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
+            setAction(wbDir, timeStart, action, wb)
+            path = os.getcwd()
+            os.chdir(wbDir)
+            #subprocess.check_call(['../bin/cequalw2.v371.mac', wbDir])
+            #subprocess.check_call(['scripts/run.cequalw2.sh', "wb"+str(wb+1)+'/'], shell=True)
+            subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
+            #subprocess.check_call('../scripts/run.sh', shell=True)
+            os.chdir(path)
+            if wb != (numDams - 1):
+                subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
 
-        rewards[wb], elevations[wb] = getReward(wb)
+            rewards[wb], elevations[wb] = getReward(wb)
+            #raw_input("Press Enter to continue...") 
 
-    nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
-    weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
+        nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
+        weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
 
-    outputStats(weights, rewards, elevations)
+        outputStats(weights, rewards, elevations)
 
-    timeStart = timeStart + timeStep
-    state = nextState
+        timeStart = timeStart + timeStep
+        state = nextState
 
-np.save(WEIGHTS_FILE, weights)
+    np.save(WEIGHTS_FILE, weights)
