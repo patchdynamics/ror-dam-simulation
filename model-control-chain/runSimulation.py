@@ -7,7 +7,7 @@ import struct
 from sklearn.utils.extmath import cartesian
 import random
 import re
-import sys
+import sys, getopt
 
 PROJECT_DIR = "../" #ror-dam-simulation directory
 CE_QUAL_W2_EXE = "../bin/cequalw2.v371.mac"
@@ -267,6 +267,26 @@ numDams = 1
 numDays = 215
 repeat = 5
 
+if len(sys.argv) > 1:
+    try:
+      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:",["eps=", "repeat=", "dams=", "days="])
+    except getopt.GetoptError:
+      print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days>'
+      sys.exit()
+
+    for opt, arg in opts:
+      if opt == '-h':
+         print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays>'
+         sys.exit()
+      elif opt in ("-e", "--eps"):
+         EPSILON_GREEDY = float(arg)
+      elif opt in ("-r", "--repeat"):
+         repeat = int(arg)
+      elif opt in ("-d", "--dams"):
+         numDams = int(arg)
+      elif opt in ("--days"):
+         numDays = int(arg)
+
 for r in range(0,repeat+1):
     timeStart = timeStartBegin
     copyInYearFiles(year, numDams)
@@ -305,7 +325,7 @@ for r in range(0,repeat+1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
 
             rewards[wb], elevations[wb] = getReward(wb)
-            #raw_input("Press Enter to continue...") 
+            #raw_input("Press Enter to continue...")
 
         nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
         weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
