@@ -30,15 +30,21 @@ FUTURE_DISCOUNT = 0.75
 STEP_SIZE = 0.01
 
 # Actions
-SPILLWAY_OUTFLOWS = [0, 500]
-POWERHOUSE_OUTFLOWS = [0, 600, 1200]
-HYPOLIMNAL_OUTFLOWS = [0, 500]
+SPILLWAY_OUTFLOWS = [0, 600, 1800]
+POWERHOUSE_OUTFLOWS = [500, 1500, 3000]
+HYPOLIMNAL_OUTFLOWS = [0, 1000]
+#SPILLWAY_OUTFLOWS = [0]
+#POWERHOUSE_OUTFLOWS = [800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400]
+#HYPOLIMNAL_OUTFLOWS = [0]
 
 # Reward parameters
 MIN_ELEVATION = 220
 MAX_ELEVATION = 225
 TARGET_HIGH_ELEVATION = 223.5
 TARGET_LOW_ELEVATION = 221.5
+
+# Set to true to stop learning
+TESTING = False
 
 def modifyControlFile(fileDir, timeStart, timeEnd, year):
     with open(fileDir + CON_FILE, "w") as fout:
@@ -67,12 +73,12 @@ def getReward(wb):
         #reward =  -np.exp(MIN_ELEVATION - elevation)
         reward = -5
     elif elevation < TARGET_LOW_ELEVATION:
-        reward = 1
+        reward = -1
     elif elevation > MAX_ELEVATION:
         #reward = -np.exp(elevation - MAX_ELEVATION)
         reward = -5
     elif elevation > TARGET_HIGH_ELEVATION:
-        reward = 1
+        reward = -1
     else:
         reward = 2
     return reward, elevation
@@ -189,7 +195,7 @@ def getState(timeStart, year, actionInds, numActions):
     stateArray = elevationJudgements.flatten()
 #    stateArray = np.append(stateArray, weatherJudgements[0,0])
 #    stateArray = np.append(stateArray, temperatureJudgements.flatten())
-#    stateArray = np.append(stateArray, wbQINindicators)
+    stateArray = np.append(stateArray, wbQINindicators)
 #    stateArray = np.append(stateArray, wbTINindicators)
 
     gateState = np.zeros((numDams, numActions)) #numDams x numActions
@@ -201,7 +207,7 @@ def getState(timeStart, year, actionInds, numActions):
     return stateArray
 
 def getAction(state, weights, possibleActions):
-   if random.random() < EPSILON_GREEDY:
+   if not TESTING and random.random() < EPSILON_GREEDY:
         return random.randrange(possibleActions.shape[0])
    else:
         [bestActionInd, Vopt] = getBestAction(state, weights, possibleActions)
@@ -264,21 +270,21 @@ def outputStats(weights, rewards, elevations):
 
 timeStartBegin = 60
 timeStep = 1
-year = 2005
-numDams = 2
+year = 2014
+numDams = 4
 numDays = 215
-repeat = 0
+repeat = 1
 
 if len(sys.argv) > 1:
     try:
-      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:",["eps=", "repeat=", "dams=", "days="])
+      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:t",["eps=", "repeat=", "dams=", "days=", "test", "--year"])
     except getopt.GetoptError:
-      print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days>'
+      print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days> --test'
       sys.exit()
 
     for opt, arg in opts:
       if opt == '-h':
-         print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays>'
+         print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> --test'
          sys.exit()
       elif opt in ("-e", "--eps"):
          EPSILON_GREEDY = float(arg)
@@ -290,8 +296,10 @@ if len(sys.argv) > 1:
          numDays = int(arg)
      elif opt in ("--year"):
          year = int(arg)
+      elif opt in ("-t", "--test"):
+          TESTING = True
 
-for r in range(0,repeat+1):
+for r in range(repeat):
     timeStart = timeStartBegin
     copyInYearFiles(year, numDams)
     possibleActions = calculatePossibleActions()
@@ -332,7 +340,8 @@ for r in range(0,repeat+1):
             #raw_input("Press Enter to continue...")
 
         nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
-        weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
+        if not TESTING:
+            weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
 
         outputStats(weights, rewards, elevations)
 
