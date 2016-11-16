@@ -25,7 +25,7 @@ WEIGHTS_FILE = "weights.npy"
 REWARDS_FILE = "rewards.txt"
 
 # Hyperparameters
-EPSILON_GREEDY = 0.2 # TODO: Should start high & decrease over time
+EPSILON_GREEDY = 0.25 # TODO: Should start high & decrease over time
 FUTURE_DISCOUNT = 0.75
 STEP_SIZE = 0.01
 
@@ -128,11 +128,13 @@ def getState(timeStart, year, actionInds, numActions):
     wbTINindicators = np.empty([numDams,6])
     for f in range(0, numDams):
         wbQINindicators[f,0] = int(wbQIN[f] <= 700)
-        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] < 900)
-        wbQINindicators[f,2] = int(wbQIN[f] > 900  and wbQIN[f] < 1100)
-        wbQINindicators[f,3] = int(wbQIN[f] > 1100  and wbQIN[f] < 1300)
-        wbQINindicators[f,4] = int(wbQIN[f] > 1300  and wbQIN[f] < 1500)
-        wbQINindicators[f,5] = int(wbQIN[f] > 1500)
+        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] < 1200)
+        wbQINindicators[f,2] = int(wbQIN[f] > 1200  and wbQIN[f] < 1700)
+        wbQINindicators[f,3] = int(wbQIN[f] > 1700  and wbQIN[f] < 2200)
+        wbQINindicators[f,4] = int(wbQIN[f] > 2200  and wbQIN[f] < 2700)
+        wbQINindicators[f,5] = int(wbQIN[f] > 2700  and wbQIN[f] < 3200)
+        wbQINindicators[f,6] = int(wbQIN[f] > 3700  and wbQIN[f] < 4200)
+        wbQINindicators[f,7] = int(wbQIN[f] > 4200)
         wbTINindicators[f,0] = int(wbTIN[f] <= 12)
         wbTINindicators[f,1] = int(wbTIN[f] > 12 and wbTIN[f] <= 14)
         wbTINindicators[f,2] = int(wbTIN[f] > 14 and wbTIN[f] <= 16)
@@ -262,10 +264,10 @@ def outputStats(weights, rewards, elevations):
 
 timeStartBegin = 60
 timeStep = 1
-year = 2015
+year = 2005
 numDams = 2
 numDays = 215
-repeat = 5
+repeat = 0
 
 if len(sys.argv) > 1:
     try:
@@ -286,6 +288,8 @@ if len(sys.argv) > 1:
          numDams = int(arg)
       elif opt in ("--days"):
          numDays = int(arg)
+     elif opt in ("--year"):
+         year = int(arg)
 
 for r in range(0,repeat+1):
     timeStart = timeStartBegin
