@@ -130,7 +130,7 @@ def getState(timeStart, year, actionInds, numActions):
         wbiTIN = np.loadtxt('wb'+str(f)+'/tin.npt', skiprows=3)
         wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
 
-    wbQINindicators = np.empty([numDams,6])
+    wbQINindicators = np.empty([numDams,8])
     wbTINindicators = np.empty([numDams,6])
     for f in range(0, numDams):
         wbQINindicators[f,0] = int(wbQIN[f] <= 700)
@@ -277,7 +277,7 @@ repeat = 1
 
 if len(sys.argv) > 1:
     try:
-      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:t",["eps=", "repeat=", "dams=", "days=", "test", "--year"])
+      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:t",["eps=", "repeat=", "dams=", "days=", "test", "year="])
     except getopt.GetoptError:
       print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days> --test'
       sys.exit()

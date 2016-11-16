@@ -21,7 +21,8 @@ for(project in projects){
 }
 powerhouse.and.spill = data.frame(Powerhouse = powerhouse * 0.0283168, Spill=spill * 0.0283168, Date=date)
 
-plot(powerhouse.and.spill$Spill, typ='l')
+plot(powerhouse.and.spill$Powerhouse + powerhouse.and.spill$Spill, col='red', typ='l')
+lines(powerhouse.and.spill$Spill)
 lines(powerhouse.and.spill$Powerhouse, col='blue')
 
 

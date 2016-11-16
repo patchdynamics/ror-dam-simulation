@@ -1,7 +1,12 @@
 #!/bin/bash
 ./scripts/clear.sh
-./runSimulation.py --repeat 0 --year 2005
-./runSimulation.py --repeat 0 --year 2006
-./runSimulation.py --repeat 0 --year 2007
-./runSimulation.py --repeat 0 --year 2008
-./runSimulation.py --repeat 0 --year 2009
+echo '.'
+./runSimulation.py  --year 2005 > /dev/null
+echo '.'
+./runSimulation.py  --year 2006 > /dev/null
+echo '.'
+./runSimulation.py  --year 2007 > /dev/null
+echo '.'
+./runSimulation.py  --year 2008 > /dev/null
+echo '.'
+./runSimulation.py  --year 2009 > /dev/null
