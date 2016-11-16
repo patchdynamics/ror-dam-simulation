@@ -294,7 +294,7 @@ if len(sys.argv) > 1:
          numDams = int(arg)
       elif opt in ("--days"):
          numDays = int(arg)
-     elif opt in ("--year"):
+      elif opt in ("--year"):
          year = int(arg)
       elif opt in ("-t", "--test"):
           TESTING = True
