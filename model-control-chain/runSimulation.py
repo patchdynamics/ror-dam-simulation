@@ -23,6 +23,7 @@ ELEVATION_FILE = "wl.opt"
 STATS_DIR = "stats/"
 WEIGHTS_FILE = "weights.npy"
 REWARDS_FILE = "rewards.txt"
+ACTIONS_FILE = "actions.txt"
 
 # Hyperparameters
 EPSILON_GREEDY = 0.25 # TODO: Should start high & decrease over time
@@ -257,10 +258,16 @@ def updateWeights(state, actionInds, rewards, nextState, weights, possibleAction
     print weights
     return weights
 
-def outputStats(weights, rewards, elevations):
+def outputStats(weights, rewards, elevations, actionInds, possibleActions):
     with open(STATS_DIR + REWARDS_FILE, "a") as fout:
         np.savetxt(fout, rewards, newline=",")
         np.savetxt(fout, elevations, newline=",")
+        fout.write("\n")
+    with open(STATS_DIR + ACTIONS_FILE, "a") as fout:
+        for i in range(numDams):
+            action = possibleActions[actionInds[i]]
+            print action, sum(int(flow) for flow in action)
+            fout.write(str(sum(int(flow) for flow in action)) + ",")
         fout.write("\n")
     for i in range(numDams):
         weightsFile = STATS_DIR + "weights" + str(i+1) +".txt"
@@ -343,7 +350,7 @@ for r in range(repeat):
         if not TESTING:
             weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
 
-        outputStats(weights, rewards, elevations)
+        outputStats(weights, rewards, elevations, actionInds, possibleActions)
 
         timeStart = timeStart + timeStep
         state = nextState
