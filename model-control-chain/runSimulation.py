@@ -314,7 +314,7 @@ if len(sys.argv) > 1:
          sys.exit()
       elif opt in ("-e", "--eps"):
          EPSILON_GREEDY = float(arg)
-     elif opt in ("-s, --step"):
+      elif opt in ("-s, --step"):
          STEP_SIZE = float(arg)
       elif opt in ("-r", "--repeat"):
          repeat = int(arg)
