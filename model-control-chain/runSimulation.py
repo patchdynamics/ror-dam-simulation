@@ -294,17 +294,19 @@ repeat = 1
 
 if len(sys.argv) > 1:
     try:
-      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:t",["eps=", "repeat=", "dams=", "days=", "test", "year="])
+      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:ts:",["eps=", "repeat=", "dams=", "days=", "test", "year=", "step="])
     except getopt.GetoptError:
-      print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days> --test'
+      print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test'
       sys.exit()
 
     for opt, arg in opts:
       if opt == '-h':
-         print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> --test'
+         print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> -s <stepsize> --test'
          sys.exit()
       elif opt in ("-e", "--eps"):
          EPSILON_GREEDY = float(arg)
+     elif opt in ("-s, --step"):
+         STEP_SIZE = float(arg)
       elif opt in ("-r", "--repeat"):
          repeat = int(arg)
       elif opt in ("-d", "--dams"):
