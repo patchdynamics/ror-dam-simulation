@@ -26,12 +26,12 @@ REWARDS_FILE = "rewards.txt"
 ACTIONS_FILE = "actions.txt"
 
 # Hyperparameters
-EPSILON_GREEDY = 0.25 # TODO: Should start high & decrease over time
+EPSILON_GREEDY = 0.1 # TODO: Should start high & decrease over time
 FUTURE_DISCOUNT = 0.75
 STEP_SIZE = 0.01
 
 # Actions
-SPILLWAY_OUTFLOWS = [0, 600, 1800]
+SPILLWAY_OUTFLOWS = [0, 300, 600, 1200, 1800]
 POWERHOUSE_OUTFLOWS = [500, 1500, 3000]
 HYPOLIMNAL_OUTFLOWS = [0, 1000]
 #SPILLWAY_OUTFLOWS = [0]
@@ -42,7 +42,7 @@ HYPOLIMNAL_OUTFLOWS = [0, 1000]
 MIN_ELEVATION = 220
 MAX_ELEVATION = 225
 TARGET_HIGH_ELEVATION = 223.5
-TARGET_LOW_ELEVATION = 221.5
+TARGET_LOW_ELEVATION = 222.5
 
 # Set to true to stop learning
 TESTING = False
@@ -135,12 +135,12 @@ def getState(timeStart, year, actionInds, numActions):
     wbTINindicators = np.empty([numDams,6])
     for f in range(0, numDams):
         wbQINindicators[f,0] = int(wbQIN[f] <= 700)
-        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] < 1200)
-        wbQINindicators[f,2] = int(wbQIN[f] > 1200  and wbQIN[f] < 1700)
-        wbQINindicators[f,3] = int(wbQIN[f] > 1700  and wbQIN[f] < 2200)
-        wbQINindicators[f,4] = int(wbQIN[f] > 2200  and wbQIN[f] < 2700)
-        wbQINindicators[f,5] = int(wbQIN[f] > 2700  and wbQIN[f] < 3200)
-        wbQINindicators[f,6] = int(wbQIN[f] > 3700  and wbQIN[f] < 4200)
+        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] <= 1200)
+        wbQINindicators[f,2] = int(wbQIN[f] > 1200  and wbQIN[f] <= 1700)
+        wbQINindicators[f,3] = int(wbQIN[f] > 1700  and wbQIN[f] <= 2200)
+        wbQINindicators[f,4] = int(wbQIN[f] > 2200  and wbQIN[f] <= 2700)
+        wbQINindicators[f,5] = int(wbQIN[f] > 2700  and wbQIN[f] <= 3200)
+        wbQINindicators[f,6] = int(wbQIN[f] > 3700  and wbQIN[f] <= 4200)
         wbQINindicators[f,7] = int(wbQIN[f] > 4200)
         wbTINindicators[f,0] = int(wbTIN[f] <= 12)
         wbTINindicators[f,1] = int(wbTIN[f] > 12 and wbTIN[f] <= 14)
@@ -167,19 +167,25 @@ def getState(timeStart, year, actionInds, numActions):
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
-    elevationJudgements = np.empty([numDams,5])
+    elevationJudgements = np.empty([numDams,18])
     temperatureJudgements = np.empty([numDams,3])
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
         elevations = np.genfromtxt(wlFile, delimiter=",")
         elevation = elevations[-1,33]
-        elevationHigh = int(elevation > MAX_ELEVATION)
-        elevationLow = int(elevation < MIN_ELEVATION)
-        elevationTargetHigh = int(not elevationHigh and (elevation >= TARGET_HIGH_ELEVATION))
-        elevationTargetLow = int(not elevationLow and (elevation <= TARGET_LOW_ELEVATION))
-        elevationOK = int(elevation < TARGET_HIGH_ELEVATION and elevation > TARGET_LOW_ELEVATION)
-        elevationJudgements[f-1] = [elevationHigh, elevationLow, elevationTargetHigh, elevationTargetLow, elevationOK]
+        elevationLevels = [1,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,300]
+        lesser = np.array(elevationLevels) < elevation
+        greater = np.array(elevationLevels) > elevation-1
+        elevationJudgements[f-1] = np.logical_and(lesser, greater).astype(int)
+        print elevationJudgements
+
+        #elevationHigh = int(elevation > MAX_ELEVATION)
+        #elevationLow = int(elevation < MIN_ELEVATION)
+        #elevationTargetHigh = int(not elevationHigh and (elevation >= TARGET_HIGH_ELEVATION))
+        #elevationTargetLow = int(not elevationLow and (elevation <= TARGET_LOW_ELEVATION))
+        #elevationOK = int(elevation < TARGET_HIGH_ELEVATION and elevation > TARGET_LOW_ELEVATION)
+        #elevationJudgements[f-1] = [elevationHigh, elevationLow, elevationTargetHigh, elevationTargetLow, elevationOK]
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
@@ -335,10 +341,7 @@ for r in range(repeat):
             setAction(wbDir, timeStart, action, wb)
             path = os.getcwd()
             os.chdir(wbDir)
-            #subprocess.check_call(['../bin/cequalw2.v371.mac', wbDir])
-            #subprocess.check_call(['scripts/run.cequalw2.sh', "wb"+str(wb+1)+'/'], shell=True)
             subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
-            #subprocess.check_call('../scripts/run.sh', shell=True)
             os.chdir(path)
             if wb != (numDams - 1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
