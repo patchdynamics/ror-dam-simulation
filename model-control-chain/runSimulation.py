@@ -43,6 +43,7 @@ MIN_ELEVATION = 220
 MAX_ELEVATION = 225
 TARGET_HIGH_ELEVATION = 223.5
 TARGET_LOW_ELEVATION = 222.5
+TARGET_ELEVATION = 223
 
 # Set to true to stop learning
 TESTING = False
@@ -70,18 +71,7 @@ def getReward(wb):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
-    if elevation < MIN_ELEVATION:
-        #reward =  -np.exp(MIN_ELEVATION - elevation)
-        reward = -5
-    elif elevation < TARGET_LOW_ELEVATION:
-        reward = -1
-    elif elevation > MAX_ELEVATION:
-        #reward = -np.exp(elevation - MAX_ELEVATION)
-        reward = -5
-    elif elevation > TARGET_HIGH_ELEVATION:
-        reward = -1
-    else:
-        reward = 2
+    reward = 2 - abs(elevation - TARGET_ELEVATION)
     return reward, elevation
 
 
