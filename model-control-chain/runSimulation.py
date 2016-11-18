@@ -167,18 +167,27 @@ def getState(timeStart, year, actionInds, numActions):
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
-    elevationJudgements = np.empty([numDams,18])
+    elevationJudgements = np.empty([numDams,19])
     temperatureJudgements = np.empty([numDams,3])
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
         elevations = np.genfromtxt(wlFile, delimiter=",")
         elevation = elevations[-1,33]
-        elevationLevels = [1,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,300]
+        elevationLevels = [1,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,300]
         lesser = np.array(elevationLevels) < elevation
         greater = np.array(elevationLevels) > elevation-1
-        elevationJudgements[f-1] = np.logical_and(lesser, greater).astype(int)
-        print elevationJudgements
+        if(np.sum(lesser) == 1):
+            elevationJudgements[f-1] = lesser
+        elif(np.sum(greater) == 1):
+            elevationJudgements[f-1] = greater
+        else:
+            elevationJudgements[f-1] = np.logical_and(lesser, greater).astype(int)
+        #print 'Elevation Judgements'
+        #print elevation
+        #print elevationJudgements
+        if(np.sum(elevationJudgements) != 1):
+            print 'ERROR'
 
         #elevationHigh = int(elevation > MAX_ELEVATION)
         #elevationLow = int(elevation < MIN_ELEVATION)
