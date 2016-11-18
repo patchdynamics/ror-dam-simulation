@@ -24,6 +24,7 @@ STATS_DIR = "stats/"
 WEIGHTS_FILE = "weights.npy"
 REWARDS_FILE = "rewards.txt"
 ACTIONS_FILE = "actions.txt"
+QIN_FILE = "QINs.txt"
 
 # Hyperparameters
 EPSILON_GREEDY = 0.25 # TODO: Should start high & decrease over time
@@ -31,12 +32,12 @@ FUTURE_DISCOUNT = 0.75
 STEP_SIZE = 0.01
 
 # Actions
-SPILLWAY_OUTFLOWS = [0, 600, 1800]
-POWERHOUSE_OUTFLOWS = [500, 1500, 3000]
-HYPOLIMNAL_OUTFLOWS = [0, 1000]
-#SPILLWAY_OUTFLOWS = [0]
-#POWERHOUSE_OUTFLOWS = [800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400]
-#HYPOLIMNAL_OUTFLOWS = [0]
+#SPILLWAY_OUTFLOWS = [0, 600, 1800]
+#POWERHOUSE_OUTFLOWS = [500, 1500, 3000]
+#HYPOLIMNAL_OUTFLOWS = [0, 1000]
+SPILLWAY_OUTFLOWS = [0]
+POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
+HYPOLIMNAL_OUTFLOWS = [0]
 
 # Reward parameters
 MIN_ELEVATION = 220
@@ -115,8 +116,8 @@ def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
 def getState(timeStart, year, actionInds, numActions):
-    wbQIN = np.empty([numDams,1])
-    wbTIN = np.empty([numDams,1])
+    wbQIN = np.empty(numDams)
+    wbTIN = np.empty(numDams)
 
     # Get QIN/TIN for today on Dam 1
     wbiQIN= np.loadtxt('wb1/qin.npt', skiprows=3)
@@ -205,7 +206,7 @@ def getState(timeStart, year, actionInds, numActions):
 
 #    stateArray = np.append(stateArray, gateState.flatten())
 
-    return stateArray
+    return stateArray, wbQIN
 
 def getAction(state, weights, possibleActions):
    if not TESTING and random.random() < EPSILON_GREEDY:
@@ -258,7 +259,7 @@ def updateWeights(state, actionInds, rewards, nextState, weights, possibleAction
     print weights
     return weights
 
-def outputStats(weights, rewards, elevations, actionInds, possibleActions):
+def outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions):
     with open(STATS_DIR + REWARDS_FILE, "a") as fout:
         np.savetxt(fout, rewards, newline=",")
         np.savetxt(fout, elevations, newline=",")
@@ -268,6 +269,9 @@ def outputStats(weights, rewards, elevations, actionInds, possibleActions):
             action = possibleActions[actionInds[i]]
             print action, sum(int(flow) for flow in action)
             fout.write(str(sum(int(flow) for flow in action)) + ",")
+        fout.write("\n")
+    with open(STATS_DIR + QIN_FILE, "a") as fout:
+        np.savetxt(fout, wbQIN, newline=",")
         fout.write("\n")
     for i in range(numDams):
         weightsFile = STATS_DIR + "weights" + str(i+1) +".txt"
@@ -311,7 +315,7 @@ for r in range(repeat):
     copyInYearFiles(year, numDams)
     possibleActions = calculatePossibleActions()
     print possibleActions
-    state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
+    state, wbQIN = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
 
     try:
         weights = np.load(WEIGHTS_FILE)
@@ -346,11 +350,11 @@ for r in range(repeat):
             rewards[wb], elevations[wb] = getReward(wb)
             #raw_input("Press Enter to continue...")
 
-        nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
+        nextState, wbQIN = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
         if not TESTING:
             weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
 
-        outputStats(weights, rewards, elevations, actionInds, possibleActions)
+        outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions)
 
         timeStart = timeStart + timeStep
         state = nextState
