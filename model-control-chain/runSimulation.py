@@ -40,8 +40,8 @@ POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 
 HYPOLIMNAL_OUTFLOWS = [0]
 
 # Reward parameters
-MIN_ELEVATION = 220
-MAX_ELEVATION = 225
+MIN_ELEVATION = 210
+MAX_ELEVATION = 230
 TARGET_HIGH_ELEVATION = 223.5
 TARGET_LOW_ELEVATION = 222.5
 TARGET_ELEVATION = 223
@@ -72,7 +72,10 @@ def getReward(wb):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
-    reward = 2 - abs(elevation - TARGET_ELEVATION)
+    #reward = 2 - abs(elevation - TARGET_ELEVATION)
+    reward = 0
+    if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
+        reward = -100
     return reward, elevation
 
 
@@ -81,12 +84,12 @@ def getReward(wb):
     # TODO: This is for one dam, do the same for other dams
     if gatesOn[0,1]:
         powerStr = int(np.sum(gatesOn[0,:2]))
-        print powerStr
+        #_print powerStr
         qPowerGate = np.genfromtxt(fileDir + QWO_FILE, delimiter=",", skip_header=3, usecols=(1+powerStr))
     else:
         qPowerGate = 0
-    print temps
-    print qPowerGate
+    #_print temps
+    #_print qPowerGate
     return qPowerGate - np.mean(temps) #TODO: Calculate a reward
 '''
 
@@ -139,8 +142,8 @@ def getState(timeStart, year, actionInds, numActions):
         wbTINindicators[f,3] = int(wbTIN[f] > 16 and wbTIN[f] <= 18)
         wbTINindicators[f,4] = int(wbTIN[f] > 18 and wbTIN[f] <= 20)
         wbTINindicators[f,5] = int(wbTIN[f] > 20)
-    #print(wbQINindicators)
-    #print(wbTINindicators)
+    ##_print(wbQINindicators)
+    ##_print(wbTINindicators)
 
     # Weather Judgement
     # Read in next week of weather
@@ -158,63 +161,67 @@ def getState(timeStart, year, actionInds, numActions):
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
-    elevationJudgements = np.empty([numDams,19])
-    temperatureJudgements = np.empty([numDams,3])
+    elevationJudgements = np.zeros([numDams,23])
+    temperatureJudgements = np.zeros([numDams,3])
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
         elevations = np.genfromtxt(wlFile, delimiter=",")
         elevation = elevations[-1,33]
-        elevationLevels = [1,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,300]
+        elevationLevels = [210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230]
         lesser = np.array(elevationLevels) < elevation
-        greater = np.array(elevationLevels) > elevation-1
+        greater = np.array(elevationLevels) >= elevation-1
         if(np.sum(lesser) == 1):
-            elevationJudgements[f-1] = lesser
+            elevationJudgements[f-1,0:21] = lesser.astype(int)
         elif(np.sum(greater) == 1):
-            elevationJudgements[f-1] = greater
+            elevationJudgements[f-1,0:21] = greater.astype(int)
         else:
-            elevationJudgements[f-1] = np.logical_and(lesser, greater).astype(int)
-        #print 'Elevation Judgements'
-        #print elevation
-        #print elevationJudgements
+            elevationJudgements[f-1,0:21] = np.logical_and(lesser, greater).astype(int)
         if(np.sum(elevationJudgements) != 1):
+            # we have lost, and are in the drained or overflow state
+            if(elevation <= MIN_ELEVATION):
+                elevationJudgements[f-1,-1] = 1
+            elif(elevation >= MAX_ELEVATION):
+                elevationJudgements[f-1,-2] = 1
+        ##_print 'Elevation Judgements'
+        ##_print elevation
+        #_print elevationJudgements
+        if(np.sum(elevationJudgements) != 1):
+            print elevation
+            print lesser
+            print greater
+            print elevationJudgements
             print 'ERROR'
-
-        #elevationHigh = int(elevation > MAX_ELEVATION)
-        #elevationLow = int(elevation < MIN_ELEVATION)
-        #elevationTargetHigh = int(not elevationHigh and (elevation >= TARGET_HIGH_ELEVATION))
-        #elevationTargetLow = int(not elevationLow and (elevation <= TARGET_LOW_ELEVATION))
-        #elevationOK = int(elevation < TARGET_HIGH_ELEVATION and elevation > TARGET_LOW_ELEVATION)
-        #elevationJudgements[f-1] = [elevationHigh, elevationLow, elevationTargetHigh, elevationTargetLow, elevationOK]
+            raw_input("Press Enter to continue...")
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
         seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == timeStart)]
-        #temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1] > 65)
-        #temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1] > 65)
-        #temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1] > 65)
-        temp220 = 0
-        temp202 = 0
-        temp191 = 0
+        temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1] > 65)
+        temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1] > 65)
+        temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1] > 65)
+        #temp220 = 0
+        #temp202 = 0
+        #temp191 = 0
         temperatureJudgements[f-1] = [temp220, temp202, temp191]
 
     # Construct State Array
     stateArray = elevationJudgements.flatten()
-#    stateArray = np.append(stateArray, weatherJudgements[0,0])
-#    stateArray = np.append(stateArray, temperatureJudgements.flatten())
+    #stateArray = np.append(stateArray, weatherJudgements[0,0])
+    #stateArray = np.append(stateArray, temperatureJudgements.flatten())
     stateArray = np.append(stateArray, wbQINindicators)
-#    stateArray = np.append(stateArray, wbTINindicators)
+    #stateArray = np.append(stateArray, wbTINindicators)
 
     gateState = np.zeros((numDams, numActions)) #numDams x numActions
     for i in range(numDams):
         gateState[i, actionInds.astype(int)[i]] = 1
 
-#    stateArray = np.append(stateArray, gateState.flatten())
-
+    # stateArray = np.append(stateArray, gateState.flatten())
     return stateArray, wbQIN
 
 def getAction(state, weights, possibleActions):
    if not TESTING and random.random() < EPSILON_GREEDY:
+        #print 'Random'
         return random.randrange(possibleActions.shape[0])
    else:
         [bestActionInd, Vopt] = getBestAction(state, weights, possibleActions)
@@ -224,8 +231,8 @@ def getBestAction(state, weights, possibleActions):
     Qopts = np.empty(possibleActions.shape[0])
     for actionInd in range(possibleActions.shape[0]):
         Qopts[actionInd] = calculateQopt(state, actionInd, weights)
-    print 'Qopts'
-    print Qopts
+    #_print 'Qopts'
+    #_print Qopts
     bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
     bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
     return bestActionInd, Qopts[bestActionInd]
@@ -241,27 +248,27 @@ def calculateQopt(state, actionInd, weights):
 
 # TODO: Add regularization?
 def updateWeights(state, actionInds, rewards, nextState, weights, possibleActions):
-    print 'state'
-    print state
-    print 'next state'
-    print nextState
-    print 'rewards'
-    print rewards
-    print 'actionInds'
-    print actionInds
-    print 'weights'
-    print weights
+    #_print 'state'
+    #_print state
+    #_print 'next state'
+    #_print nextState
+    #_print 'rewards'
+    #_print rewards
+    #_print 'actionInds'
+    #_print actionInds
+    #_print 'weights'
+    #_print weights
     for i in range(numDams):
         features = getFeatures(state, actionInds[i], weights[i].shape)
-        print 'features'
-        print features
+        #_print 'features'
+        #_print features
         [nextAction, Vopt] = getBestAction(nextState, weights[i], possibleActions)
         error = calculateQopt(state, actionInds[i], weights[i]) - (rewards[i] + FUTURE_DISCOUNT * Vopt)
-        print 'Qopt   Vopt'
-        print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
+        #_print 'Qopt   Vopt'
+        #_print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
         weights[i] = weights[i] - STEP_SIZE * error * features
-    print 'updated weights'
-    print weights
+    #_print 'updated weights'
+    #_print weights
     return weights
 
 def outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions):
@@ -272,7 +279,7 @@ def outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions
     with open(STATS_DIR + ACTIONS_FILE, "a") as fout:
         for i in range(numDams):
             action = possibleActions[actionInds[i]]
-            print action, sum(int(flow) for flow in action)
+            #_print action, sum(int(flow) for flow in action)
             fout.write(str(sum(int(flow) for flow in action)) + ",")
         fout.write("\n")
     with open(STATS_DIR + QIN_FILE, "a") as fout:
@@ -321,7 +328,7 @@ for r in range(repeat):
     timeStart = timeStartBegin
     copyInYearFiles(year, numDams)
     possibleActions = calculatePossibleActions()
-    print possibleActions
+    #_print possibleActions
     state, wbQIN = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
 
     try:
@@ -335,13 +342,13 @@ for r in range(repeat):
     rewards = np.zeros(numDams)
     elevations = np.zeros(numDams)
     for i in range(numDays):
-        print 'Day ' + str(timeStart)
+        #print 'Day ' + str(timeStart)
         for wb in range(numDams):
             actionInd = getAction(state, weights[wb], possibleActions)
             actionInds[wb] = actionInd
             action = possibleActions[actionInd]
             wbDir = 'wb'+str(wb+1)+'/'
-            #print wbDir
+            ##_print wbDir
             modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
             setAction(wbDir, timeStart, action, wb)
             path = os.getcwd()
@@ -360,7 +367,18 @@ for r in range(repeat):
 
         outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions)
 
+        if True in (rewards < 0):
+            # Move to next epoch
+            print 'Day ' + str(timeStart)
+            print 'Lose'
+            np.save(WEIGHTS_FILE, weights)
+            print(weights)
+            sys.exit()
+
+
         timeStart = timeStart + timeStep
         state = nextState
+
+
 
     np.save(WEIGHTS_FILE, weights)
