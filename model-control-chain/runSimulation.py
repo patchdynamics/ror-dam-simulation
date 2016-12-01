@@ -1,13 +1,14 @@
 #!/usr/bin/python
+import sys, getopt
+import os
+sys.path.append(os.getcwd()) 
 import numpy as np
 import subprocess
-import os
 from shutil import copyfile
 import struct
 from sklearn.utils.extmath import cartesian
 import random
 import re
-import sys, getopt
 
 PROJECT_DIR = "../" #ror-dam-simulation directory
 CE_QUAL_W2_EXE = "../bin/cequalw2.v371.mac"
@@ -177,6 +178,9 @@ def getState(timeStart, year, actionInds, numActions):
             elevationJudgements[f-1,0:21] = greater.astype(int)
         else:
             elevationJudgements[f-1,0:21] = np.logical_and(lesser, greater).astype(int)
+        ##_#_print 'Elevation Judgements'
+        ##_#_print elevation
+        ##_#_print elevationJudgements
         if(np.sum(elevationJudgements) != 1):
             # we have lost, and are in the drained or overflow state
             if(elevation <= MIN_ELEVATION):
@@ -302,12 +306,12 @@ if len(sys.argv) > 1:
     try:
       opts, args = getopt.getopt(sys.argv[1:],"he:r:d:ts:",["eps=", "repeat=", "dams=", "days=", "test", "year=", "step="])
     except getopt.GetoptError:
-      print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test'
+      #_#_print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test'
       sys.exit()
 
     for opt, arg in opts:
       if opt == '-h':
-         print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> -s <stepsize> --test'
+         #_#_print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> -s <stepsize> --test'
          sys.exit()
       elif opt in ("-e", "--eps"):
          EPSILON_GREEDY = float(arg)
@@ -333,10 +337,10 @@ for r in range(repeat):
 
     try:
         weights = np.load(WEIGHTS_FILE)
-        print "Restarting with existing weights"
+        #_#_print "Restarting with existing weights"
     except IOError:
         weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
-        print "Starting with new weights"
+        #_#_print "Starting with new weights"
 
     actionInds = np.zeros(numDams)
     rewards = np.zeros(numDams)
@@ -353,7 +357,7 @@ for r in range(repeat):
             setAction(wbDir, timeStart, action, wb)
             path = os.getcwd()
             os.chdir(wbDir)
-            subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
+            subprocess.check_call(['/home/mshultz/ror-dam-simulation/bin/cequalw2.v371.linux', '.'], shell=True)
             os.chdir(path)
             if wb != (numDams - 1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
