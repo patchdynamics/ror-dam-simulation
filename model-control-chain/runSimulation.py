@@ -83,7 +83,7 @@ def getReward(wb):
 
     temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
     temperatureOut = temperatureOut[-1,1]
-    if temperatureOut > 70:
+    if temperatureOut > 21.2:
         reward = -100
 
     return reward, elevation
