@@ -119,6 +119,7 @@ def copyInYearFiles(year, numDams):
 def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
+# returns state represented as a tuple of (QINs, TINs, airTempForecast, solarFluxForecast, elevations, temps)
 def getState(timeStart, year, actionInds, numActions):
     wbQIN = np.empty(numDams)
     wbTIN = np.empty(numDams)
@@ -136,99 +137,43 @@ def getState(timeStart, year, actionInds, numActions):
         wbiTIN = np.loadtxt('wb'+str(f)+'/tin.npt', skiprows=3)
         wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
 
-    wbQINindicators = np.empty([numDams,8])
-    wbTINindicators = np.empty([numDams,6])
-    for f in range(0, numDams):
-        wbQINindicators[f,0] = int(wbQIN[f] <= 700)
-        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] <= 1200)
-        wbQINindicators[f,2] = int(wbQIN[f] > 1200  and wbQIN[f] <= 1700)
-        wbQINindicators[f,3] = int(wbQIN[f] > 1700  and wbQIN[f] <= 2200)
-        wbQINindicators[f,4] = int(wbQIN[f] > 2200  and wbQIN[f] <= 2700)
-        wbQINindicators[f,5] = int(wbQIN[f] > 2700  and wbQIN[f] <= 3200)
-        wbQINindicators[f,6] = int(wbQIN[f] > 3700  and wbQIN[f] <= 4200)
-        wbQINindicators[f,7] = int(wbQIN[f] > 4200)
-        wbTINindicators[f,0] = int(wbTIN[f] <= 12)
-        wbTINindicators[f,1] = int(wbTIN[f] > 12 and wbTIN[f] <= 14)
-        wbTINindicators[f,2] = int(wbTIN[f] > 14 and wbTIN[f] <= 16)
-        wbTINindicators[f,3] = int(wbTIN[f] > 16 and wbTIN[f] <= 18)
-        wbTINindicators[f,4] = int(wbTIN[f] > 18 and wbTIN[f] <= 20)
-        wbTINindicators[f,5] = int(wbTIN[f] > 20)
-    ##_print(wbQINindicators)
-    ##_print(wbTINindicators)
-
     # Weather Judgement
     # Read in next week of weather
     # Average and noise it
     # this is a 'fake forecast', and we will only use the first one for now
-    weatherJudgements = np.empty([numDams,2])
     futureDays = 5
     for f in range(1, numDams+1):
         met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3, delimiter=',')
         future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
         average = sum(future)/futureDays
         airTempForecast = np.random.normal(average[1], scale=2)
-        airTempJudgement = int(airTempForecast > 65)
         solarFluxForecast = np.random.normal(average[6], scale=50)
-        solarFluxJudgement = int(solarFluxForecast > 300)
-        weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
-    elevationJudgements = np.zeros([numDams,23])
-    temperatureJudgements = np.zeros([numDams,3])
+    elevations = np.zeros(numDams)
+    temps = np.zeros([numDams,3])
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
-        elevations = np.genfromtxt(wlFile, delimiter=",")
-        elevation = elevations[-1,33]
-        elevationLevels = [210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230]
-        lesser = np.array(elevationLevels) < elevation
-        greater = np.array(elevationLevels) >= elevation-1
-        if(np.sum(lesser) == 1):
-            elevationJudgements[f-1,0:21] = lesser.astype(int)
-        elif(np.sum(greater) == 1):
-            elevationJudgements[f-1,0:21] = greater.astype(int)
-        else:
-            elevationJudgements[f-1,0:21] = np.logical_and(lesser, greater).astype(int)
-        if(np.sum(elevationJudgements) != 1):
-            # we have lost, and are in the drained or overflow state
-            if(elevation <= MIN_ELEVATION):
-                elevationJudgements[f-1,-1] = 1
-            elif(elevation >= MAX_ELEVATION):
-                elevationJudgements[f-1,-2] = 1
-        ##_print 'Elevation Judgements'
-        ##_print elevation
-        #_print elevationJudgements
-        if(np.sum(elevationJudgements) != 1):
-            print elevation
-            print lesser
-            print greater
-            print elevationJudgements
-            print 'ERROR'
-            raw_input("Press Enter to continue...")
+        wbElevations = np.genfromtxt(wlFile, delimiter=",")
+        elevations[f-1] = wbElevations[-1,33]
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
         seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == timeStart)]
-        temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1] > 65)
-        temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1] > 65)
-        temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1] > 65)
+        temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1])
+        temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1])
+        temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1])
         #temp220 = 0
         #temp202 = 0
         #temp191 = 0
-        temperatureJudgements[f-1] = [temp220, temp202, temp191]
+        temps[f-1] = [temp220, temp202, temp191]
 
-    # Construct State Array
-    stateArray = elevationJudgements.flatten()
-    stateArray = np.append(stateArray, weatherJudgements[0,0])
-    stateArray = np.append(stateArray, temperatureJudgements.flatten())
-    stateArray = np.append(stateArray, wbQINindicators)
-    stateArray = np.append(stateArray, wbTINindicators)
-
-    gateState = np.zeros((numDams, numActions)) #numDams x numActions
-    for i in range(numDams):
-        gateState[i, actionInds.astype(int)[i]] = 1
-
+    #gateState = np.zeros((numDams, numActions)) #numDams x numActions
+    #for i in range(numDams):
+    #    gateState[i, actionInds.astype(int)[i]] = 1
     # stateArray = np.append(stateArray, gateState.flatten())
-    return stateArray, wbQIN
+
+    return (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps)
 
 def getAction(state, dam, possibleActions):
    if not TESTING and random.random() < EPSILON_GREEDY:
@@ -274,7 +219,7 @@ def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
 timeStartBegin = 60
 timeStep = 1
 year = 2014
-numDams = 1
+numDams = 4
 numDays = 215
 repeat = 1
 algorithm = Linear(numDams)
@@ -313,9 +258,9 @@ for r in range(repeat):
     copyInYearFiles(year, numDams)
     possibleActions = calculatePossibleActions()
     #_print possibleActions
-    state, wbQIN = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
+    state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
 
-    algorithm.loadModel(state.shape[0], possibleActions.shape[0])
+    algorithm.loadModel(state, possibleActions)
 
     actionInds = np.zeros(numDams)
     rewards = np.zeros(numDams)
@@ -340,7 +285,7 @@ for r in range(repeat):
             rewards[wb], elevations[wb] = getReward(wb)
             #raw_input("Press Enter to continue...")
 
-        nextState, wbQIN = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
+        nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
         if not TESTING:
             algorithm.incorporateObservations(state, actionInds, rewards, nextState, possibleActions)
 

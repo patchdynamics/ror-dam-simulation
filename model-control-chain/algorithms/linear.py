@@ -14,8 +14,9 @@ class Linear(Base):
 
 
     def getFeatures(self, state, actionInd, shape):
+        stateArray = self.discretizeState(state)
         features = np.zeros(shape)
-        features[:, actionInd] = state # TODO: Add a bias term?
+        features[:, actionInd] = stateArray # TODO: Add a bias term?
         return features
 
     def getQopt(self, state, actionInd, dam):
@@ -38,7 +39,7 @@ class Linear(Base):
             #_print 'features'
             #_print features
             [nextAction, Vopt] = getBestAction(nextState, self.weights[i], possibleActions)
-            error = calculateQopt(state, actionInds[i], i) - (rewards[i] + FUTURE_DISCOUNT * Vopt)
+            error = getQopt(state, actionInds[i], i) - (rewards[i] + FUTURE_DISCOUNT * Vopt)
             #_print 'Qopt   Vopt'
             #_print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
             self.weights[i] = self.weights[i] - STEP_SIZE * error * features
@@ -58,10 +59,12 @@ class Linear(Base):
         np.save(WEIGHTS_FILE, self.weights)
         print(weights)
 
-    def loadModel(self, numStates, numActions):
+    def loadModel(self, state, possibleActions):
+        print state
         try:
             self.weights = np.load(WEIGHTS_FILE)
             print "Restarting with existing weights"
         except IOError:
-            self.weights = np.zeros((self.numDams, numStates, numActions))
+            stateArray = self.discretizeState(state)
+            self.weights = np.zeros((self.numDams, stateArray.shape[0], possibleActions.shape[0]))
             print "Starting with new weights"
