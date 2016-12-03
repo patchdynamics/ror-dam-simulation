@@ -1,5 +1,9 @@
 import numpy as np
 
+
+MIN_ELEVATION = 210
+MAX_ELEVATION = 230
+
 class Base():
 
     def __init__(self, numDams):
@@ -17,7 +21,7 @@ class Base():
 
     ########## Optional Methods ###########
 
-    def outputStats(self, numDams):
+    def outputStats(self, statsDir):
         pass
 
     def saveModel(self):
@@ -30,17 +34,11 @@ class Base():
     ########## Common Helper Methods #########
 
     def discretizeState(self, state):
-        (QINs, TINs, airTempForecast, solarFluxForecast, elevations, temps) = state
-        print QINs
-        print TINs
-        print airTempForecast
-        print solarFluxForecast
-        print elevations
-        print temps
+        (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
 
-        wbQINindicators = np.empty([numDams,8])
-        wbTINindicators = np.empty([numDams,6])
-        for f in range(0, numDams):
+        wbQINindicators = np.empty([self.numDams,8])
+        wbTINindicators = np.empty([self.numDams,6])
+        for f in range(0, self.numDams):
             wbQINindicators[f,0] = int(wbQIN[f] <= 700)
             wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] <= 1200)
             wbQINindicators[f,2] = int(wbQIN[f] > 1200  and wbQIN[f] <= 1700)
@@ -58,43 +56,40 @@ class Base():
         ##_print(wbQINindicators)
         ##_print(wbTINindicators)
 
-        weatherJudgements = np.empty([numDams,2])
+        weatherJudgements = np.empty([self.numDams,2])
         airTempJudgement = int(airTempForecast > 65)
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
-        elevationJudgements = np.zeros([numDams,23])
+        elevationJudgements = np.zeros([self.numDams,23])
         elevationLevels = [210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230]
-        lesser = np.array(elevationLevels) < elevation
-        greater = np.array(elevationLevels) >= elevation-1
-        if(np.sum(lesser) == 1):
-            elevationJudgements[f-1,0:21] = lesser.astype(int)
-        elif(np.sum(greater) == 1):
-            elevationJudgements[f-1,0:21] = greater.astype(int)
-        else:
-            elevationJudgements[f-1,0:21] = np.logical_and(lesser, greater).astype(int)
-        if(np.sum(elevationJudgements) != 1):
-            # we have lost, and are in the drained or overflow state
-            if(elevation <= MIN_ELEVATION):
-                elevationJudgements[f-1,-1] = 1
-            elif(elevation >= MAX_ELEVATION):
-                elevationJudgements[f-1,-2] = 1
-        ##_print 'Elevation Judgements'
-        ##_print elevation
-        #_print elevationJudgements
-        if(np.sum(elevationJudgements) != 1):
-            print elevation
-            print lesser
-            print greater
-            print elevationJudgements
-            print 'ERROR'
-            raw_input("Press Enter to continue...")
+        for wb in range(self.numDams):
+            lesser = np.array(elevationLevels) < elevations[wb]
+            greater = np.array(elevationLevels) >= elevations[wb]-1
+            if(np.sum(lesser) == 1):
+                elevationJudgements[wb,0:21] = lesser.astype(int)
+            elif(np.sum(greater) == 1):
+                elevationJudgements[wb,0:21] = greater.astype(int)
+            else:
+                elevationJudgements[wb,0:21] = np.logical_and(lesser, greater).astype(int)
+            if(np.sum(elevationJudgements) != 1):
+                # we have lost, and are in the drained or overflow state
+                if(elevations[wb] <= MIN_ELEVATION):
+                    elevationJudgements[wb,-1] = 1
+                elif(elevations[wb] >= MAX_ELEVATION):
+                    elevationJudgements[wb,-2] = 1
 
+                print elevations[wb]
+                print lesser
+                print greater
+                print elevationJudgements
+                print 'ERROR'
+                raw_input("Press Enter to continue...")
+            ##_print 'Elevation Judgements'
+            ##_print elevation
+            #_print elevationJudgements
 
-        temperatureJudgements = np.zeros([numDams,3])
-        temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1] > 65)
-        temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1] > 65)
-        temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1] > 65)
+        temperatureJudgements = (temps > 65).astype(int)
 
         # Construct State Array
         stateArray = elevationJudgements.flatten()
@@ -102,3 +97,5 @@ class Base():
         stateArray = np.append(stateArray, temperatureJudgements.flatten())
         stateArray = np.append(stateArray, wbQINindicators)
         stateArray = np.append(stateArray, wbTINindicators)
+
+        return stateArray

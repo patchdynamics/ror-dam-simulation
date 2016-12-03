@@ -160,9 +160,9 @@ def getState(timeStart, year, actionInds, numActions):
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
         seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == timeStart)]
-        temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1])
-        temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1])
-        temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1])
+        temp220 = float(seg34ForTime[seg34ForTime[:,0].size - 15,1])
+        temp202 = float(seg34ForTime[seg34ForTime[:,0].size - 11,1])
+        temp191 = float(seg34ForTime[seg34ForTime[:,0].size - 6,1])
         #temp220 = 0
         #temp202 = 0
         #temp191 = 0
@@ -219,7 +219,7 @@ def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
 timeStartBegin = 60
 timeStep = 1
 year = 2014
-numDams = 4
+numDams = 1
 numDays = 215
 repeat = 1
 algorithm = Linear(numDams)

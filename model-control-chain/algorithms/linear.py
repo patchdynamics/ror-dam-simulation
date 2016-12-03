@@ -21,7 +21,7 @@ class Linear(Base):
 
     def getQopt(self, state, actionInd, dam):
         features = self.getFeatures(state, actionInd, self.weights[dam].shape)
-        return self.weights.flatten().dot(features.flatten())
+        return self.weights[dam].flatten().dot(features.flatten())
 
     def incorporateObservations(self, state, actionInds, rewards, nextState, possibleActions):
         #_print 'state'
