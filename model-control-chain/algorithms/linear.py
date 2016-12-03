@@ -6,24 +6,23 @@ WEIGHTS_FILE = "weights.npy"
 
 class Linear(Base):
 
-    def __init__(self, numDams, stepsize, futureDiscount):
-        Base.__init__(self, numDams, stepsize, futureDiscount)
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
+        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions)
         self.weights = None
 
-    #TODO: state should be the raw real-valued state (& discretized in here...)
+    def getQopt(self, state, actionInd, dam):
+        features = self.getFeatures(state, actionInd)
+        return self.weights[dam].flatten().dot(features.flatten())
 
 
-    def getFeatures(self, state, actionInd, shape):
+    def getFeatures(self, state, actionInd):
         stateArray = self.discretizeState(state)
-        features = np.zeros(shape)
+        features = np.zeros((stateArray.shape[0], self.possibleActions.shape[0]))
         features[:, actionInd] = stateArray # TODO: Add a bias term?
         return features
 
-    def getQopt(self, state, actionInd, dam):
-        features = self.getFeatures(state, actionInd, self.weights[dam].shape)
-        return self.weights[dam].flatten().dot(features.flatten())
 
-    def incorporateObservations(self, state, actionInds, rewards, nextState, possibleActions):
+    def incorporateObservations(self, state, actionInds, rewards, nextState):
         #_print 'state'
         #_print state
         #_print 'next state'
@@ -35,10 +34,10 @@ class Linear(Base):
         #_print 'weights'
         #_print weights
         for i in range(self.numDams):
-            features = self.getFeatures(state, actionInds[i], self.weights[i].shape)
+            features = self.getFeatures(state, actionInds[i])
             #_print 'features'
             #_print features
-            [nextAction, Vopt] = self.getBestAction(nextState, i, possibleActions)
+            [nextAction, Vopt] = self.getBestAction(nextState, i)
             error = self.getQopt(state, actionInds[i], i) - (rewards[i] + self.futureDiscount * Vopt)
             #_print 'Qopt   Vopt'
             #_print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
@@ -59,12 +58,11 @@ class Linear(Base):
         print(self.weights)
         print(np.sum(self.weights))
 
-    def loadModel(self, state, possibleActions):
-        print state
+    def loadModel(self, state):
         try:
             self.weights = np.load(WEIGHTS_FILE)
             print "Restarting with existing weights"
         except IOError:
             stateArray = self.discretizeState(state)
-            self.weights = np.zeros((self.numDams, stateArray.shape[0], possibleActions.shape[0]))
+            self.weights = np.zeros((self.numDams, stateArray.shape[0], self.possibleActions.shape[0]))
             print "Starting with new weights"

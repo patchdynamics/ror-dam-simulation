@@ -180,7 +180,7 @@ def getAction(state, dam, possibleActions):
         #print 'Random'
         return random.randrange(possibleActions.shape[0])
    else:
-        [bestActionInd, Vopt] = algorithm.getBestAction(state, dam, possibleActions)
+        [bestActionInd, Vopt] = algorithm.getBestAction(state, dam)
         return bestActionInd
 
 def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
@@ -242,15 +242,15 @@ if len(sys.argv) > 1:
       elif opt in ("-a", "--alg"):
           algClass = getattr(importlib.import_module("algorithms."+arg.lower()), arg)
 
-algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT)
+possibleActions = calculatePossibleActions()
+#_print possibleActions
+algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT, possibleActions)
 for r in range(repeat):
     timeStart = timeStartBegin
     copyInYearFiles(year, numDams)
-    possibleActions = calculatePossibleActions()
-    #_print possibleActions
     state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
 
-    algorithm.loadModel(state, possibleActions)
+    algorithm.loadModel(state)
 
     actionInds = np.zeros(numDams)
     rewards = np.zeros(numDams)
@@ -277,7 +277,7 @@ for r in range(repeat):
 
         nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
         if not TESTING:
-            algorithm.incorporateObservations(state, actionInds, rewards, nextState, possibleActions)
+            algorithm.incorporateObservations(state, actionInds, rewards, nextState)
 
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = nextState
         outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)

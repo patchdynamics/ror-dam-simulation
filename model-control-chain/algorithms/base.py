@@ -7,17 +7,18 @@ MAX_ELEVATION = 230
 
 class Base():
 
-    def __init__(self, numDams, stepsize, futureDiscount):
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
         self.numDams = numDams
         self.stepsize = stepsize
         self.futureDiscount = futureDiscount
+        self.possibleActions = possibleActions
 
     ######### Required Methods ############
 
     def getQopt(self, state, actionInd, dam):
         raise NotImplementedError()
 
-    def incorporateObservations(self, state, actionInds, rewards, nextState, possibleActions):
+    def incorporateObservations(self, state, actionInds, rewards, nextState):
         raise NotImplementedError()
 
 
@@ -30,23 +31,22 @@ class Base():
     def saveModel(self):
         pass
 
-    def loadModel(self, state, possibleActions):
+    def loadModel(self, state):
         pass
 
 
     ########## Common Methods ############
 
 
-    def getBestAction(self, state, dam, possibleActions):
-        Qopts = np.empty(possibleActions.shape[0])
-        for actionInd in range(possibleActions.shape[0]):
+    def getBestAction(self, state, dam):
+        Qopts = np.empty(self.possibleActions.shape[0])
+        for actionInd in range(self.possibleActions.shape[0]):
             Qopts[actionInd] = self.getQopt(state, actionInd, dam)
         #_print 'Qopts'
         #_print Qopts
         bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
         bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
         return bestActionInd, Qopts[bestActionInd]
-
 
     def discretizeState(self, state):
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
