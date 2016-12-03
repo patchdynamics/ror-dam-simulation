@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 
 MIN_ELEVATION = 210
@@ -6,8 +7,10 @@ MAX_ELEVATION = 230
 
 class Base():
 
-    def __init__(self, numDams):
+    def __init__(self, numDams, stepsize, futureDiscount):
         self.numDams = numDams
+        self.stepsize = stepsize
+        self.futureDiscount = futureDiscount
 
     ######### Required Methods ############
 
@@ -31,7 +34,19 @@ class Base():
         pass
 
 
-    ########## Common Helper Methods #########
+    ########## Common Methods ############
+
+
+    def getBestAction(self, state, dam, possibleActions):
+        Qopts = np.empty(possibleActions.shape[0])
+        for actionInd in range(possibleActions.shape[0]):
+            Qopts[actionInd] = self.getQopt(state, actionInd, dam)
+        #_print 'Qopts'
+        #_print Qopts
+        bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
+        bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
+        return bestActionInd, Qopts[bestActionInd]
+
 
     def discretizeState(self, state):
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
@@ -84,7 +99,7 @@ class Base():
                 print greater
                 print elevationJudgements
                 print 'ERROR'
-                raw_input("Press Enter to continue...")
+#                raw_input("Press Enter to continue...")
             ##_print 'Elevation Judgements'
             ##_print elevation
             #_print elevationJudgements

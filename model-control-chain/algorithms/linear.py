@@ -6,8 +6,8 @@ WEIGHTS_FILE = "weights.npy"
 
 class Linear(Base):
 
-    def __init__(self, numDams):
-        Base.__init__(self, numDams)
+    def __init__(self, numDams, stepsize, futureDiscount):
+        Base.__init__(self, numDams, stepsize, futureDiscount)
         self.weights = None
 
     #TODO: state should be the raw real-valued state (& discretized in here...)
@@ -35,17 +35,16 @@ class Linear(Base):
         #_print 'weights'
         #_print weights
         for i in range(self.numDams):
-            features = getFeatures(state, actionInds[i], self.weights[i].shape)
+            features = self.getFeatures(state, actionInds[i], self.weights[i].shape)
             #_print 'features'
             #_print features
-            [nextAction, Vopt] = getBestAction(nextState, self.weights[i], possibleActions)
-            error = getQopt(state, actionInds[i], i) - (rewards[i] + FUTURE_DISCOUNT * Vopt)
+            [nextAction, Vopt] = self.getBestAction(nextState, i, possibleActions)
+            error = self.getQopt(state, actionInds[i], i) - (rewards[i] + self.futureDiscount * Vopt)
             #_print 'Qopt   Vopt'
             #_print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
-            self.weights[i] = self.weights[i] - STEP_SIZE * error * features
+            self.weights[i] = self.weights[i] - self.stepsize * error * features
         #_print 'updated weights'
         #_print weights
-        return weights
 
 
     def outputStats(self, statsDir):
@@ -57,7 +56,8 @@ class Linear(Base):
 
     def saveModel(self):
         np.save(WEIGHTS_FILE, self.weights)
-        print(weights)
+        print(self.weights)
+        print(np.sum(self.weights))
 
     def loadModel(self, state, possibleActions):
         print state

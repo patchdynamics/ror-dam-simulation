@@ -82,10 +82,10 @@ def getReward(wb):
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
 
-    temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
-    temperatureOut = temperatureOut[-1,1]
-    if temperatureOut > 21.2:
-        reward = -100
+#    temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
+#    temperatureOut = temperatureOut[-1,1]
+#    if temperatureOut > 21.2:
+#        reward = -100
 
     return reward, elevation
 
@@ -180,18 +180,8 @@ def getAction(state, dam, possibleActions):
         #print 'Random'
         return random.randrange(possibleActions.shape[0])
    else:
-        [bestActionInd, Vopt] = getBestAction(state, dam, possibleActions)
+        [bestActionInd, Vopt] = algorithm.getBestAction(state, dam, possibleActions)
         return bestActionInd
-
-def getBestAction(state, dam, possibleActions):
-    Qopts = np.empty(possibleActions.shape[0])
-    for actionInd in range(possibleActions.shape[0]):
-        Qopts[actionInd] = algorithm.getQopt(state, actionInd, dam)
-    #_print 'Qopts'
-    #_print Qopts
-    bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
-    bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
-    return bestActionInd, Qopts[bestActionInd]
 
 def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
     with open(STATS_DIR + REWARDS_FILE, "a") as fout:
@@ -207,13 +197,13 @@ def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
     with open(STATS_DIR + QIN_FILE, "a") as fout:
         np.savetxt(fout, wbQIN, newline=",")
         fout.write("\n")
-    for i in range(numDams):
-        temperatureOut = np.loadtxt( "wb" + str(i+1) + "/two_34.opt", skiprows=3)
-        temperatureOut = temperatureOut[-1,1]
-        tempFile = STATS_DIR + "temperatures" + str(i+1) +".txt"
-        with open(tempFile, "a") as fout:
-            np.savetxt(fout, [temperatureOut], newline=",")
-            fout.write("\n")
+#    for i in range(numDams):
+#        temperatureOut = np.loadtxt( "wb" + str(i+1) + "/two_34.opt", skiprows=3)
+#        temperatureOut = temperatureOut[-1,1]
+#        tempFile = STATS_DIR + "temperatures" + str(i+1) +".txt"
+#        with open(tempFile, "a") as fout:
+#            np.savetxt(fout, [temperatureOut], newline=",")
+#            fout.write("\n")
     algorithm.outputStats(STATS_DIR)
 
 timeStartBegin = 60
@@ -222,7 +212,7 @@ year = 2014
 numDams = 1
 numDays = 215
 repeat = 1
-algorithm = Linear(numDams)
+algClass = getattr(importlib.import_module("algorithms.linear"), "Linear")
 
 if len(sys.argv) > 1:
     try:
@@ -235,9 +225,6 @@ if len(sys.argv) > 1:
       if opt == '-h':
          print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> -s <stepsize> --test'
          sys.exit()
-      elif opt in ("-a", "--alg"):
-         algClass = getattr(importlib.import_module("algorithms."+arg.lower()), arg)
-         algorithm = algClass(numDams)
       elif opt in ("-e", "--eps"):
          EPSILON_GREEDY = float(arg)
       elif opt in ("-s, --step"):
@@ -252,7 +239,10 @@ if len(sys.argv) > 1:
          year = int(arg)
       elif opt in ("-t", "--test"):
           TESTING = True
+      elif opt in ("-a", "--alg"):
+          algClass = getattr(importlib.import_module("algorithms."+arg.lower()), arg)
 
+algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT)
 for r in range(repeat):
     timeStart = timeStartBegin
     copyInYearFiles(year, numDams)
@@ -266,7 +256,7 @@ for r in range(repeat):
     rewards = np.zeros(numDams)
     elevations = np.zeros(numDams)
     for i in range(numDays):
-        #print 'Day ' + str(timeStart)
+        print 'Day ' + str(timeStart)
         for wb in range(numDams):
             actionInd = getAction(state, wb, possibleActions)
             actionInds[wb] = actionInd
@@ -289,6 +279,7 @@ for r in range(repeat):
         if not TESTING:
             algorithm.incorporateObservations(state, actionInds, rewards, nextState, possibleActions)
 
+        (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = nextState
         outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
 
         if True in (rewards < 0):
