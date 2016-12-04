@@ -10,8 +10,9 @@ class Lookup(Base):
         self.Qvalues = [{} for i in range(numDams)]
 
     def getQopt(self, state, actionInd, dam):
-        stateArray = self.discretizeState(state).tolist()
-        stateAction = stateArray.append(actionInd)
+        stateAction = self.discretizeState(state).tolist()
+        stateAction.append(actionInd)
+        stateAction = tuple(stateAction)
         if stateAction in self.Qvalues[dam]:
             return self.Qvalues[dam][stateAction]
         return 0
