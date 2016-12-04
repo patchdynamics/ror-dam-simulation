@@ -1,11 +1,12 @@
 from base import Base
 import numpy as np
 from sklearn.utils.extmath import cartesian
+import random
 
 KNN_FILE = "knn.npy"
 
 NUM_NEIGHBORS = 5
-NUM_POINTS_PER_DIM = 2
+NUM_POINTS_PER_DIM = 7
 #TODO: Realistic min/max values
 MIN_STATE = ((500, 4, 0, 0, 210, 4))
 MAX_STATE = ((7000, 22, 45, 400, 230, 22))
@@ -14,10 +15,10 @@ class KNN(Base):
 
     def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
         Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions)
+        self.Qvalues = [{} for i in range(numDams)]
         (self.minList, self.maxList) = self.createListOfMinMaxStateValues()
         self.statePoints = self.createStatePoints()
         print self.statePoints.shape
-        self.initQvalues()
 
     def createListOfMinMaxStateValues(self):
         (minQIN, minTIN, minAirTempForecast, minSolarFluxForecast, minElevation, minTemp) = MIN_STATE
@@ -50,11 +51,6 @@ class KNN(Base):
             stateDimArrays.append(dimArray)
         return cartesian(stateDimArrays)
 
-    def initQvalues(self):
-        pointActions = cartesian((range(len(self.statePoints)), range(self.possibleActions.shape[0])))
-        damQvalues = {tuple(pa): 0 for pa in pointActions }
-        self.Qvalues = [damQvalues for i in range(self.numDams)]
-
     def getStateArray(self, state):
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
         stateArray = np.array([airTempForecast, solarFluxForecast])
@@ -70,30 +66,41 @@ class KNN(Base):
         stateArray = self.getStateArray(state)
         distances = np.linalg.norm(stateArray - self.statePoints, axis=1)
         NNs = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
-        return (NNs, distances[NNs])
+        probs = self.calculateProbs(distances[NNs])
+        return (NNs, probs)
 
     # distances is array of distance to k nearest-neighbor states
     def calculateProbs(self, distances):
         weights = 1 / (1 + distances**2)
         return weights / np.sum(weights)
 
-    def getQopt(self, state, actionInd, dam):
-        (neighbors, distances) = self.findNNs(state)
-        probs = self.calculateProbs(distances)
-        NNQvalues = np.empty(NUM_NEIGHBORS)
+    def getQopt(self, state, actionInd, dam, neighbors, probs):
+        NNQvalues = np.zeros(NUM_NEIGHBORS)
         for k in range(NUM_NEIGHBORS):
             neighborAction = (neighbors[k], actionInd)
-            NNQvalues[k] = self.Qvalues[dam][neighborAction]
+            if neighborAction in self.Qvalues[dam]:
+                NNQvalues[k] = self.Qvalues[dam][neighborAction]
         return np.sum(NNQvalues * probs)
 
+    # Overwrite because too slow to do findNNs in getQopt and thus redo for every action!
+    def getBestAction(self, state, dam):
+        (neighbors, probs) = self.findNNs(state)
+        Qopts = np.empty(self.possibleActions.shape[0])
+        for actionInd in range(self.possibleActions.shape[0]):
+            Qopts[actionInd] = self.getQopt(state, actionInd, dam, neighbors, probs)
+        bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
+        bestActionInd = random.choice(bestActionIndices)[0]
+        return bestActionInd, Qopts[bestActionInd]
+
     def incorporateObservations(self, state, actionInds, rewards, nextState):
-        (neighbors, distances) = self.findNNs(state)
-        probs = self.calculateProbs(distances)
+        (neighbors, probs) = self.findNNs(state)
         for i in range(self.numDams):
             [nextAction, Vopt] = self.getBestAction(nextState, i)
             for k in range(NUM_NEIGHBORS):
                 neighborAction = (neighbors[k], actionInds[i])
-                oldQ = self.Qvalues[i][neighborAction]
+                oldQ = 0
+                if neighborAction in self.Qvalues[i]:
+                    oldQ = self.Qvalues[i][neighborAction]
                 error = rewards[i] + self.futureDiscount * Vopt - oldQ
                 self.Qvalues[i][neighborAction] = oldQ + self.stepsize * error * probs[k]
 
