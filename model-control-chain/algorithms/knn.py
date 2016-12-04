@@ -51,10 +51,9 @@ class KNN(Base):
         return cartesian(stateDimArrays)
 
     def initQvalues(self):
-        pointActions = cartesian(self.statePoints, self.possibleActions)
-        damQvalues = {pa: 0 for pa in pointActions }
+        pointActions = cartesian((range(len(self.statePoints)), range(self.possibleActions.shape[0])))
+        damQvalues = {tuple(pa): 0 for pa in pointActions }
         self.Qvalues = [damQvalues for i in range(self.numDams)]
-        print len(damQvalues)
 
     def getStateArray(self, state):
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
@@ -70,9 +69,7 @@ class KNN(Base):
     def findNNs(self, state):
         stateArray = self.getStateArray(state)
         distances = np.linalg.norm(stateArray - self.statePoints, axis=1)
-        print distances.shape
         NNs = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
-        print NNs
         return (NNs, distances[NNs])
 
     # distances is array of distance to k nearest-neighbor states
@@ -86,12 +83,20 @@ class KNN(Base):
         NNQvalues = np.empty(NUM_NEIGHBORS)
         for k in range(NUM_NEIGHBORS):
             neighborAction = (neighbors[k], actionInd)
-            print type(neighborAction)
             NNQvalues[k] = self.Qvalues[dam][neighborAction]
         return np.sum(NNQvalues * probs)
 
     def incorporateObservations(self, state, actionInds, rewards, nextState):
-        raise NotImplementedError()
+        (neighbors, distances) = self.findNNs(state)
+        probs = self.calculateProbs(distances)
+        for i in range(self.numDams):
+            [nextAction, Vopt] = self.getBestAction(nextState, i)
+            for k in range(NUM_NEIGHBORS):
+                neighborAction = (neighbors[k], actionInds[i])
+                oldQ = self.Qvalues[i][neighborAction]
+                error = rewards[i] + self.futureDiscount * Vopt - oldQ
+                self.Qvalues[i][neighborAction] = oldQ + self.stepsize * error * probs[k]
+
 
     def outputStats(self, statsDir):
         pass

@@ -26,8 +26,8 @@ class Lookup(Base):
             if stateAction in self.Qvalues[i]:
                 oldQ = self.Qvalues[i][stateAction]
 
-            update = rewards[i] + self.futureDiscount * Vopt
-            self.Qvalues[i][stateAction] = (1 - self.stepsize) * oldQ + self.stepsize * update
+            error = rewards[i] + self.futureDiscount * Vopt - oldQ
+            self.Qvalues[i][stateAction] = oldQ + self.stepsize * error
 
     def outputStats(self, statsDir):
         pass
