@@ -577,7 +577,7 @@ LPOM-N       OFF
 RPOM-N       OFF
 
 EX COEF    EXH2O    EXSS    EXOM    BETA     EXC    EXIC
-WB 1     0.25000 0.01000 0.40000 0.45000     OFF     OFF
+WB 1     0.45000 0.01000 0.10000 0.45000     OFF     OFF
 
 ALG EX       EXA     EXA     EXA     EXA     EXA     EXA
          0.00000
