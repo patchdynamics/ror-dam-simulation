@@ -72,7 +72,7 @@ class Base():
         ##_print(wbTINindicators)
 
         weatherJudgements = np.empty([self.numDams,2])
-        airTempJudgement = int(airTempForecast > 65)
+        airTempJudgement = int(airTempForecast > 18.3)
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 

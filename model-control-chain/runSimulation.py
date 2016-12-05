@@ -82,27 +82,11 @@ def getReward(wb):
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
 
-#    temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
-#    temperatureOut = temperatureOut[-1,1]
-#    if temperatureOut > 21.2:
-#        reward = -100
-
+    temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
+    temperatureOut = temperatureOut[-1,1]
+    if temperatureOut > 21.2:
+        reward = -100
     return reward, elevation
-
-
-'''
-    temps = np.genfromtxt(fileDir + TEMPERATURE_FILE, delimiter=",", skip_header=1, usecols = 4)
-    # TODO: This is for one dam, do the same for other dams
-    if gatesOn[0,1]:
-        powerStr = int(np.sum(gatesOn[0,:2]))
-        #_print powerStr
-        qPowerGate = np.genfromtxt(fileDir + QWO_FILE, delimiter=",", skip_header=3, usecols=(1+powerStr))
-    else:
-        qPowerGate = 0
-    #_print temps
-    #_print qPowerGate
-    return qPowerGate - np.mean(temps) #TODO: Calculate a reward
-'''
 
 def copyInYearFiles(year, numDams):
     for wb in range(1, numDams + 1):
@@ -140,14 +124,14 @@ def getState(timeStart, year, actionInds, numActions):
     # Weather Judgement
     # Read in next week of weather
     # Average and noise it
-    # this is a 'fake forecast', and we will only use the first one for now
+    # this is a 'fake forecast'
+    # Note: Using the same meteorological data for all dams
     futureDays = 5
-    for f in range(1, numDams+1):
-        met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3, delimiter=',')
-        future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
-        average = sum(future)/futureDays
-        airTempForecast = np.random.normal(average[1], scale=2)
-        solarFluxForecast = np.random.normal(average[6], scale=50)
+    met = np.loadtxt('wb1/met.npt', skiprows=3, delimiter=',')
+    future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
+    average = sum(future)/futureDays
+    airTempForecast = np.random.normal(average[1], scale=2)
+    solarFluxForecast = np.random.normal(average[6], scale=50)
 
     elevations = np.zeros(numDams)
     temps = np.zeros([numDams,3])
@@ -197,13 +181,13 @@ def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
     with open(STATS_DIR + QIN_FILE, "a") as fout:
         np.savetxt(fout, wbQIN, newline=",")
         fout.write("\n")
-#    for i in range(numDams):
-#        temperatureOut = np.loadtxt( "wb" + str(i+1) + "/two_34.opt", skiprows=3)
-#        temperatureOut = temperatureOut[-1,1]
-#        tempFile = STATS_DIR + "temperatures" + str(i+1) +".txt"
-#        with open(tempFile, "a") as fout:
-#            np.savetxt(fout, [temperatureOut], newline=",")
-#            fout.write("\n")
+    for i in range(numDams):
+        temperatureOut = np.loadtxt( "wb" + str(i+1) + "/two_34.opt", skiprows=3)
+        temperatureOut = temperatureOut[-1,1]
+        tempFile = STATS_DIR + "temperatures" + str(i+1) +".txt"
+        with open(tempFile, "a") as fout:
+            np.savetxt(fout, [temperatureOut], newline=",")
+            fout.write("\n")
     algorithm.outputStats(STATS_DIR)
 
 timeStartBegin = 60

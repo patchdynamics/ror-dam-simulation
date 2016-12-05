@@ -7,9 +7,10 @@ KNN_FILE = "knn.npy"
 
 NUM_NEIGHBORS = 5
 NUM_POINTS_PER_DIM = 7
-#TODO: Realistic min/max values
-MIN_STATE = ((500, 4, 0, 0, 210, 4))
-MAX_STATE = ((7000, 22, 45, 400, 230, 22))
+# TODO: Realistic min/max values
+# State = (logQIN, TIN, airTemp, solarFlux, elevation, waterTemp)
+MIN_STATE = ((6, 4, 0, 0, 210, 4))
+MAX_STATE = ((9, 22, 45, 400, 230, 22))
 
 class KNN(Base):
 
@@ -53,8 +54,9 @@ class KNN(Base):
 
     def getStateArray(self, state):
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
+        logQIN = np.log(wbQIN)
         stateArray = np.array([airTempForecast, solarFluxForecast])
-        stateArray = np.concatenate((wbQIN.flatten(), wbTIN.flatten(), stateArray, elevations.flatten(), temps.flatten()))
+        stateArray = np.concatenate((logQIN.flatten(), wbTIN.flatten(), stateArray, elevations.flatten(), temps.flatten()))
         return stateArray
 
     # Normalize all state dimensions on [-1,1]
