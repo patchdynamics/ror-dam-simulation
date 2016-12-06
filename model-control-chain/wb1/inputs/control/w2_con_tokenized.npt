@@ -49,7 +49,7 @@ LOCATION     LAT    LONG    EBOT      BS      BE    JBDN
 WB 1     46.6000 117.400 185.010       1       1       1
 
 INIT CND     T2I    ICEI  WTYPEC   GRIDC
-WB 1     3.70000 0.00000   FRESH    RECT
+WB 1     5.70000 0.00000   FRESH    RECT
 
 CALCULAT     VBC     EBC     MBC     PQC     EVC     PRC
 WB 1         OFF      ON     OFF     OFF      ON     OFF
@@ -279,10 +279,10 @@ TSR FREQ    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF    TSRF
              .25 
 
 TSR SEG     ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR    ITSR
-              3 
+              34 
 
 TSR LAYE    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR    ETSR
-               2
+              -1 
 
 WITH OUT    WDOC    NWDO   NIWDO
               ON       1       1
