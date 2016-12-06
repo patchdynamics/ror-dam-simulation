@@ -310,7 +310,7 @@ def outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions
 timeStartBegin = 60
 timeStep = 1
 year = 2014
-numDams = 4
+numDams = 1
 numDays = 215
 repeat = 1
 
