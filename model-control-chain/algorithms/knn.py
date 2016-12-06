@@ -90,8 +90,9 @@ class KNN(Base):
 
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
         actionQOUT = np.sum(self.possibleActions, 1)
-        # Only allow actions that are within 0.5*QIN and 2*QIN
-        disallowedActions = np.logical_or( actionQOUT < (wbQIN[dam] / 2), actionQOUT > 2 * wbQIN[dam] )
+        distances = (actionQOUT - wbQIN) ** 2
+        allowedActions = np.argpartition(distances, 5)[:5]
+        disallowedActions = [i for i in range(self.possibleActions.shape[0]) if i not in allowedActions]
 
         Qopts = np.empty(self.possibleActions.shape[0])
         for actionInd in range(self.possibleActions.shape[0]):

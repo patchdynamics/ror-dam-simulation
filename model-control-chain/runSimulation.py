@@ -83,10 +83,10 @@ def getReward(wb):
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
 
-    temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
-    temperatureOut = temperatureOut[-1,1]
-    if temperatureOut > 21.2:
-        reward = -100
+    #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
+    #temperatureOut = temperatureOut[-1,1]
+    #if temperatureOut > 21.2:
+    #    reward = -100
     return reward, elevation
 
 def copyInInputFiles(year, numDams):
@@ -174,13 +174,14 @@ def getState(currentTime, year, actionInds, numActions):
 def getAction(state, dam, possibleActions):
     (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
     actionQOUT = np.sum(possibleActions, 1)
-    # Only allow actions that are within 0.5*QIN and 2*QIN
-    allowedActions = np.logical_and( actionQOUT >= (wbQIN[dam] / 2), actionQOUT <= 2 * wbQIN[dam] )
+    # Only allow actions that are 5 NN to QIN
+    NUM_NEIGHBORS = 5
+    distances = (actionQOUT - wbQIN) ** 2
+    allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
     if not TESTING and random.random() < EPSILON_GREEDY:
         #print 'Random'
-        chosenAction = random.randrange( np.sum(allowedActions == True) )
-        indargs = [ i for i,a in enumerate(allowedActions) if a==True ]
-        return indargs[chosenAction]
+        chosenAction = random.randrange( NUM_NEIGHBORS )
+        return allowedActions[chosenAction]
     else:
         [bestActionInd, Vopt] = algorithm.getBestAction(state, dam)
         return bestActionInd
@@ -272,7 +273,8 @@ for r in range(repeat):
             setAction(wbDir, currentTime, action, wb)
             path = os.getcwd()
             os.chdir(wbDir)
-            subprocess.check_call(['/home/mshultz/ror-dam-simulation/bin/cequalw2.v371.linux', '.'], shell=True)
+            #subprocess.check_call(['/home/mshultz/ror-dam-simulation/bin/cequalw2.v371.linux', '.'], shell=True)
+            subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
             os.chdir(path)
             if wb != (numDams - 1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
