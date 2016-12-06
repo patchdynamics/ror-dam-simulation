@@ -93,7 +93,7 @@ def copyInInputFiles(year, numDams):
     for wb in range(1, numDams + 1):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
-        copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
+	copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
 
