@@ -297,10 +297,10 @@ WITH SEG    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO    IWDO
               34
 
 RESTART     RSOC    NRSO    RSIC
-              ON       1      ON
+             OFF       1     OFF
 
 RSO DATE    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD    RSOD
-        %TMEND_%
+        
 
 RSO FREQ    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF    RSOF
              1.0
@@ -742,7 +742,7 @@ REAERATION  TYPE    EQN#   COEF1   COEF2   COEF3   COEF4
 WB 1                   0 0.00000 0.00000 0.00000 0.00000
 
 RSI FILE..................................RSIFN.................................
-        %RSIFN%
+       rsin.npt - not used
 
 QWD FILE..................................QWDFN.................................
         qwd.npt - not used

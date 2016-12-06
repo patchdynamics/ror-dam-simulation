@@ -9,6 +9,8 @@ import struct
 from sklearn.utils.extmath import cartesian
 import random
 import re
+import importlib
+from algorithms.linear import Linear
 
 PROJECT_DIR = "../" #ror-dam-simulation directory
 CE_QUAL_W2_EXE = "../bin/cequalw2.v371.mac"
@@ -22,7 +24,6 @@ RSI_FILE = "rso%STEP%.opt"
 CHAINING_FILE = CONTROL_DIR + "scripts/propagate.flow.sh"
 ELEVATION_FILE = "wl.opt"
 STATS_DIR = "stats/"
-WEIGHTS_FILE = "weights.npy"
 REWARDS_FILE = "rewards.txt"
 ACTIONS_FILE = "actions.txt"
 QIN_FILE = "QINs.txt"
@@ -40,7 +41,7 @@ STEP_SIZE = 0.01
 # Simple
 # POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
 # Two Way
-SPILLWAY_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+SPILLWAY_OUTFLOWS = [0, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 HYPOLIMNAL_OUTFLOWS = [0]
 
@@ -64,8 +65,8 @@ def modifyControlFile(fileDir, timeStart, timeEnd, year):
                 line = line.replace("%YEAR__%", str(year).rjust(8))
                 fout.write(line)
 
-def setAction(fileDir, timeStart, action, wb):
-    line = str(timeStart+1).rjust(8)
+def setAction(fileDir, currentTime, action, wb):
+    line = str(currentTime+1).rjust(8)
     line += str(action[0]).rjust(8)
     line += str(action[1]).rjust(8)
     line += str(action[2]).rjust(8)
@@ -86,206 +87,105 @@ def getReward(wb):
     temperatureOut = temperatureOut[-1,1]
     if temperatureOut > 21.2:
         reward = -100
-
     return reward, elevation
 
-
-'''
-    temps = np.genfromtxt(fileDir + TEMPERATURE_FILE, delimiter=",", skip_header=1, usecols = 4)
-    # TODO: This is for one dam, do the same for other dams
-    if gatesOn[0,1]:
-        powerStr = int(np.sum(gatesOn[0,:2]))
-        #_print powerStr
-        qPowerGate = np.genfromtxt(fileDir + QWO_FILE, delimiter=",", skip_header=3, usecols=(1+powerStr))
-    else:
-        qPowerGate = 0
-    #_print temps
-    #_print qPowerGate
-    return qPowerGate - np.mean(temps) #TODO: Calculate a reward
-'''
-
-def copyInYearFiles(year, numDams):
+def copyInInputFiles(year, numDams):
     for wb in range(1, numDams + 1):
-        copyfile( CONTROL_DIR + "wb" + str(wb) + "/inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
-        spinupDir =  CONTROL_DIR + "wb" + str(wb) + "/inputs/spinup/" + str(year)
-        for f in os.listdir(spinupDir):
-            filename = spinupDir + "/" + f
-            if os.path.isfile(filename):
-                copyfile( filename , CONTROL_DIR + "wb" + str(wb) + "/" + f)
-    #copyfile( CONTROL_DIR + "wb1/inputs/QIN.CONSTANT.npt", CONTROL_DIR + "wb1/qin.npt")
+        wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
+        copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
+        copyfile( wbDir + "inputs/qot_br1.npt", wbDir + "qot_br1.npt" )
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
+
+def copyInOutputFiles(year, numDams):
+    for wb in range(1, numDams + 1):
+        wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
+        spinupDir =  wbDir + "inputs/spinup/" + str(year) + "/"
+        #for f in os.listdir(spinupDir):
+        #    filename = spinupDir + "/" + f
+        #    if os.path.isfile(filename):
+        #        copyfile( filename , CONTROL_DIR + "wb" + str(wb) + "/" + f)
+        files = os.listdir(wbDir)
+        for file in files:
+            if file.endswith(".opt"):
+                os.remove(os.path.join(wbDir,file))
+        copyfile( spinupDir + "wl.opt", wbDir + "wl.opt" )
+        copyfile( spinupDir + "spr.opt", wbDir + "spr.opt" )
 
 def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
-def getState(timeStart, year, actionInds, numActions):
+# returns state represented as a tuple of (QINs, TINs, airTempForecast, solarFluxForecast, elevations, temps)
+def getState(currentTime, year, actionInds, numActions):
     wbQIN = np.empty(numDams)
     wbTIN = np.empty(numDams)
 
     # Get QIN/TIN for today on Dam 1
     wbiQIN= np.loadtxt('wb1/qin.npt', skiprows=3)
-    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
+    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==currentTime),1]
     wbiTIN= np.loadtxt('wb1/tin.npt', skiprows=3)
-    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
+    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==currentTime),1]
 
     # Read last QIN/TIN for each of Dams 2-4
     for f in range(2, numDams+1):
         wbiQIN = np.loadtxt('wb'+str(f)+'/qin.npt', skiprows=3)
-        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
+        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==currentTime),1]
         wbiTIN = np.loadtxt('wb'+str(f)+'/tin.npt', skiprows=3)
-        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
-
-    wbQINindicators = np.empty([numDams,8])
-    wbTINindicators = np.empty([numDams,6])
-    for f in range(0, numDams):
-        wbQINindicators[f,0] = int(wbQIN[f] <= 700)
-        wbQINindicators[f,1] = int(wbQIN[f] > 700  and wbQIN[f] <= 1200)
-        wbQINindicators[f,2] = int(wbQIN[f] > 1200  and wbQIN[f] <= 1700)
-        wbQINindicators[f,3] = int(wbQIN[f] > 1700  and wbQIN[f] <= 2200)
-        wbQINindicators[f,4] = int(wbQIN[f] > 2200  and wbQIN[f] <= 2700)
-        wbQINindicators[f,5] = int(wbQIN[f] > 2700  and wbQIN[f] <= 3200)
-        wbQINindicators[f,6] = int(wbQIN[f] > 3700  and wbQIN[f] <= 4200)
-        wbQINindicators[f,7] = int(wbQIN[f] > 4200)
-        wbTINindicators[f,0] = int(wbTIN[f] <= 12)
-        wbTINindicators[f,1] = int(wbTIN[f] > 12 and wbTIN[f] <= 14)
-        wbTINindicators[f,2] = int(wbTIN[f] > 14 and wbTIN[f] <= 16)
-        wbTINindicators[f,3] = int(wbTIN[f] > 16 and wbTIN[f] <= 18)
-        wbTINindicators[f,4] = int(wbTIN[f] > 18 and wbTIN[f] <= 20)
-        wbTINindicators[f,5] = int(wbTIN[f] > 20)
-    ##_print(wbQINindicators)
-    ##_print(wbTINindicators)
+        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==currentTime),1]
 
     # Weather Judgement
     # Read in next week of weather
     # Average and noise it
-    # this is a 'fake forecast', and we will only use the first one for now
-    weatherJudgements = np.empty([numDams,2])
+    # this is a 'fake forecast'
+    # Note: Using the same meteorological data for all dams
     futureDays = 5
-    for f in range(1, numDams+1):
-        met = np.loadtxt('wb'+str(f)+'/met.npt', skiprows=3, delimiter=',')
-        future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
-        average = sum(future)/futureDays
-        airTempForecast = np.random.normal(average[1], scale=2)
-        airTempJudgement = int(airTempForecast > 65)
-        solarFluxForecast = np.random.normal(average[6], scale=50)
-        solarFluxJudgement = int(solarFluxForecast > 300)
-        weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
+    met = np.loadtxt('wb1/met.npt', skiprows=3, delimiter=',')
+    future = met[np.where(np.logical_and(met[:,0] >= currentTime, met[:,0] < currentTime+futureDays))]
+    average = sum(future)/futureDays
+    airTempForecast = np.random.normal(average[1], scale=2)
+    solarFluxForecast = np.random.normal(average[6], scale=50)
 
-    elevationJudgements = np.zeros([numDams,23])
-    temperatureJudgements = np.zeros([numDams,3])
+    elevations = np.zeros(numDams)
+    temps = np.zeros([numDams,3])
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
-        elevations = np.genfromtxt(wlFile, delimiter=",")
-        elevation = elevations[-1,33]
-        elevationLevels = [210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230]
-        lesser = np.array(elevationLevels) < elevation
-        greater = np.array(elevationLevels) >= elevation-1
-        if(np.sum(lesser) == 1):
-            elevationJudgements[f-1,0:21] = lesser.astype(int)
-        elif(np.sum(greater) == 1):
-            elevationJudgements[f-1,0:21] = greater.astype(int)
-        else:
-            elevationJudgements[f-1,0:21] = np.logical_and(lesser, greater).astype(int)
-        ##_#_print 'Elevation Judgements'
-        ##_#_print elevation
-        ##_#_print elevationJudgements
-        if(np.sum(elevationJudgements) != 1):
-            # we have lost, and are in the drained or overflow state
-            if(elevation <= MIN_ELEVATION):
-                elevationJudgements[f-1,-1] = 1
-            elif(elevation >= MAX_ELEVATION):
-                elevationJudgements[f-1,-2] = 1
-        ##_print 'Elevation Judgements'
-        ##_print elevation
-        #_print elevationJudgements
-        if(np.sum(elevationJudgements) != 1):
-            print elevation
-            print lesser
-            print greater
-            print elevationJudgements
-            print 'ERROR'
-            raw_input("Press Enter to continue...")
+	wbElevations = np.genfromtxt(wlFile, delimiter=",")
+        elevations[f-1] = wbElevations[-1,33]
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
-        seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == timeStart)]
-        temp220 = int(seg34ForTime[seg34ForTime[:,0].size - 15,1] > 65)
-        temp202 = int(seg34ForTime[seg34ForTime[:,0].size - 11,1] > 65)
-        temp191 = int(seg34ForTime[seg34ForTime[:,0].size - 6,1] > 65)
+        seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == currentTime)]
+        temp220 = float(seg34ForTime[seg34ForTime[:,0].size - 15,1])
+        temp202 = float(seg34ForTime[seg34ForTime[:,0].size - 11,1])
+        temp191 = float(seg34ForTime[seg34ForTime[:,0].size - 6,1])
         #temp220 = 0
         #temp202 = 0
         #temp191 = 0
-        temperatureJudgements[f-1] = [temp220, temp202, temp191]
+        temps[f-1] = [temp220, temp202, temp191]
 
-    # Construct State Array
-    stateArray = elevationJudgements.flatten()
-    stateArray = np.append(stateArray, weatherJudgements[0,0])
-    stateArray = np.append(stateArray, temperatureJudgements.flatten())
-    stateArray = np.append(stateArray, wbQINindicators)
-    stateArray = np.append(stateArray, wbTINindicators)
-
-    gateState = np.zeros((numDams, numActions)) #numDams x numActions
-    for i in range(numDams):
-        gateState[i, actionInds.astype(int)[i]] = 1
-
+    #gateState = np.zeros((numDams, numActions)) #numDams x numActions
+    #for i in range(numDams):
+    #    gateState[i, actionInds.astype(int)[i]] = 1
     # stateArray = np.append(stateArray, gateState.flatten())
-    return stateArray, wbQIN
 
-def getAction(state, weights, possibleActions):
-   if not TESTING and random.random() < EPSILON_GREEDY:
+    return (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps)
+
+def getAction(state, dam, possibleActions):
+    (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
+    actionQOUT = np.sum(possibleActions, 1)
+    # Only allow actions that are within 0.5*QIN and 2*QIN
+    allowedActions = np.logical_and( actionQOUT >= (wbQIN[dam] / 2), actionQOUT <= 2 * wbQIN[dam] )
+    if not TESTING and random.random() < EPSILON_GREEDY:
         #print 'Random'
-        return random.randrange(possibleActions.shape[0])
-   else:
-        [bestActionInd, Vopt] = getBestAction(state, weights, possibleActions)
+        chosenAction = random.randrange( np.sum(allowedActions == True) )
+        indargs = [ i for i,a in enumerate(allowedActions) if a==True ]
+        return indargs[chosenAction]
+    else:
+        [bestActionInd, Vopt] = algorithm.getBestAction(state, dam)
         return bestActionInd
 
-def getBestAction(state, weights, possibleActions):
-    Qopts = np.empty(possibleActions.shape[0])
-    for actionInd in range(possibleActions.shape[0]):
-        Qopts[actionInd] = calculateQopt(state, actionInd, weights)
-    #_print 'Qopts'
-    #_print Qopts
-    bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
-    bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
-    return bestActionInd, Qopts[bestActionInd]
-
-def getFeatures(state, actionInd, shape):
-    features = np.zeros(shape)
-    features[:, actionInd] = state # TODO: Add a bias term?
-    return features
-
-def calculateQopt(state, actionInd, weights):
-    features = getFeatures(state, actionInd, weights.shape)
-    return weights.flatten().dot(features.flatten())
-
-# TODO: Add regularization?
-def updateWeights(state, actionInds, rewards, nextState, weights, possibleActions):
-    #_print 'state'
-    #_print state
-    #_print 'next state'
-    #_print nextState
-    #_print 'rewards'
-    #_print rewards
-    #_print 'actionInds'
-    #_print actionInds
-    #_print 'weights'
-    #_print weights
-    for i in range(numDams):
-        features = getFeatures(state, actionInds[i], weights[i].shape)
-        #_print 'features'
-        #_print features
-        [nextAction, Vopt] = getBestAction(nextState, weights[i], possibleActions)
-        error = calculateQopt(state, actionInds[i], weights[i]) - (rewards[i] + FUTURE_DISCOUNT * Vopt)
-        #_print 'Qopt   Vopt'
-        #_print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
-        weights[i] = weights[i] - STEP_SIZE * error * features
-    #_print 'updated weights'
-    #_print weights
-    return weights
-
-def outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions):
+def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
     with open(STATS_DIR + REWARDS_FILE, "a") as fout:
         np.savetxt(fout, rewards, newline=",")
         np.savetxt(fout, elevations, newline=",")
@@ -300,29 +200,28 @@ def outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions
         np.savetxt(fout, wbQIN, newline=",")
         fout.write("\n")
     for i in range(numDams):
-        weightsFile = STATS_DIR + "weights" + str(i+1) +".txt"
-        with open(weightsFile, "a") as fout:
-            np.savetxt(fout, weights[i].flatten(), newline=",")
-            fout.write("\n")
         temperatureOut = np.loadtxt( "wb" + str(i+1) + "/two_34.opt", skiprows=3)
         temperatureOut = temperatureOut[-1,1]
         tempFile = STATS_DIR + "temperatures" + str(i+1) +".txt"
         with open(tempFile, "a") as fout:
             np.savetxt(fout, [temperatureOut], newline=",")
             fout.write("\n")
+    algorithm.outputStats(STATS_DIR)
 
-timeStartBegin = 60
+timeStart = 1
+currentTimeBegin = 60
 timeStep = 1
-year = 2014
+year = 2015
 numDams = 1
 numDays = 215
 repeat = 1
+algClass = getattr(importlib.import_module("algorithms.linear"), "Linear")
 
 if len(sys.argv) > 1:
     try:
-      opts, args = getopt.getopt(sys.argv[1:],"he:r:d:ts:",["eps=", "repeat=", "dams=", "days=", "test", "year=", "step="])
+      opts, args = getopt.getopt(sys.argv[1:],"ha:e:r:d:ts:",["eps=", "alg=", "repeat=", "dams=", "days=", "test", "year=", "step="])
     except getopt.GetoptError:
-      #_#_print 'runSimulation.py -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test'
+      print 'runSimulation.py -a <algorithm> -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test'
       sys.exit()
 
     for opt, arg in opts:
@@ -343,34 +242,34 @@ if len(sys.argv) > 1:
          year = int(arg)
       elif opt in ("-t", "--test"):
           TESTING = True
+      elif opt in ("-a", "--alg"):
+          algClass = getattr(importlib.import_module("algorithms."+arg.lower()), arg)
 
+possibleActions = calculatePossibleActions()
+#_print possibleActions
+algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT, possibleActions)
 for r in range(repeat):
-    timeStart = timeStartBegin
-    copyInYearFiles(year, numDams)
-    possibleActions = calculatePossibleActions()
-    #_print possibleActions
-    state, wbQIN = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
+    currentTime = currentTimeBegin
+    copyInInputFiles(year, numDams)
+    copyInOutputFiles(year, numDams)
+    state = getState(currentTime, year, np.ones(numDams)*4, possibleActions.shape[0])
 
-    try:
-        weights = np.load(WEIGHTS_FILE)
-        #_#_print "Restarting with existing weights"
-    except IOError:
-        weights = np.zeros((numDams, state.shape[0], possibleActions.shape[0]))
-        #_#_print "Starting with new weights"
+    algorithm.loadModel(state)
 
     actionInds = np.zeros(numDams)
     rewards = np.zeros(numDams)
     elevations = np.zeros(numDams)
     for i in range(numDays):
-        #print 'Day ' + str(timeStart)
+        print 'Day ' + str(currentTime)
+        copyInOutputFiles(year, numDams)
         for wb in range(numDams):
-            actionInd = getAction(state, weights[wb], possibleActions)
+            actionInd = getAction(state, wb, possibleActions)
             actionInds[wb] = actionInd
             action = possibleActions[actionInd]
             wbDir = 'wb'+str(wb+1)+'/'
             ##_print wbDir
-            modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
-            setAction(wbDir, timeStart, action, wb)
+            modifyControlFile(wbDir, timeStart, currentTime + timeStep, year)
+            setAction(wbDir, currentTime, action, wb)
             path = os.getcwd()
             os.chdir(wbDir)
             subprocess.check_call(['/home/mshultz/ror-dam-simulation/bin/cequalw2.v371.linux', '.'], shell=True)
@@ -381,24 +280,27 @@ for r in range(repeat):
             rewards[wb], elevations[wb] = getReward(wb)
             #raw_input("Press Enter to continue...")
 
-        nextState, wbQIN = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
+        if True in (rewards < 0): # Game over
+            nextState = None
+        else:
+            nextState = getState(currentTime + timeStep, year, actionInds, possibleActions.shape[0])
         if not TESTING:
-            weights = updateWeights(state, actionInds, rewards, nextState, weights, possibleActions)
+            algorithm.incorporateObservations(state, actionInds, rewards, nextState)
 
-        outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions)
-
-        if True in (rewards < 0):
-            # Move to next epoch
-            print 'Day ' + str(timeStart)
+        if nextState:
+            (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevationVals, temps) = nextState
+            outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
+        else:
+            # Game over, move to next epoch
+            outputStats(rewards, elevations, [0], actionInds, possibleActions)
+            print 'Day ' + str(currentTime)
             print 'Lose'
-            np.save(WEIGHTS_FILE, weights)
-            print(weights)
+            algorithm.saveModel()
             sys.exit()
 
-
-        timeStart = timeStart + timeStep
+        currentTime = currentTime + timeStep
         state = nextState
 
 
 
-    np.save(WEIGHTS_FILE, weights)
+    algorithm.saveModel()

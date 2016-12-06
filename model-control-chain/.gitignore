@@ -1,2 +1,3 @@
 weights.npy
 stats/
+*.pyc
