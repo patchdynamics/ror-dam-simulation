@@ -35,9 +35,10 @@ class Linear(Base):
         #_print weights
         for i in range(self.numDams):
             features = self.getFeatures(state, actionInds[i])
-            #_print 'features'
-            #_print features
-            [nextAction, Vopt] = self.getBestAction(nextState, i)
+            if not nextState: # Game over, no future rewards
+                Vopt = 0
+            else:
+                [nextAction, Vopt] = self.getBestAction(nextState, i)
             error = self.getQopt(state, actionInds[i], i) - (rewards[i] + self.futureDiscount * Vopt)
             #_print 'Qopt   Vopt'
             #_print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)

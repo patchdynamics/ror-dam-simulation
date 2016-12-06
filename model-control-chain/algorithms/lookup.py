@@ -21,7 +21,10 @@ class Lookup(Base):
         stateArray = self.discretizeState(state).tolist()
         for i in range(self.numDams):
             stateAction = stateArray.append(actionInds[i])
-            [nextAction, Vopt] = self.getBestAction(nextState, i)
+            if not nextState: # Game over, no future rewards
+                Vopt = 0
+            else:
+                [nextAction, Vopt] = self.getBestAction(nextState, i)
             oldQ = 0
             if stateAction in self.Qvalues[i]:
                 oldQ = self.Qvalues[i][stateAction]

@@ -259,20 +259,23 @@ for r in range(repeat):
             rewards[wb], elevations[wb] = getReward(wb)
             #raw_input("Press Enter to continue...")
 
-        nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
+        if True in (rewards < 0): # Game over
+            nextState = None
+        else:
+            nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
         if not TESTING:
             algorithm.incorporateObservations(state, actionInds, rewards, nextState)
 
-        (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = nextState
-        outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
-
-        if True in (rewards < 0):
-            # Move to next epoch
+        if nextState:
+            (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevationVals, temps) = nextState
+            outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
+        else:
+            # Game over, move to next epoch
+            outputStats(rewards, elevations, [0], actionInds, possibleActions)
             print 'Day ' + str(timeStart)
             print 'Lose'
             algorithm.saveModel()
             sys.exit()
-
 
         timeStart = timeStart + timeStep
         state = nextState

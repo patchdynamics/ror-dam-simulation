@@ -6,7 +6,7 @@ import random
 KNN_FILE = "knn.npy"
 
 NUM_NEIGHBORS = 5
-NUM_POINTS_PER_DIM = 7
+NUM_POINTS_PER_DIM = 6
 # TODO: Realistic min/max values
 # State = (logQIN, TIN, airTemp, solarFlux, elevation, waterTemp)
 MIN_STATE = ((6, 4, 0, 0, 210, 4))
@@ -97,7 +97,10 @@ class KNN(Base):
     def incorporateObservations(self, state, actionInds, rewards, nextState):
         (neighbors, probs) = self.findNNs(state)
         for i in range(self.numDams):
-            [nextAction, Vopt] = self.getBestAction(nextState, i)
+            if not nextState: # Game over, no future rewards
+                Vopt = 0
+            else:
+                [nextAction, Vopt] = self.getBestAction(nextState, i)
             for k in range(NUM_NEIGHBORS):
                 neighborAction = (neighbors[k], actionInds[i])
                 oldQ = 0

@@ -76,30 +76,24 @@ class Base():
         solarFluxJudgement = int(solarFluxForecast > 300)
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
-        elevationJudgements = np.zeros([self.numDams,23])
         elevationLevels = [210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230]
+        elevationJudgements = np.zeros([self.numDams,len(elevationLevels)])
         for wb in range(self.numDams):
             lesser = np.array(elevationLevels) < elevations[wb]
             greater = np.array(elevationLevels) >= elevations[wb]-1
             if(np.sum(lesser) == 1):
-                elevationJudgements[wb,0:21] = lesser.astype(int)
+                elevationJudgements[wb] = lesser.astype(int)
             elif(np.sum(greater) == 1):
-                elevationJudgements[wb,0:21] = greater.astype(int)
+                elevationJudgements[wb] = greater.astype(int)
             else:
-                elevationJudgements[wb,0:21] = np.logical_and(lesser, greater).astype(int)
-            if(np.sum(elevationJudgements) != 1):
-                # we have lost, and are in the drained or overflow state
-                if(elevations[wb] <= MIN_ELEVATION):
-                    elevationJudgements[wb,-1] = 1
-                elif(elevations[wb] >= MAX_ELEVATION):
-                    elevationJudgements[wb,-2] = 1
-
+                elevationJudgements[wb] = np.logical_and(lesser, greater).astype(int)
+            if(np.sum(elevationJudgements[wb]) != 1):
                 print elevations[wb]
                 print lesser
                 print greater
                 print elevationJudgements
                 print 'ERROR'
-#                raw_input("Press Enter to continue...")
+                raw_input("Press Enter to continue...")
             ##_print 'Elevation Judgements'
             ##_print elevation
             #_print elevationJudgements
