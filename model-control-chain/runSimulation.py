@@ -210,7 +210,11 @@ def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
 timeStart = 1
 currentTimeBegin = 60
 timeStep = 1
+<<<<<<< HEAD
 year = 2015
+=======
+year = 2014
+>>>>>>> 6a539659361f67283c16fd26f05e34f8c1f91d5c
 numDams = 1
 numDays = 215
 repeat = 1
@@ -271,7 +275,8 @@ for r in range(repeat):
             setAction(wbDir, currentTime, action, wb)
             path = os.getcwd()
             os.chdir(wbDir)
-            subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
+            #subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
+            subprocess.check_call(['wine', '../../bin/w2_ivf32_v372.exe'])
             os.chdir(path)
             if wb != (numDams - 1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
