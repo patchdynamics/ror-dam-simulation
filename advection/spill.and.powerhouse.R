@@ -1,5 +1,6 @@
 library(stringr)
 library(xts)
+library(stringr)
 
 projects = c('LGNW')
 syear = 2005; eyear=2015
@@ -25,17 +26,23 @@ plot(powerhouse.and.spill$Powerhouse + powerhouse.and.spill$Spill, col='red', ty
 lines(powerhouse.and.spill$Spill)
 lines(powerhouse.and.spill$Powerhouse, col='blue')
 
+plot(powerhouse.and.spill$Spill, typ='l')
+plot(powerhouse.and.spill$Powerhouse, typ='l')
 
 
-# lets just get 2015 for the moment
-data.2015 = grep('2015', powerhouse.and.spill$Date)
-data.2015 = powerhouse.and.spill[data.2015,]
-data.2015$Julian = as.numeric(strftime(as.POSIXct(data.2015$Date), format='%j'))
 
-filename = 'QOUT2015.npt'
-write(paste0('****************** Q Out File ****************'),
+# write out the files
+for(i in 2005:2015) {
+
+  data = grep(as.character(i), powerhouse.and.spill$Date)
+  data = powerhouse.and.spill[data,]
+  data$Julian = as.numeric(strftime(as.POSIXct(data$Date), format='%j'))
+
+  filename = paste0('QOUT',i,'.npt')
+  write(paste0('****************** Q Out File ****************'),
       file = filename, append=FALSE)
-write('', file=filename, append=TRUE)
-write('    JDAY    QOUT    QOUT', file=filename, append=TRUE)
-formatted.df = sprintf("%8.0f%8.2f%8.2f", data.2015$Julian, data.2015$Powerhouse, data.2015$Spill)
-write(formatted.df, file=filename, append=TRUE)
+  write('', file=filename, append=TRUE)
+  write('    JDAY    QOUT    QOUT', file=filename, append=TRUE)
+  formatted.df = sprintf("%8.0f%8.2f%8.2f", data$Julian, data$Powerhouse, data$Spill)
+  write(formatted.df, file=filename, append=TRUE)
+}

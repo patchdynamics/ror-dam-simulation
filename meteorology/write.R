@@ -24,7 +24,7 @@ df$Wind = wind
 
 direction = as.numeric(levels(station.data$WindDirection))[station.data$WindDirection] 
 direction = na.interp(direction)
-df$WindDirection = direction * 2 * pi / 36 # convert from 10s of degress to radians
+df$WindDirection = direction * 2 * pi / 360 # convert from 10s of degress to radians
 
 df$Clouds = clouds[station.index,]/10
 
@@ -40,7 +40,8 @@ for( i in 2005:2015 ){
       file = filename, append=FALSE)
   write(paste0(''), file = filename, append=TRUE)
   write('JDAY,TAIR,TDEW,WIND,PHI,CLOUD,Solar,',  file = filename, append=TRUE)
-  df.year = filter(df, Year == i)
+  df.year = round(filter(df, Year == i),2)
+  df.year$Clouds = round(df.year$Clouds)
   df.year$Day = julian[out$year == i] - julian(as.Date(paste0(i,'-01-01'))) + 1
   df.year = df.year[c("Day", "AirTemperature", "Dewpoint", 'Wind', 'WindDirection', 'Clouds', 'Swr')]
   write.table(df.year, file = filename, append = TRUE, sep=',', col.name=FALSE, quote=FALSE, row.names=FALSE)

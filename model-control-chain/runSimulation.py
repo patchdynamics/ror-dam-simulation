@@ -33,11 +33,15 @@ FUTURE_DISCOUNT = 0.75
 STEP_SIZE = 0.01
 
 # Actions
+# Original
 #SPILLWAY_OUTFLOWS = [0, 600, 1800]
 #POWERHOUSE_OUTFLOWS = [500, 1500, 3000]
 #HYPOLIMNAL_OUTFLOWS = [0, 1000]
-SPILLWAY_OUTFLOWS = [0]
-POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
+# Simple
+# POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
+# Two Way
+SPILLWAY_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 HYPOLIMNAL_OUTFLOWS = [0]
 
 # Reward parameters
@@ -77,6 +81,12 @@ def getReward(wb):
     reward = 0
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
+
+    temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
+    temperatureOut = temperatureOut[-1,1]
+    if temperatureOut > 21.2:
+        reward = -100
+
     return reward, elevation
 
 
@@ -211,10 +221,10 @@ def getState(timeStart, year, actionInds, numActions):
 
     # Construct State Array
     stateArray = elevationJudgements.flatten()
-    #stateArray = np.append(stateArray, weatherJudgements[0,0])
-    #stateArray = np.append(stateArray, temperatureJudgements.flatten())
+    stateArray = np.append(stateArray, weatherJudgements[0,0])
+    stateArray = np.append(stateArray, temperatureJudgements.flatten())
     stateArray = np.append(stateArray, wbQINindicators)
-    #stateArray = np.append(stateArray, wbTINindicators)
+    stateArray = np.append(stateArray, wbTINindicators)
 
     gateState = np.zeros((numDams, numActions)) #numDams x numActions
     for i in range(numDams):
@@ -294,11 +304,17 @@ def outputStats(weights, rewards, elevations, wbQIN, actionInds, possibleActions
         with open(weightsFile, "a") as fout:
             np.savetxt(fout, weights[i].flatten(), newline=",")
             fout.write("\n")
+        temperatureOut = np.loadtxt( "wb" + str(i+1) + "/two_34.opt", skiprows=3)
+        temperatureOut = temperatureOut[-1,1]
+        tempFile = STATS_DIR + "temperatures" + str(i+1) +".txt"
+        with open(tempFile, "a") as fout:
+            np.savetxt(fout, [temperatureOut], newline=",")
+            fout.write("\n")
 
 timeStartBegin = 60
 timeStep = 1
 year = 2014
-numDams = 4
+numDams = 1
 numDays = 215
 repeat = 1
 

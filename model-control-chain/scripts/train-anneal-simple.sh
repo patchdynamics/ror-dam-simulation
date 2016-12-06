@@ -1,6 +1,6 @@
 #!/bin/bash
 #./scripts/clear.sh
-anneal=(.5 .4 .3 .3 .2 .2 .1 .1 .1, .05, .05, .05, .01, .01, .01, 0, 0, 0)
+anneal=(.5 .4 .4 .3 .3 .2 .2 .1 .1 .1 .05 .05 .05 .01 .01 .01 0 0 0)
 set -e
 for epsilon in "${anneal[@]}"
 do
