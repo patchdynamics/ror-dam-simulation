@@ -1,13 +1,14 @@
 #!/usr/bin/python
+import sys, getopt
+import os
+sys.path.append(os.getcwd()) 
 import numpy as np
 import subprocess
-import os
 from shutil import copyfile
 import struct
 from sklearn.utils.extmath import cartesian
 import random
 import re
-import sys, getopt
 import importlib
 from algorithms.linear import Linear
 
@@ -92,7 +93,7 @@ def copyInInputFiles(year, numDams):
     for wb in range(1, numDams + 1):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
-        copyfile( wbDir + "inputs/qot_br1.npt", wbDir + "qot_br1.npt" )
+	copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
 
@@ -149,7 +150,7 @@ def getState(currentTime, year, actionInds, numActions):
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
-        wbElevations = np.genfromtxt(wlFile, delimiter=",")
+	wbElevations = np.genfromtxt(wlFile, delimiter=",")
         elevations[f-1] = wbElevations[-1,33]
 
         # Output Structure +/- 65 F / 16 C
@@ -226,7 +227,7 @@ if len(sys.argv) > 1:
 
     for opt, arg in opts:
       if opt == '-h':
-         print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> -s <stepsize> --test'
+         #_#_print 'runSimulation.py -r <repeat> -e <epsilon> -d <numDams>, --days <numDays> -s <stepsize> --test'
          sys.exit()
       elif opt in ("-e", "--eps"):
          EPSILON_GREEDY = float(arg)
@@ -272,8 +273,8 @@ for r in range(repeat):
             setAction(wbDir, currentTime, action, wb)
             path = os.getcwd()
             os.chdir(wbDir)
+            #subprocess.check_call(['/home/mshultz/ror-dam-simulation/bin/cequalw2.v371.linux', '.'], shell=True)
             subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
-            #subprocess.check_call(['wine', '../../bin/w2_ivf32_v372.exe'])
             os.chdir(path)
             if wb != (numDams - 1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
