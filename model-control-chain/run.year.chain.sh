@@ -9,7 +9,8 @@ run.model()
 {
 	cd $1
 	rm *.opt
-	wine ../../bin/w2_ivf32_v372.exe .
+	#wine ../../bin/w2_ivf32_v372.exe .
+	../../bin/cequalw2.v371.mac.fast .
 	cd ../
 	if [ -n $2 ]
 	then
@@ -32,11 +33,11 @@ cp wb2/inputs/spinup/$YEAR/*.opt wb2
 cp wb3/inputs/spinup/$YEAR/*.opt wb3
 cp wb4/inputs/spinup/$YEAR/*.opt wb4 
 
-cp wb1/inputs/QOUT$YEAR.npt wb1/qot_br1.npt
-cp wb2/inputs/QOUT$YEAR.npt wb2/qot_br1.npt
-cp wb3/inputs/QOUT$YEAR.npt wb3/qot_br1.npt
-cp wb4/inputs/QOUT$YEAR.npt wb4/qot_br1.npt
+cp wb1/inputs/qout_year/QOUT$YEAR.npt wb1/qot_br1.npt
+cp wb1/inputs/qout_year/QOUT$YEAR.npt wb2/qot_br1.npt
+cp wb1/inputs/qout_year/QOUT$YEAR.npt wb3/qot_br1.npt
+cp wb1/inputs/qout_year/QOUT$YEAR.npt wb4/qot_br1.npt
 run.model wb1 wb2
-run.model wb2 wb3
-run.model wb3 wb4
-run.model wb4
+#run.model wb2 wb3
+#run.model wb3 wb4
+#run.model wb4
