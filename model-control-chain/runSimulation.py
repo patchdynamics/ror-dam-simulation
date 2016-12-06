@@ -40,7 +40,7 @@ STEP_SIZE = 0.01
 # Simple
 # POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
 # Two Way
-SPILLWAY_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+SPILLWAY_OUTFLOWS = [0, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 HYPOLIMNAL_OUTFLOWS = [0]
 
@@ -64,8 +64,8 @@ def modifyControlFile(fileDir, timeStart, timeEnd, year):
                 line = line.replace("%YEAR__%", str(year).rjust(8))
                 fout.write(line)
 
-def setAction(fileDir, timeStart, action, wb):
-    line = str(timeStart+1).rjust(8)
+def setAction(fileDir, currentTime, action, wb):
+    line = str(currentTime+1).rjust(8)
     line += str(action[0]).rjust(8)
     line += str(action[1]).rjust(8)
     line += str(action[2]).rjust(8)
@@ -88,38 +88,49 @@ def getReward(wb):
         reward = -100
     return reward, elevation
 
-def copyInYearFiles(year, numDams):
+def copyInInputFiles(year, numDams):
     for wb in range(1, numDams + 1):
-        copyfile( CONTROL_DIR + "wb" + str(wb) + "/inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
-        spinupDir =  CONTROL_DIR + "wb" + str(wb) + "/inputs/spinup/" + str(year)
-        for f in os.listdir(spinupDir):
-            filename = spinupDir + "/" + f
-            if os.path.isfile(filename):
-                copyfile( filename , CONTROL_DIR + "wb" + str(wb) + "/" + f)
-    #copyfile( CONTROL_DIR + "wb1/inputs/QIN.CONSTANT.npt", CONTROL_DIR + "wb1/qin.npt")
+        wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
+        copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
+        copyfile( wbDir + "inputs/qot_br1.npt", wbDir + "qot_br1.npt" )
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
+
+def copyInOutputFiles(year, numDams):
+    for wb in range(1, numDams + 1):
+        wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
+        spinupDir =  wbDir + "inputs/spinup/" + str(year) + "/"
+        #for f in os.listdir(spinupDir):
+        #    filename = spinupDir + "/" + f
+        #    if os.path.isfile(filename):
+        #        copyfile( filename , CONTROL_DIR + "wb" + str(wb) + "/" + f)
+        files = os.listdir(wbDir)
+        for file in files:
+            if file.endswith(".opt"):
+                os.remove(os.path.join(wbDir,file))
+        copyfile( spinupDir + "wl.opt", wbDir + "wl.opt" )
+        copyfile( spinupDir + "spr.opt", wbDir + "spr.opt" )
 
 def calculatePossibleActions():
     return cartesian((SPILLWAY_OUTFLOWS, POWERHOUSE_OUTFLOWS, HYPOLIMNAL_OUTFLOWS))
 
 # returns state represented as a tuple of (QINs, TINs, airTempForecast, solarFluxForecast, elevations, temps)
-def getState(timeStart, year, actionInds, numActions):
+def getState(currentTime, year, actionInds, numActions):
     wbQIN = np.empty(numDams)
     wbTIN = np.empty(numDams)
 
     # Get QIN/TIN for today on Dam 1
     wbiQIN= np.loadtxt('wb1/qin.npt', skiprows=3)
-    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
+    wbQIN[0] = wbiQIN[np.where(wbiQIN[:,0]==currentTime),1]
     wbiTIN= np.loadtxt('wb1/tin.npt', skiprows=3)
-    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
+    wbTIN[0] = wbiTIN[np.where(wbiTIN[:,0]==currentTime),1]
 
     # Read last QIN/TIN for each of Dams 2-4
     for f in range(2, numDams+1):
         wbiQIN = np.loadtxt('wb'+str(f)+'/qin.npt', skiprows=3)
-        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==timeStart),1]
+        wbQIN[f-1] = wbiQIN[np.where(wbiQIN[:,0]==currentTime),1]
         wbiTIN = np.loadtxt('wb'+str(f)+'/tin.npt', skiprows=3)
-        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==timeStart),1]
+        wbTIN[f-1] = wbiTIN[np.where(wbiTIN[:,0]==currentTime),1]
 
     # Weather Judgement
     # Read in next week of weather
@@ -128,7 +139,7 @@ def getState(timeStart, year, actionInds, numActions):
     # Note: Using the same meteorological data for all dams
     futureDays = 5
     met = np.loadtxt('wb1/met.npt', skiprows=3, delimiter=',')
-    future = met[np.where(np.logical_and(met[:,0] >= timeStart, met[:,0] < timeStart+futureDays))]
+    future = met[np.where(np.logical_and(met[:,0] >= currentTime, met[:,0] < currentTime+futureDays))]
     average = sum(future)/futureDays
     airTempForecast = np.random.normal(average[1], scale=2)
     solarFluxForecast = np.random.normal(average[6], scale=50)
@@ -143,7 +154,7 @@ def getState(timeStart, year, actionInds, numActions):
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
-        seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == timeStart)]
+        seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == currentTime)]
         temp220 = float(seg34ForTime[seg34ForTime[:,0].size - 15,1])
         temp202 = float(seg34ForTime[seg34ForTime[:,0].size - 11,1])
         temp191 = float(seg34ForTime[seg34ForTime[:,0].size - 6,1])
@@ -160,10 +171,16 @@ def getState(timeStart, year, actionInds, numActions):
     return (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps)
 
 def getAction(state, dam, possibleActions):
-   if not TESTING and random.random() < EPSILON_GREEDY:
+    (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
+    actionQOUT = np.sum(possibleActions, 1)
+    # Only allow actions that are within 0.5*QIN and 2*QIN
+    allowedActions = np.logical_and( actionQOUT >= (wbQIN[dam] / 2), actionQOUT <= 2 * wbQIN[dam] )
+    if not TESTING and random.random() < EPSILON_GREEDY:
         #print 'Random'
-        return random.randrange(possibleActions.shape[0])
-   else:
+        chosenAction = random.randrange( np.sum(allowedActions == True) )
+        indargs = [ i for i,a in enumerate(allowedActions) if a==True ]
+        return indargs[chosenAction]
+    else:
         [bestActionInd, Vopt] = algorithm.getBestAction(state, dam)
         return bestActionInd
 
@@ -190,9 +207,10 @@ def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
             fout.write("\n")
     algorithm.outputStats(STATS_DIR)
 
-timeStartBegin = 60
+timeStart = 1
+currentTimeBegin = 60
 timeStep = 1
-year = 2014
+year = 2015
 numDams = 1
 numDays = 215
 repeat = 1
@@ -230,9 +248,10 @@ possibleActions = calculatePossibleActions()
 #_print possibleActions
 algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT, possibleActions)
 for r in range(repeat):
-    timeStart = timeStartBegin
-    copyInYearFiles(year, numDams)
-    state = getState(timeStart, year, np.ones(numDams)*4, possibleActions.shape[0])
+    currentTime = currentTimeBegin
+    copyInInputFiles(year, numDams)
+    copyInOutputFiles(year, numDams)
+    state = getState(currentTime, year, np.ones(numDams)*4, possibleActions.shape[0])
 
     algorithm.loadModel(state)
 
@@ -240,15 +259,16 @@ for r in range(repeat):
     rewards = np.zeros(numDams)
     elevations = np.zeros(numDams)
     for i in range(numDays):
-        print 'Day ' + str(timeStart)
+        print 'Day ' + str(currentTime)
+        copyInOutputFiles(year, numDams)
         for wb in range(numDams):
             actionInd = getAction(state, wb, possibleActions)
             actionInds[wb] = actionInd
             action = possibleActions[actionInd]
             wbDir = 'wb'+str(wb+1)+'/'
             ##_print wbDir
-            modifyControlFile(wbDir, timeStart, timeStart + timeStep, year)
-            setAction(wbDir, timeStart, action, wb)
+            modifyControlFile(wbDir, timeStart, currentTime + timeStep, year)
+            setAction(wbDir, currentTime, action, wb)
             path = os.getcwd()
             os.chdir(wbDir)
             subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
@@ -262,7 +282,7 @@ for r in range(repeat):
         if True in (rewards < 0): # Game over
             nextState = None
         else:
-            nextState = getState(timeStart + timeStep, year, actionInds, possibleActions.shape[0])
+            nextState = getState(currentTime + timeStep, year, actionInds, possibleActions.shape[0])
         if not TESTING:
             algorithm.incorporateObservations(state, actionInds, rewards, nextState)
 
@@ -272,12 +292,12 @@ for r in range(repeat):
         else:
             # Game over, move to next epoch
             outputStats(rewards, elevations, [0], actionInds, possibleActions)
-            print 'Day ' + str(timeStart)
+            print 'Day ' + str(currentTime)
             print 'Lose'
             algorithm.saveModel()
             sys.exit()
 
-        timeStart = timeStart + timeStep
+        currentTime = currentTime + timeStep
         state = nextState
 
 
