@@ -87,9 +87,16 @@ class KNN(Base):
     # Overwrite because too slow to do findNNs in getQopt and thus redo for every action!
     def getBestAction(self, state, dam):
         (neighbors, probs) = self.findNNs(state)
+
+        (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
+        actionQOUT = np.sum(self.possibleActions, 1)
+        # Only allow actions that are within 0.5*QIN and 2*QIN
+        disallowedActions = np.logical_or( actionQOUT < (wbQIN[dam] / 2), actionQOUT > 2 * wbQIN[dam] )
+
         Qopts = np.empty(self.possibleActions.shape[0])
         for actionInd in range(self.possibleActions.shape[0]):
             Qopts[actionInd] = self.getQopt(state, actionInd, dam, neighbors, probs)
+        Qopts[disallowedActions] = -float("inf")
         bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
         bestActionInd = random.choice(bestActionIndices)[0]
         return bestActionInd, Qopts[bestActionInd]
