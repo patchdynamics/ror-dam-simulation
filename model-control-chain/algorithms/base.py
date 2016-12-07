@@ -52,9 +52,11 @@ class Base():
         for actionInd in allowedActions:
             Qopts[actionInd] = self.getQopt(state, actionInd, dam)
         #_print 'Qopts'
-        print Qopts
+        #print Qopts
         #Qopts[disallowedActions] = -float("inf")
         bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
+        print 'best action ind'
+        print bestActionIndices
         bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
         return bestActionInd, Qopts[bestActionInd]
 
@@ -115,6 +117,6 @@ class Base():
         #stateArray = np.append(stateArray, weatherJudgements[0,0])
         #stateArray = np.append(stateArray, temperatureJudgements.flatten())
         #stateArray = np.append(stateArray, wbTINindicators)
-        stateArray = np.append(stateArray, wbQINindicators)
+        #stateArray = np.append(stateArray, wbQINindicators)
 
         return stateArray
