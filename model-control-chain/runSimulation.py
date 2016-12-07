@@ -80,7 +80,7 @@ def getReward(wb):
     elevation = elevations[-1,33]
     #reward = 2 - abs(elevation - TARGET_ELEVATION)
     reward = 0
-    if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
+    if elevation <= MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
 
     #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
@@ -93,7 +93,7 @@ def copyInInputFiles(year, numDams):
     for wb in range(1, numDams + 1):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
-	copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
+    copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
 
@@ -150,7 +150,7 @@ def getState(currentTime, year, actionInds, numActions):
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
-	wbElevations = np.genfromtxt(wlFile, delimiter=",")
+        wbElevations = np.genfromtxt(wlFile, delimiter=",")
         elevations[f-1] = wbElevations[-1,33]
 
         # Output Structure +/- 65 F / 16 C
@@ -175,9 +175,11 @@ def getAction(state, dam, possibleActions):
     (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
     actionQOUT = np.sum(possibleActions, 1)
     # Only allow actions that are 5 NN to QIN
-    NUM_NEIGHBORS = 5
+    NUM_NEIGHBORS = 10
     distances = (actionQOUT - wbQIN) ** 2
     allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
+    print possibleActions[allowedActions]
+
     if not TESTING and random.random() < EPSILON_GREEDY:
         #print 'Random'
         chosenAction = random.randrange( NUM_NEIGHBORS )
@@ -274,7 +276,7 @@ for r in range(repeat):
             path = os.getcwd()
             os.chdir(wbDir)
             #subprocess.check_call(['/home/mshultz/ror-dam-simulation/bin/cequalw2.v371.linux', '.'], shell=True)
-            subprocess.check_call(['../../bin/cequalw2.v371.mac.fast', '.'], shell=True)
+            subprocess.check_call(['../../bin/cequalw2.v371.linux', '.'], shell=True)
             os.chdir(path)
             if wb != (numDams - 1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
