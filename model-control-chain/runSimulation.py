@@ -43,14 +43,14 @@ STEP_SIZE = 0.1
 # Two Way
 #POWERHOUSE_OUTFLOWS = [300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 POWERHOUSE_OUTFLOWS = [0]
-SPILLWAY_OUTFLOWS = [0, 300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+SPILLWAY_OUTFLOWS = [0, 300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2101, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100]
 HYPOLIMNAL_OUTFLOWS = [0]
 #HYPOLIMNAL_OUTFLOWS = [0, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500]
 
 NUM_NEIGHBORS = 5
 # Reward parameters
-MIN_ELEVATION = 210
-MAX_ELEVATION = 230
+MIN_ELEVATION = 215
+MAX_ELEVATION = 225
 TARGET_HIGH_ELEVATION = 223.5
 TARGET_LOW_ELEVATION = 222.5
 TARGET_ELEVATION = 223
@@ -214,11 +214,11 @@ def outputStats(rewards, elevations, wbQIN, actionInds, possibleActions):
     algorithm.outputStats(STATS_DIR)
 
 timeStart = 1
-currentTimeBegin = 60
+currentTimeBegin = 90
 timeStep = 1
 year = 2015
 numDams = 1
-numDays = 215
+numDays = 215 - currentTimeBegin
 repeat = 1
 algClass = getattr(importlib.import_module("algorithms.linear"), "Linear")
 
@@ -293,7 +293,7 @@ for r in range(repeat):
         print nextState
         if not TESTING:
             algorithm.incorporateObservations(state, actionInds, rewards, nextState)
-        print 'done with observations'
+        #print 'done with observations'
         if nextState:
             (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevationVals, temps) = nextState
             outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
@@ -302,6 +302,9 @@ for r in range(repeat):
             outputStats(rewards, elevations, [0], actionInds, possibleActions)
             print 'Day ' + str(currentTime)
             print 'Lose'
+            print state
+            print actionInds[0]
+            print rewards[0]
             with open(STATS_DIR + 'lastday.txt', "a") as fout:
                  np.savetxt(fout, [currentTime], newline=",")
                  fout.write("\n")

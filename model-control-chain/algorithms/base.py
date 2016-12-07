@@ -2,8 +2,8 @@ import numpy as np
 import random
 
 
-MIN_ELEVATION = 210
-MAX_ELEVATION = 230
+MIN_ELEVATION = 215
+MAX_ELEVATION = 225
 
 class Base():
 
@@ -40,7 +40,7 @@ class Base():
 
 
     def getBestAction(self, state, dam):
-        print 'getBestAction'
+        #print 'getBestAction'
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
         actionQOUT = np.sum(self.possibleActions, 1)
         distances = (actionQOUT - wbQIN) ** 2
@@ -55,8 +55,9 @@ class Base():
         #print Qopts
         #Qopts[disallowedActions] = -float("inf")
         bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
-        print 'best action ind'
-        print bestActionIndices
+        #print 'best action ind'
+        #print np.max(Qopts)
+        #print bestActionIndices
         bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
         return bestActionInd, Qopts[bestActionInd]
 
@@ -117,6 +118,6 @@ class Base():
         #stateArray = np.append(stateArray, weatherJudgements[0,0])
         #stateArray = np.append(stateArray, temperatureJudgements.flatten())
         #stateArray = np.append(stateArray, wbTINindicators)
-        #stateArray = np.append(stateArray, wbQINindicators)
+        stateArray = np.append(stateArray, wbQINindicators)
 
         return stateArray
