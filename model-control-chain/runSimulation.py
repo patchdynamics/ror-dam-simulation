@@ -31,7 +31,7 @@ QIN_FILE = "QINs.txt"
 # Hyperparameters
 EPSILON_GREEDY = 0.1 # TODO: Should start high & decrease over time
 FUTURE_DISCOUNT = 0.75
-STEP_SIZE = 0.01
+STEP_SIZE = 0.1
 
 # Actions
 # Original
@@ -41,12 +41,13 @@ STEP_SIZE = 0.01
 # Simple
 # POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
 # Two Way
-POWERHOUSE_OUTFLOWS = [300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+#POWERHOUSE_OUTFLOWS = [300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+POWERHOUSE_OUTFLOWS = [0]
 SPILLWAY_OUTFLOWS = [0, 300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 HYPOLIMNAL_OUTFLOWS = [0]
 #HYPOLIMNAL_OUTFLOWS = [0, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500]
 
-NUM_NEIGHBORS = 40
+NUM_NEIGHBORS = 5
 # Reward parameters
 MIN_ELEVATION = 210
 MAX_ELEVATION = 230
@@ -80,8 +81,8 @@ def getReward(wb):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
-    reward = (2 - abs(elevation - TARGET_ELEVATION))*10
     #reward = 0
+    reward = (10 - abs(elevation - TARGET_ELEVATION))
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
     #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
@@ -182,7 +183,7 @@ def getAction(state, dam, possibleActions):
     print(np.sum(possibleActions[allowedActions],1))
 
     if not TESTING and random.random() < EPSILON_GREEDY:
-        #print 'Random'
+        print 'Random'
         chosenAction = random.randrange( NUM_NEIGHBORS )
         return allowedActions[chosenAction]
     else:
