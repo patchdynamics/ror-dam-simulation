@@ -14,8 +14,8 @@ MAX_STATE = ((9, 22, 45, 400, 230, 22))
 
 class KNN(Base):
 
-    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
-        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions)
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions, numNeighbors):
+        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions, numNeighbors)
         self.Qvalues = [{} for i in range(numDams)]
         (self.minList, self.maxList) = self.createListOfMinMaxStateValues()
         self.statePoints = self.createStatePoints()

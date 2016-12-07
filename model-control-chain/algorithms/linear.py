@@ -6,8 +6,8 @@ WEIGHTS_FILE = "weights.npy"
 
 class Linear(Base):
 
-    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
-        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions)
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions, numNeighbors):
+        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions, numNeighbors)
         self.weights = None
 
     def getQopt(self, state, actionInd, dam):

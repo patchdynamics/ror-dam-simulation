@@ -7,11 +7,12 @@ MAX_ELEVATION = 230
 
 class Base():
 
-    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions, numNeighbors):
         self.numDams = numDams
         self.stepsize = stepsize
         self.futureDiscount = futureDiscount
         self.possibleActions = possibleActions
+        self.numNeighbors = numNeighbors
 
     ######### Required Methods ############
 
@@ -43,7 +44,7 @@ class Base():
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
         actionQOUT = np.sum(self.possibleActions, 1)
         distances = (actionQOUT - wbQIN) ** 2
-        allowedActions = np.argpartition(distances, 5)[:5]
+        allowedActions = np.argpartition(distances, self.numNeighbors)[:self.numNeighbors]
         #disallowedActions = [i for i in range(self.possibleActions.shape[0]) if i not in allowedActions]
 
         Qopts = np.empty(self.possibleActions.shape[0])
