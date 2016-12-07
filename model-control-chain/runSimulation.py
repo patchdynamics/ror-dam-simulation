@@ -79,10 +79,8 @@ def getReward(wb):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
-<<<<<<< HEAD
-    #reward = 2 - abs(elevation - TARGET_ELEVATION)
-    reward = 0
     reward = (2 - abs(elevation - TARGET_ELEVATION))*10
+    #reward = 0
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
     #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
@@ -177,18 +175,11 @@ def getAction(state, dam, possibleActions):
     (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
     actionQOUT = np.sum(possibleActions, 1)
     # Only allow actions that are 5 NN to QIN
-<<<<<<< HEAD
-    NUM_NEIGHBORS = 10
-    distances = (actionQOUT - wbQIN) ** 2
-    allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
-    print possibleActions[allowedActions]
-=======
     NUM_NEIGHBORS = 40
     distances = (actionQOUT - wbQIN) ** 2
     allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
     #print(possibleAction[allowedActions])
     print(np.sum(possibleActions[allowedActions],1))
->>>>>>> 34b7dd9d82629655d413dc7ef80afa9c2b990351
 
     if not TESTING and random.random() < EPSILON_GREEDY:
         #print 'Random'
