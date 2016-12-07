@@ -13,7 +13,7 @@ do
 		#echo '.'
 		#./runSimulation.py -e $epsilon --dams 1  --year 2006 #> /dev/null
 		echo '.'
-		./runSimulation.py -e $epsilon --dams 1 --year 2007 #> /dev/null
+		./runSimulation.py -e $epsilon --dams 1 --year 2007 -a Lookup #> /dev/null
 		#echo '.'
 		#./runSimulation.py -e $epsilon --dams 1 --year 2008 #> /dev/null
 		#echo '.'

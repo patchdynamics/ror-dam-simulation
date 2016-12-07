@@ -39,18 +39,20 @@ class Base():
 
 
     def getBestAction(self, state, dam):
+        print 'getBestAction'
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
         actionQOUT = np.sum(self.possibleActions, 1)
         distances = (actionQOUT - wbQIN) ** 2
         allowedActions = np.argpartition(distances, 5)[:5]
-        disallowedActions = [i for i in range(self.possibleActions.shape[0]) if i not in allowedActions]
+        #disallowedActions = [i for i in range(self.possibleActions.shape[0]) if i not in allowedActions]
 
         Qopts = np.empty(self.possibleActions.shape[0])
-        for actionInd in range(self.possibleActions.shape[0]):
+        Qopts.fill(-float("inf"))
+        for actionInd in allowedActions:
             Qopts[actionInd] = self.getQopt(state, actionInd, dam)
         #_print 'Qopts'
-        #_print Qopts
-        Qopts[disallowedActions] = -float("inf")
+        print Qopts
+        #Qopts[disallowedActions] = -float("inf")
         bestActionIndices = np.argwhere(Qopts == np.max(Qopts))
         bestActionInd = random.choice(bestActionIndices)[0] # Make sure not always choosing first action if all valued same
         return bestActionInd, Qopts[bestActionInd]

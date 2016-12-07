@@ -41,9 +41,10 @@ STEP_SIZE = 0.01
 # Simple
 # POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
 # Two Way
-SPILLWAY_OUTFLOWS = [0, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
-POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+POWERHOUSE_OUTFLOWS = [300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+SPILLWAY_OUTFLOWS = [0, 300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
 HYPOLIMNAL_OUTFLOWS = [0]
+#HYPOLIMNAL_OUTFLOWS = [0, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500]
 
 # Reward parameters
 MIN_ELEVATION = 210
@@ -78,11 +79,12 @@ def getReward(wb):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
+<<<<<<< HEAD
     #reward = 2 - abs(elevation - TARGET_ELEVATION)
     reward = 0
-    if elevation <= MIN_ELEVATION or elevation > MAX_ELEVATION:
+    reward = (2 - abs(elevation - TARGET_ELEVATION))*10
+    if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
-
     #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
     #temperatureOut = temperatureOut[-1,1]
     #if temperatureOut > 21.2:
@@ -175,10 +177,18 @@ def getAction(state, dam, possibleActions):
     (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
     actionQOUT = np.sum(possibleActions, 1)
     # Only allow actions that are 5 NN to QIN
+<<<<<<< HEAD
     NUM_NEIGHBORS = 10
     distances = (actionQOUT - wbQIN) ** 2
     allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
     print possibleActions[allowedActions]
+=======
+    NUM_NEIGHBORS = 40
+    distances = (actionQOUT - wbQIN) ** 2
+    allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
+    #print(possibleAction[allowedActions])
+    print(np.sum(possibleActions[allowedActions],1))
+>>>>>>> 34b7dd9d82629655d413dc7ef80afa9c2b990351
 
     if not TESTING and random.random() < EPSILON_GREEDY:
         #print 'Random'
@@ -283,14 +293,15 @@ for r in range(repeat):
 
             rewards[wb], elevations[wb] = getReward(wb)
             #raw_input("Press Enter to continue...")
-
-        if True in (rewards < 0): # Game over
+        print rewards
+        if True in (rewards <= -100): # Game over
             nextState = None
         else:
             nextState = getState(currentTime + timeStep, year, actionInds, possibleActions.shape[0])
+        print nextState
         if not TESTING:
             algorithm.incorporateObservations(state, actionInds, rewards, nextState)
-
+        print 'done with observations'
         if nextState:
             (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevationVals, temps) = nextState
             outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
@@ -299,6 +310,9 @@ for r in range(repeat):
             outputStats(rewards, elevations, [0], actionInds, possibleActions)
             print 'Day ' + str(currentTime)
             print 'Lose'
+            with open(STATS_DIR + 'lastday.txt', "a") as fout:
+                 np.savetxt(fout, [currentTime], newline=",")
+                 fout.write("\n")
             algorithm.saveModel()
             sys.exit()
 
@@ -308,3 +322,6 @@ for r in range(repeat):
 
 
     algorithm.saveModel()
+    with open(STATS_DIR + 'lastday.txt', "a") as fout:
+         np.savetxt(fout, [currentTime], newline=",")
+         fout.write("\n")
