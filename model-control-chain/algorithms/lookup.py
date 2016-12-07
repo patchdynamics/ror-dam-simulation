@@ -20,7 +20,9 @@ class Lookup(Base):
     def incorporateObservations(self, state, actionInds, rewards, nextState):
         stateArray = self.discretizeState(state).tolist()
         for i in range(self.numDams):
-            stateAction = stateArray.append(actionInds[i])
+            stateAction = stateArray
+            stateAction.append(actionInds[i])
+            stateAction = tuple(stateAction)
             if not nextState: # Game over, no future rewards
                 Vopt = 0
             else:
@@ -28,7 +30,6 @@ class Lookup(Base):
             oldQ = 0
             if stateAction in self.Qvalues[i]:
                 oldQ = self.Qvalues[i][stateAction]
-
             error = rewards[i] + self.futureDiscount * Vopt - oldQ
             self.Qvalues[i][stateAction] = oldQ + self.stepsize * error
 
