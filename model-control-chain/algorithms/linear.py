@@ -6,8 +6,8 @@ WEIGHTS_FILE = "weights.npy"
 
 class Linear(Base):
 
-    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
-        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions)
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions, numActionsPerState):
+        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions, numActionsPerState)
         self.weights = None
 
     def getQopt(self, state, actionInd, dam):
@@ -16,8 +16,8 @@ class Linear(Base):
 
 
     def getFeatures(self, state, actionInd):
-        stateArray = self.discretizeState(state)
-        features = np.zeros((stateArray.shape[0], self.possibleActions.shape[0]))
+        stateArray = list(state)
+        features = np.zeros((len(stateArray), self.possibleActions.shape[0]))
         features[:, actionInd] = stateArray # TODO: Add a bias term?
         return features
 
@@ -33,13 +33,14 @@ class Linear(Base):
         #_print actionInds
         #_print 'weights'
         #_print weights
+        stateArray = self.discretizeState(state).tolist()
         for i in range(self.numDams):
-            features = self.getFeatures(state, actionInds[i])
+            features = self.getFeatures(stateArray, actionInds[i])
             if not nextState: # Game over, no future rewards
                 Vopt = 0
             else:
                 [nextAction, Vopt] = self.getBestAction(nextState, i)
-            error = self.getQopt(state, actionInds[i], i) - (rewards[i] + self.futureDiscount * Vopt)
+            error = self.getQopt(stateArray, actionInds[i], i) - (rewards[i] + self.futureDiscount * Vopt)
             #_print 'Qopt   Vopt'
             #_print str(calculateQopt(state, actionInds[i], weights[i])) + '    ' + str(Vopt)
             self.weights[i] = self.weights[i] - self.stepsize * error * features

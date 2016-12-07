@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys, getopt
 import os
-sys.path.append(os.getcwd()) 
+sys.path.append(os.getcwd())
 import numpy as np
 import subprocess
 from shutil import copyfile
@@ -54,6 +54,8 @@ TARGET_ELEVATION = 223
 
 # Set to true to stop learning
 TESTING = False
+
+NUM_ACTIONS_PER_STATE = 20
 
 def modifyControlFile(fileDir, timeStart, timeEnd, year):
     with open(fileDir + CON_FILE, "w") as fout:
@@ -175,12 +177,11 @@ def getAction(state, dam, possibleActions):
     (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
     actionQOUT = np.sum(possibleActions, 1)
     # Only allow actions that are 5 NN to QIN
-    NUM_NEIGHBORS = 5
     distances = (actionQOUT - wbQIN) ** 2
-    allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
+    allowedActions = np.argpartition(distances, NUM_ACTIONS_PER_STATE)[:NUM_ACTIONS_PER_STATE]
     if not TESTING and random.random() < EPSILON_GREEDY:
         #print 'Random'
-        chosenAction = random.randrange( NUM_NEIGHBORS )
+        chosenAction = random.randrange( NUM_ACTIONS_PER_STATE )
         return allowedActions[chosenAction]
     else:
         [bestActionInd, Vopt] = algorithm.getBestAction(state, dam)
@@ -217,10 +218,11 @@ numDams = 1
 numDays = 215
 repeat = 1
 algClass = getattr(importlib.import_module("algorithms.linear"), "Linear")
+useValueIteration = False
 
 if len(sys.argv) > 1:
     try:
-      opts, args = getopt.getopt(sys.argv[1:],"ha:e:r:d:ts:",["eps=", "alg=", "repeat=", "dams=", "days=", "test", "year=", "step="])
+      opts, args = getopt.getopt(sys.argv[1:],"ha:e:r:d:ts:v",["eps=", "alg=", "repeat=", "dams=", "days=", "test", "year=", "step=", "value"])
     except getopt.GetoptError:
       print 'runSimulation.py -a <algorithm> -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test'
       sys.exit()
@@ -245,10 +247,12 @@ if len(sys.argv) > 1:
           TESTING = True
       elif opt in ("-a", "--alg"):
           algClass = getattr(importlib.import_module("algorithms."+arg.lower()), arg)
+      elif opt in ("-v", "--value"):
+          useValueIteration = True
 
 possibleActions = calculatePossibleActions()
 #_print possibleActions
-algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT, possibleActions)
+algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT, possibleActions, NUM_ACTIONS_PER_STATE)
 for r in range(repeat):
     currentTime = currentTimeBegin
     copyInInputFiles(year, numDams)
@@ -282,18 +286,21 @@ for r in range(repeat):
             rewards[wb], elevations[wb] = getReward(wb)
             #raw_input("Press Enter to continue...")
 
-        if True in (rewards < 0): # Game over
-            nextState = None
-        else:
-            nextState = getState(currentTime + timeStep, year, actionInds, possibleActions.shape[0])
+        nextState = getState(currentTime + timeStep, year, actionInds, possibleActions.shape[0])
         if not TESTING:
-            algorithm.incorporateObservations(state, actionInds, rewards, nextState)
+            if useValueIteration:
+                algorithm.updateCounts(state, actionInds, rewards, nextState)
+            else:
+                algorithm.incorporateObservations(state, actionInds, rewards, nextState)
 
-        if nextState:
-            (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevationVals, temps) = nextState
-            outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
-        else:
-            # Game over, move to next epoch
+        (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevationVals, temps) = nextState
+        outputStats(rewards, elevations, wbQIN, actionInds, possibleActions)
+
+
+        if True in (rewards < 0): # Game over
+            # Game over, value iteration then move to next epoch
+            if not TESTING and useValueIteration:
+                algorithm.updateQvalues()
             outputStats(rewards, elevations, [0], actionInds, possibleActions)
             print 'Day ' + str(currentTime)
             print 'Lose'

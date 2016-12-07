@@ -7,11 +7,13 @@ MAX_ELEVATION = 230
 
 class Base():
 
-    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions, numActionsPerState):
         self.numDams = numDams
         self.stepsize = stepsize
         self.futureDiscount = futureDiscount
         self.possibleActions = possibleActions
+        self.numActionsPerState = numActionsPerState
+        self.allowedActions = self.calculateAllowedActions()
 
     ######### Required Methods ############
 
@@ -37,12 +39,22 @@ class Base():
 
     ########## Common Methods ############
 
+    def calculateAllowedActions(self):
+        actionQOUT = np.sum(self.possibleActions, 1)
+        avgDiscretizedQIN = [450, 950, 1450, 1950, 2450, 2950, 3450, 3950, 4450]
+        allowedActionsList = np.empty((len(avgDiscretizedQIN), self.numActionsPerState))
+        for i in range(len(avgDiscretizedQIN)):
+            distances = (actionQOUT - avgDiscretizedQIN[i]) ** 2
+            allowedActionsList[i] = np.argpartition(distances, self.numActionsPerState)[:self.numActionsPerState]
+        return allowedActionsList
 
     def getBestAction(self, state, dam):
-        (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
-        actionQOUT = np.sum(self.possibleActions, 1)
-        distances = (actionQOUT - wbQIN) ** 2
-        allowedActions = np.argpartition(distances, 5)[:5]
+        stateArray = tuple(self.discretizeState(state).tolist())
+        return self.getBestActionDiscretized(stateArray, dam)
+
+    def getBestActionDiscretized(self, state, dam):
+        QINindicators = state[-9:]
+        allowedActions = self.allowedActions[QINindicators == 1]
         disallowedActions = [i for i in range(self.possibleActions.shape[0]) if i not in allowedActions]
 
         Qopts = np.empty(self.possibleActions.shape[0])
@@ -84,23 +96,29 @@ class Base():
         weatherJudgements[f-1] = [airTempJudgement, solarFluxJudgement]
 
         elevationLevels = [210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230]
-        elevationJudgements = np.zeros([self.numDams,len(elevationLevels)])
+        elevationJudgements = np.zeros([self.numDams,len(elevationLevels)+2])
         for wb in range(self.numDams):
             lesser = np.array(elevationLevels) < elevations[wb]
             greater = np.array(elevationLevels) >= elevations[wb]-1
             if(np.sum(lesser) == 1):
-                elevationJudgements[wb] = lesser.astype(int)
+                elevationJudgements[wb,0:-2] = lesser.astype(int)
             elif(np.sum(greater) == 1):
-                elevationJudgements[wb] = greater.astype(int)
+                elevationJudgements[wb,0:-2] = greater.astype(int)
             else:
-                elevationJudgements[wb] = np.logical_and(lesser, greater).astype(int)
-            if(np.sum(elevationJudgements[wb]) != 1):
-                print elevations[wb]
-                print lesser
-                print greater
-                print elevationJudgements
-                print 'ERROR'
-                raw_input("Press Enter to continue...")
+                elevationJudgements[wb,0:-2] = np.logical_and(lesser, greater).astype(int)
+                if(np.sum(elevationJudgements) != 1):
+                    # we have lost, and are in the drained or overflow state
+                    if(elevations[wb] <= MIN_ELEVATION):
+                        elevationJudgements[wb,-1] = 1
+                    elif(elevations[wb] >= MAX_ELEVATION):
+                        elevationJudgements[wb,-2] = 1
+                    else:
+                        print elevations[wb]
+                        print lesser
+                        print greater
+                        print elevationJudgements
+                        print 'ERROR'
+                        raw_input("Press Enter to continue...")
             ##_print 'Elevation Judgements'
             ##_print elevation
             #_print elevationJudgements

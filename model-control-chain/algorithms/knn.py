@@ -14,8 +14,8 @@ MAX_STATE = ((9, 22, 45, 400, 230, 22))
 
 class KNN(Base):
 
-    def __init__(self, numDams, stepsize, futureDiscount, possibleActions):
-        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions)
+    def __init__(self, numDams, stepsize, futureDiscount, possibleActions, numActionsPerState):
+        Base.__init__(self, numDams, stepsize, futureDiscount, possibleActions, numActionsPerState)
         self.Qvalues = [{} for i in range(numDams)]
         (self.minList, self.maxList) = self.createListOfMinMaxStateValues()
         self.statePoints = self.createStatePoints()
@@ -91,7 +91,7 @@ class KNN(Base):
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
         actionQOUT = np.sum(self.possibleActions, 1)
         distances = (actionQOUT - wbQIN) ** 2
-        allowedActions = np.argpartition(distances, 5)[:5]
+        allowedActions = np.argpartition(distances, self.numActionsPerState)[:self.numActionsPerState]
         disallowedActions = [i for i in range(self.possibleActions.shape[0]) if i not in allowedActions]
 
         Qopts = np.empty(self.possibleActions.shape[0])
