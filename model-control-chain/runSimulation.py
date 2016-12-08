@@ -41,13 +41,13 @@ STEP_SIZE = 0.1
 # Simple
 # POWERHOUSE_OUTFLOWS = [500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100, 4500, 5000, 5500, 6000]
 # Two Way
-#POWERHOUSE_OUTFLOWS = [300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
-POWERHOUSE_OUTFLOWS = [0]
+POWERHOUSE_OUTFLOWS = [300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2100, 2300, 2500, 2700, 2900, 3100, 3300, 3500]
+#POWERHOUSE_OUTFLOWS = [0]
 SPILLWAY_OUTFLOWS = [0, 300, 500, 700, 900, 1100, 1300, 1500, 1700, 1900, 2101, 2300, 2500, 2700, 2900, 3100, 3300, 3500, 3700, 3900, 4100]
-HYPOLIMNAL_OUTFLOWS = [0]
-#HYPOLIMNAL_OUTFLOWS = [0, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500]
+#HYPOLIMNAL_OUTFLOWS = [0]
+HYPOLIMNAL_OUTFLOWS = [0, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500]
 
-NUM_NEIGHBORS = 5
+NUM_NEIGHBORS = 10
 # Reward parameters
 MIN_ELEVATION = 215
 MAX_ELEVATION = 225
@@ -77,17 +77,25 @@ def setAction(fileDir, currentTime, action, wb):
     with open(fileDir + QOUT_FILE, "a") as f:
         f.write(line)
 
-def getReward(wb):
+def getReward(wb, currentTime):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
-    reward = (MAX_ELEVATION - TARGET_ELEVATION - 1) - (elevation - TARGET_ELEVATION)**2
-    if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
-        reward = -100
-    #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
-    #temperatureOut = temperatureOut[-1,1]
-    #if temperatureOut > 21.2:
+    #reward = (MAX_ELEVATION - TARGET_ELEVATION - 1) - (elevation - TARGET_ELEVATION)**2
+    #if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
     #    reward = -100
+
+    wbiTIN= np.loadtxt('wb1/tin.npt', skiprows=3)
+    tempIn = wbiTIN[np.where(wbiTIN[:,0]==currentTime),1]
+    print "tempIn", tempIn
+
+    temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
+    temperatureOut = temperatureOut[-1,1]
+    reward = (2+tempIn - temperatureOut) # Positive reward if within 2 of tempIn
+    if temperatureOut > 16:
+        reward = -100
+
+    print reward
     return reward, elevation
 
 def copyInInputFiles(year, numDams, randomize=False):
@@ -283,7 +291,7 @@ for r in range(repeat):
             if wb != (numDams - 1):
                 subprocess.check_call([CHAINING_FILE, "wb" + str(wb+1), "wb" + str(wb+2)])
 
-            rewards[wb], elevations[wb] = getReward(wb)
+            rewards[wb], elevations[wb] = getReward(wb, currentTime)
             #raw_input("Press Enter to continue...")
         #print rewards
         if True in (rewards <= -100): # Game over
