@@ -1,0 +1,140 @@
+CE-QUAL-W2 VERSION3.72
+ Lower Granite (RM 107-140) - Jan.1 to Dec.31, 1992                      
+ Evenly distributed Clr,Sna inflow, line sink outflow                    
+ Default hydraulic coefficients                                          
+ Default light absorption/extinction coefficients                        
+ Temperature simulation - Lewiston weather - Selective Withdrawal        
+ Ben Cope      - EPA Region 10                                           
+ Matthew Shultz - Stanford University                                    
+                                                                         
+                                                                         
+                                                                         
+
+ Time Parameters
+   Gregorian date      [GDAY] =            January 1, 2010
+   Julian date         [JDAY] =         1 days 12.98 hours
+   Elapsed time      [ELTMJD] =         0 days 12.98 hours
+   Timestep             [DLT] =      3599 sec
+     at location  [KLOC,ILOC] = (10,5)
+   Minimum timestep  [MINDLT] =      3516 sec 
+     at Julian day    [JDMIN] =         1 days  1.98 hours
+     at location  [KMIN,IMIN] = (10,5)
+   Average timestep   [DLTAV] =      3593 sec
+   Number of iterations [NIT] =        13
+   Number of violations  [NV] =         0
+
+ Meteorological Parameters
+   Input
+     Air temperature          [TAIR] =     6.39 øC
+     Dewpoint temperature     [TDEW] =     1.67 øC
+     Wind direction            [PHI] =     1.92 rad
+     Cloud cover             [CLOUD] =     9.23
+     Calculated
+       Equilibrium temperature    [ET] =     8.64 øC
+       Surface heat exchange    [CSHE] = 0.29E-05 m/sec
+       Net short wave radiation [SRON] = 0.11E+03 øC W/m^2
+
+ Inflows
+   Upstream inflows
+     Branch 1
+       Layer       [KQIN] = 3-8
+       Inflow       [QIN] =  537.35 m^3/sec
+       Temperature  [TIN] =    2.35 øC
+
+ Outflows
+   Structure outflows [QSTR]
+     Branch 1 =   579.08    0.00
+
+   Total outflow [QOUT] =  579.08 m^3/s
+     Outlets
+       Layer             [KOUT] =      3      4      5      6      7      8      9     10     11     12     13     14
+                                      15     16     17     18     19     20     21     22     23
+       Outflow (m^3/sec) [QOUT] =   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00   0.00  74.22  72.18  71.58
+                                   68.47  67.57  46.30  44.86  43.66  41.88  21.30  17.74   9.30
+
+Surface calculations
+   Evaporation rate [EV]
+     Branch 1 =  0.887E-01 m^3/s
+   Cumulative evaporation [VOLEV]
+     Branch 1 = 4402.7 m^3
+
+ Energy Balance
+   Waterbody 1
+     Spatially integrated energy   [ESR] =  0.94541106E+13 kJ
+     Temporally integrated energy  [ETR] =  0.94541106E+13 kJ
+     Energy error                        = -0.87883568E+02 kJ
+     Percent error                       = -0.92958049E-09 %
+   Branch 1
+     Spatially integrated energy  [ESBR] =  0.94541106E+13 kJ
+     Temporally integrated energy [ETBR] =  0.94547885E+13 kJ
+     Energy error                        = -0.87889869E+02 kJ
+     Percent error                       = -0.92958049E-09 %
+
+ Geometry
+   Surface layer [KT] = 3
+   Elevation   [ELKT] =   224.257 m
+
+   Current upstream segment [CUS]
+     Branch 1 = 2
+
+          Water Surface, m
+
+           5        10        15        20        25        30
+     224.257   224.257   224.257   224.257   224.257   224.257
+
+          Water Surface Deviation (positive downwards), m
+
+           5        10        15        20        25        30
+     -0.8174   -0.8168   -0.8166   -0.8165   -0.8166   -0.8166
+1Lower Granite (RM 107-140) - Jan.1 to Dec.31, 1992                      
+ Evenly distributed Clr,Sna inflow, line sink outflow                    
+ Default hydraulic coefficients                                          
+ Default light absorption/extinction coefficients                        
+ Temperature simulation - Lewiston weather - Selective Withdrawal        
+ Ben Cope      - EPA Region 10                                           
+ Matthew Shultz - Stanford University                                    
+                                                                         
+                                                                         
+                                                                         
+ Model run at 18:59:21 on 12/07/16                                       
+
+
+   January 1, 2010    Julian day =  1 days 12.98 hours   Temperature [T1], <o/>C                    
+
+ Layer  Depth         5        10        15        20        25        30
+    3    1.32     3.065     3.590     3.596     3.601     3.596     3.601
+    4    3.56     3.295     3.669     3.682     3.703     3.696     3.704
+    5    5.39     3.422     3.699     3.703     3.702     3.702     3.702
+    6    7.22     3.537     3.702     3.702     3.702     3.702     3.702
+    7    9.05     3.593     3.702     3.702     3.702     3.702     3.702
+    8   10.88     3.661     3.702     3.702     3.702     3.702     3.702
+    9   12.71     3.692     3.702     3.702     3.702     3.702     3.702
+   10   14.54     3.699     3.702     3.702     3.702     3.702     3.702
+   11   16.37               3.702     3.702     3.702     3.702     3.702
+   12   18.20               3.702     3.702     3.702     3.702     3.702
+   13   20.03                         3.702     3.702     3.702     3.702
+   14   21.86                         3.702     3.702     3.702     3.702
+   15   23.69                         3.702     3.702     3.702     3.702
+   16   25.52                         3.702     3.702     3.702     3.702
+   17   27.35                                   3.702     3.702     3.702
+   18   29.18                                   3.702     3.702     3.700
+   19   31.01                                             3.700     3.700
+   20   32.84                                                       3.700
+   21   34.67                                                       3.700
+   22   36.50                                                       3.700
+
+Normal termination at 18:59:21 on 12/07/16
+
+Runtime statistics
+  Grid                 = 35 x 24
+  Maximum active cells = 478
+  Minimum active cells = 478
+  Segment lengths, m   = 1609.3-1609.3
+  Layer heights, m     = 1.8-1.8
+  Timestep
+    Total iterations   = 25
+    # of violations    = 0
+    % violations       = .00
+    Average timestep   = 3456 sec
+  Simulation time      = 1 days .00 hours
+  Total CPU runtime    = .00 min

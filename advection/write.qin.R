@@ -17,3 +17,14 @@ for (i in 1:11) {
   formatted.df = sprintf("%8.0f%8.2f", data$Julian, data$Q)
   write(formatted.df, file=filename, append=TRUE)
 }
+
+df = data.frame(Julian=c(), Q=c())
+for (i in 1:11) {
+  year = (2005:2015)[i]
+  qin.year.q = qin[out$year == year]
+  qin.julian = julian[out$year == year] - julian(as.Date(paste0(year,'-01-01'))) + 1
+  data = data.frame(Julian=qin.julian, Q = qin.year.q)
+  df = rbind(df, data)
+}
+stats = dplyr::summarize(group_by(df, Julian), mean = mean(Q) , sd = sd(Q))
+
