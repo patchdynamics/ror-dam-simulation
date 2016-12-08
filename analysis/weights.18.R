@@ -83,9 +83,9 @@ temperatures = read.csv('../model-control-chain/stats/temperatures1.txt', header
 #plot(temperatures$V1, typ='l')  
 
 
-qin = read.csv('../model-control-chain/stats/QINs.txt')
+qin = tail(read.csv('../model-control-chain/stats/QINs.txt'),200)
 qin[qin==0] = NA
-qout = read.csv('../model-control-chain/stats/actions.txt')
+qout = tail(read.csv('../model-control-chain/stats/actions.txt'),200)
 par(mfrow=c(1,1))
 plot(qin[,1], col='orange', typ='l',ylim=c(0,3000))
 lines(qout[,1], col='blue')

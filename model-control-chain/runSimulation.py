@@ -57,6 +57,8 @@ TARGET_ELEVATION = 220
 
 # Set to true to stop learning
 TESTING = False
+# Randomize inputs to explore the state space (mixnmatch)
+RANDOMIZE = False 
 
 def modifyControlFile(fileDir, timeStart, timeEnd, year):
     with open(fileDir + CON_FILE, "w") as fout:
@@ -95,9 +97,15 @@ def copyInInputFiles(year, numDams, randomize=False):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
 	copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
+        #subprocess.check_call(['./scripts/copy.qout.sh', '93', str(year)  ], shell=True)
+
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
-    # here we could randomize the input files if we like
+    # here we could randomize the temperature input files if we like
+    if(randomize):
+        randyear = random.randint(2005,2015)
+        copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(randyear) +".npt", CONTROL_DIR + "wb1/tin.npt")
+        print 'rand mixnmatch ' + str(randyear)
 
 def copyInOutputFiles(year, numDams):
     for wb in range(1, numDams + 1):
@@ -224,9 +232,9 @@ algClass = getattr(importlib.import_module("algorithms.linear"), "Linear")
 
 if len(sys.argv) > 1:
     try:
-      opts, args = getopt.getopt(sys.argv[1:],"ha:e:r:d:ts:",["eps=", "alg=", "repeat=", "dams=", "days=", "test", "year=", "step="])
+      opts, args = getopt.getopt(sys.argv[1:],"ha:e:r:d:ts:",["eps=", "alg=", "repeat=", "dams=", "days=", "test", "year=", "step=", "rand"])
     except getopt.GetoptError:
-      print 'runSimulation.py -a <algorithm> -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test'
+      print 'runSimulation.py -a <algorithm> -r <repeat> -e <epsilon> -d <dams>, days=<days> -s <stepsize> --test --rand'
       sys.exit()
 
     for opt, arg in opts:
@@ -247,6 +255,8 @@ if len(sys.argv) > 1:
          year = int(arg)
       elif opt in ("-t", "--test"):
           TESTING = True
+      elif opt in ("--rand"):
+          RANDOMIZE = True
       elif opt in ("-a", "--alg"):
           algClass = getattr(importlib.import_module("algorithms."+arg.lower()), arg)
 
@@ -255,7 +265,10 @@ possibleActions = calculatePossibleActions()
 algorithm = algClass(numDams, STEP_SIZE, FUTURE_DISCOUNT, possibleActions, NUM_NEIGHBORS)
 for r in range(repeat):
     currentTime = currentTimeBegin
-    copyInInputFiles(year, numDams)
+    if(RANDOMIZE):
+        year = random.randint(2005,2015)
+        print 'rand year' + str(year)
+    copyInInputFiles(year, numDams, RANDOMIZE)
     copyInOutputFiles(year, numDams)
     state = getState(currentTime, year, np.ones(numDams)*4, possibleActions.shape[0])
 
@@ -303,7 +316,8 @@ for r in range(repeat):
             print 'Day ' + str(currentTime)
             print 'Lose'
             print state
-            print actionInds[0]
+            print elevations[0]
+            print possibleActions[actionInds[0]]
             print rewards[0]
             with open(STATS_DIR + 'lastday.txt', "a") as fout:
                  np.savetxt(fout, [currentTime], newline=",")
