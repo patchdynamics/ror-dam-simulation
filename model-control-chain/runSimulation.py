@@ -53,7 +53,7 @@ MIN_ELEVATION = 215
 MAX_ELEVATION = 225
 TARGET_HIGH_ELEVATION = 223.5
 TARGET_LOW_ELEVATION = 222.5
-TARGET_ELEVATION = 223
+TARGET_ELEVATION = 220
 
 # Set to true to stop learning
 TESTING = False
@@ -91,13 +91,14 @@ def getReward(wb):
     #    reward = -100
     return reward, elevation
 
-def copyInInputFiles(year, numDams):
+def copyInInputFiles(year, numDams, randomize=False):
     for wb in range(1, numDams + 1):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
     copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
+    # here we could randomize the input files if we like
 
 def copyInOutputFiles(year, numDams):
     for wb in range(1, numDams + 1):
