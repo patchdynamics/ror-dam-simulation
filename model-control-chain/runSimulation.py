@@ -81,7 +81,7 @@ def getReward(wb):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
-    reward = ((MAX_ELEVATION - TARGET_ELEVATION - 1) - (elevation - TARGET_ELEVATION)**2)
+    reward = (MAX_ELEVATION - TARGET_ELEVATION - 1) - (elevation - TARGET_ELEVATION)**2
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
     #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
@@ -94,7 +94,7 @@ def copyInInputFiles(year, numDams, randomize=False):
     for wb in range(1, numDams + 1):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
-	copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
+    copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
     copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
     # here we could randomize the input files if we like
@@ -152,7 +152,7 @@ def getState(currentTime, year, actionInds, numActions):
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
-	wbElevations = np.genfromtxt(wlFile, delimiter=",")
+        wbElevations = np.genfromtxt(wlFile, delimiter=",")
         elevations[f-1] = wbElevations[-1,33]
 
         # Output Structure +/- 65 F / 16 C
