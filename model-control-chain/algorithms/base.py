@@ -116,7 +116,7 @@ class Base():
         # Construct State Array
         stateArray = elevationJudgements.flatten()
         #stateArray = np.append(stateArray, weatherJudgements[0,0])
-        #stateArray = np.append(stateArray, temperatureJudgements.flatten())
+        stateArray = np.append(stateArray, temperatureJudgements.flatten())
         #stateArray = np.append(stateArray, wbTINindicators)
         stateArray = np.append(stateArray, wbQINindicators)
 
