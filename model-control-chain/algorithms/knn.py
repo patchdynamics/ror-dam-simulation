@@ -6,11 +6,13 @@ import random
 KNN_FILE = "knn.npy"
 
 NUM_NEIGHBORS = 5
-NUM_POINTS_PER_DIM = 6
+NUM_POINTS_PER_DIM = 20
 # TODO: Realistic min/max values
 # State = (logQIN, TIN, airTemp, solarFlux, elevation, waterTemp)
-MIN_STATE = ((6, 4, 0, 0, 210, 4))
-MAX_STATE = ((9, 22, 45, 400, 230, 22))
+#MIN_STATE = (6, 4, 0, 0, 210, 4)
+#MAX_STATE = (9, 22, 45, 400, 230, 22)
+MIN_STATE = (6, 215) # QIN = 403, elevation = 215
+MAX_STATE = (8.85, 225) # QIN = 6974, elevation = 225
 
 class KNN(Base):
 
@@ -22,8 +24,11 @@ class KNN(Base):
         print self.statePoints.shape
 
     def createListOfMinMaxStateValues(self):
-        (minQIN, minTIN, minAirTempForecast, minSolarFluxForecast, minElevation, minTemp) = MIN_STATE
-        (maxQIN, maxTIN, maxAirTempForecast, maxSolarFluxForecast, maxElevation, maxTemp) = MAX_STATE
+#        (minQIN, minTIN, minAirTempForecast, minSolarFluxForecast, minElevation, minTemp) = MIN_STATE
+#        (maxQIN, maxTIN, maxAirTempForecast, maxSolarFluxForecast, maxElevation, maxTemp) = MAX_STATE
+        (minQIN, minElevation) = MIN_STATE
+        (maxQIN, maxElevation) = MAX_STATE
+
         # numDams dimensions for QIN, TIN, elevation. 3*numDams dimensions for temp
         # dimensions = 6 * self.numDams + 2
         minList = []
@@ -31,18 +36,17 @@ class KNN(Base):
         for i in range(self.numDams):
             minList.append(minQIN)
             maxList.append(maxQIN)
-        for i in range(self.numDams):
-            minList.append(minTIN)
-            maxList.append(maxTIN)
-        minList += [minAirTempForecast, minSolarFluxForecast]
-        maxList += [maxAirTempForecast, maxSolarFluxForecast]
+#        for i in range(self.numDams):
+#            minList.append(minTIN)
+#            maxList.append(maxTIN)
+#        minList += [minAirTempForecast, minSolarFluxForecast]
+#        maxList += [maxAirTempForecast, maxSolarFluxForecast]
         for i in range(self.numDams):
             minList.append(minElevation)
             maxList.append(maxElevation)
-        for i in range(3*self.numDams):
-            minList.append(minTemp)
-            maxList.append(maxTemp)
-        print minList
+#        for i in range(3*self.numDams):
+#            minList.append(minTemp)
+#            maxList.append(maxTemp)
         return (np.array(minList), np.array(maxList))
 
     def createStatePoints(self):
@@ -55,8 +59,9 @@ class KNN(Base):
     def getStateArray(self, state):
         (wbQIN, wbTIN, airTempForecast, solarFluxForecast, elevations, temps) = state
         logQIN = np.log(wbQIN)
-        stateArray = np.array([airTempForecast, solarFluxForecast])
-        stateArray = np.concatenate((logQIN.flatten(), wbTIN.flatten(), stateArray, elevations.flatten(), temps.flatten()))
+        #stateArray = np.array([airTempForecast, solarFluxForecast])
+        #stateArray = np.concatenate((logQIN.flatten(), wbTIN.flatten(), stateArray, elevations.flatten(), temps.flatten()))
+        stateArray = np.concatenate((logQIN.flatten(), elevations.flatten()))
         return stateArray
 
     # Normalize all state dimensions on [-1,1]
@@ -109,6 +114,7 @@ class KNN(Base):
                 Vopt = 0
             else:
                 [nextAction, Vopt] = self.getBestAction(nextState, i)
+            print "Vopt", Vopt
             for k in range(NUM_NEIGHBORS):
                 neighborAction = (neighbors[k], actionInds[i])
                 oldQ = 0

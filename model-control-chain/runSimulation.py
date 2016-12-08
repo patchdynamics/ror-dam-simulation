@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import sys, getopt
 import os
-sys.path.append(os.getcwd()) 
+sys.path.append(os.getcwd())
 import numpy as np
 import subprocess
 from shutil import copyfile
@@ -83,7 +83,7 @@ def getReward(wb):
     wlFile = CONTROL_DIR + "wb" + str(wb+1) + "/" + ELEVATION_FILE
     elevations = np.genfromtxt(wlFile, delimiter=",")
     elevation = elevations[-1,33]
-    reward = (10 - abs(elevation - TARGET_ELEVATION))
+    reward = (MAX_ELEVATION - TARGET_ELEVATION - 1) - (elevation - TARGET_ELEVATION)**2
     if elevation < MIN_ELEVATION or elevation > MAX_ELEVATION:
         reward = -100
     #temperatureOut = np.loadtxt( "wb" + str(wb+1) + "/two_34.opt", skiprows=3)
@@ -160,7 +160,7 @@ def getState(currentTime, year, actionInds, numActions):
     for f in range(1, numDams+1):
         # Water Level
         wlFile = CONTROL_DIR + "wb" + str(f) + "/" + ELEVATION_FILE
-	wbElevations = np.genfromtxt(wlFile, delimiter=",")
+        wbElevations = np.genfromtxt(wlFile, delimiter=",")
         elevations[f-1] = wbElevations[-1,33]
 
         # Output Structure +/- 65 F / 16 C
@@ -188,7 +188,7 @@ def getAction(state, dam, possibleActions):
     distances = (actionQOUT - wbQIN) ** 2
     allowedActions = np.argpartition(distances, NUM_NEIGHBORS)[:NUM_NEIGHBORS]
     #print(possibleAction[allowedActions])
-    print(np.sum(possibleActions[allowedActions],1))
+    #print(np.sum(possibleActions[allowedActions],1))
 
     if not TESTING and random.random() < EPSILON_GREEDY:
         print 'Random'
@@ -298,12 +298,12 @@ for r in range(repeat):
 
             rewards[wb], elevations[wb] = getReward(wb)
             #raw_input("Press Enter to continue...")
-        print rewards
+        #print rewards
         if True in (rewards <= -100): # Game over
             nextState = None
         else:
             nextState = getState(currentTime + timeStep, year, actionInds, possibleActions.shape[0])
-        print nextState
+        #print nextState
         if not TESTING:
             algorithm.incorporateObservations(state, actionInds, rewards, nextState)
         #print 'done with observations'
@@ -318,6 +318,7 @@ for r in range(repeat):
             print state
             print elevations[0]
             print possibleActions[actionInds[0]]
+            print np.sum(possibleActions[actionInds[0]])
             print rewards[0]
             with open(STATS_DIR + 'lastday.txt', "a") as fout:
                  np.savetxt(fout, [currentTime], newline=",")
