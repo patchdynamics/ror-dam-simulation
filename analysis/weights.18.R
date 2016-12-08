@@ -92,9 +92,9 @@ lines(qout[,1], col='blue')
 
 
 #lookup (annealling)
-rewards = read.csv('~/memex/ror-dam-simulation-lookup/model-control-chain/stats/rewards.txt', header=FALSE)
+rewards = read.csv('~/memex/ror-dam-simulation2/model-control-chain/stats/rewards.txt', header=FALSE)
 plot.rewards(rewards, top=225, bottom=215)
-lastday = read.csv('~/memex/ror-dam-simulation-lookup/model-control-chain/stats/lastday.txt', header=FALSE)
+lastday = read.csv('~/memex/ror-dam-simulation2/model-control-chain/stats/lastday.txt', header=FALSE)
 plot(lastday$V1)
 
 qin = read.csv('~/memex/ror-dam-simulation-lookup/model-control-chain/stats/QINs.txt')
@@ -106,7 +106,8 @@ lines(qout[,1], col='blue')
 
 #default (not annealing)
 rewards = read.csv('~/memex/ror-dam-simulation/model-control-chain/stats/rewards.txt', header=FALSE)
-plot.rewards(rewards, top=225, bottom=215)
+temperatures = read.csv('~/memex/ror-dam-simulation/model-control-chain/stats/temperatures1.txt', header=FALSE)
+plot.rewards(rewards, top=225, bottom=215, temperatures)
 lastday = read.csv('~/memex/ror-dam-simulation/model-control-chain/stats/lastday.txt', header=FALSE)
 plot(lastday$V1)
 
