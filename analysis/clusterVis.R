@@ -303,7 +303,8 @@ metric.lookup$rollmean[1] = metric.first
 metric.knn$rollmean[1] = metric.first
 
 
-png(filename='elev.learning.curve2.png', width=1100, height=1100, units='px')
+#png(filename='elev.learning.curve2.png', width=1100, height=1100, units='px')
+# just export using Rstudio
 par(mfrow=c(1,1))
 par(mar=c(4,4,4,4))
 par(bg=NA) 
@@ -315,11 +316,11 @@ plot(metric.linear$epoch, metric.linear$rollmean-90,
      cex.axis=cex, cex.lab=cex)
 lines(metric.lookup$epoch, metric.lookup$rollmean-90, typ='l', col='red', lwd=4)
 lines(metric.knn$epoch, metric.knn$rollmean-90, typ='l', col='orange', lwd=4)
-abline(h=125, lwd=3, col='lightblue')
-text(30,128, 'Success')
+abline(h=126, lwd=3, col='cyan3')
+text(75,128, 'Success', cex=1.8)
 #legend('topright', legend=c('Linear', 'Lookup', 'KNN'),
 #       lwd=4, col=c('blue', 'red', 'orange'), cex=cex)
-dev.off()
+#dev.off()
 
 
 
