@@ -315,7 +315,7 @@ plot(metric.linear$epoch, metric.linear$rollmean-90,
      cex.axis=cex, cex.lab=cex)
 lines(metric.lookup$epoch, metric.lookup$rollmean-90, typ='l', col='red', lwd=4)
 lines(metric.knn$epoch, metric.knn$rollmean-90, typ='l', col='orange', lwd=4)
-abline(h=125, lwd=3, col='coral')
+abline(h=125, lwd=3, col='lightblue')
 text(30,128, 'Success')
 #legend('topright', legend=c('Linear', 'Lookup', 'KNN'),
 #       lwd=4, col=c('blue', 'red', 'orange'), cex=cex)
