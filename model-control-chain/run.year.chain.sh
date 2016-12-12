@@ -9,8 +9,8 @@ run.model()
 {
 	cd $1
 	rm *.opt
-	#wine ../../bin/w2_ivf32_v372.exe .
-	../../bin/cequalw2.v371.mac.fast .
+	wine ../../bin/w2_ivf32_v372.exe .
+	#../../bin/cequalw2.v371.mac.fast .
 	cd ../
 	if [ -n $2 ]
 	then

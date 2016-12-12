@@ -70,9 +70,9 @@ abline(h=bottom,col='blue')
 }
 
 rewards = read.csv('../model-control-chain/stats/rewards.txt', header=FALSE)
-rewards = tail(rewards,400)
+rewards = tail(rewards,800)
 temperatures = read.csv('../model-control-chain/stats/temperatures1.txt', header=FALSE)
-temperatures = tail(temperatures,400)
+temperatures = tail(temperatures,800)
 plot.rewards(rewards, top=225, bottom=215, temperatures)
 weights.dam1 = read.csv('../model-control-chain/stats/weights1.txt', header=FALSE)
 plot(as.numeric(tail(weights.dam1,1)))
