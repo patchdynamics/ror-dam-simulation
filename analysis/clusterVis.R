@@ -150,6 +150,7 @@ df.lookup = showRewardStatus('multicore/epsilon.elevation.lookup0')
 showElevationMetric(df.lookup, 220 - 90, 227.5)
 
 
+df.randow = showRewardStatus('multicore/random.linear0')
 
 df.knn = showRewardStatus('multicore/nolose3.elevation.knn0')
 showElevationMetric(df.knn, 220 - 90, 227.5)
@@ -295,11 +296,11 @@ metric.knn = data.frame(epoch=1:(nrow(knn.lastday)-24), rollmean=rollmean(knn.la
 metric.linear = data.frame(epoch=1:(nrow(linear.lastday)-24), rollmean=rollmean(linear.lastday$V1,25))
 metric.lookup = data.frame(epoch=1:(nrow(lookup.lastday)-24), rollmean=rollmean(lookup.lastday$V1,25))
 
-plot(knn.lastday$V1)
-plot(metric.knn$epoch, metric.knn$rollmean)
+metric.first = (metric.linear$rollmean[1] + metric.lookup$rollmean[2] + metric.knn$rollmean[2])/3
 
-plot(linear.lastday$V1)
-plot(metric.linear$epoch, metric.linear$rollmean)
+metric.linear$rollmean[1] = metric.first
+metric.lookup$rollmean[1] = metric.first
+metric.knn$rollmean[1] = metric.first
 
 
 png(filename='elev.learning.curve2.png', width=1100, height=1100, units='px')
@@ -307,13 +308,15 @@ par(mfrow=c(1,1))
 par(mar=c(4,4,4,4))
 par(bg=NA) 
 cex = 2
-plot(metric.linear$epoch, metric.linear$rollmean, 
-     typ='l', col='blue', lwd=4, ylim=c(90,220), xlim=c(0,800),
+plot(metric.linear$epoch, metric.linear$rollmean-90, 
+     typ='l', col='blue', lwd=4, ylim=c(20,130), xlim=c(0,800),
      #xlab='Training Epoch', ylab='Days Outflow Temperature Excedes Inflow By Two Degrees',
      xlab='', ylab='',
      cex.axis=cex, cex.lab=cex)
-lines(metric.lookup$epoch, metric.lookup$rollmean, typ='l', col='red', lwd=4)
-lines(metric.knn$epoch, metric.knn$rollmean, typ='l', col='orange', lwd=4)
+lines(metric.lookup$epoch, metric.lookup$rollmean-90, typ='l', col='red', lwd=4)
+lines(metric.knn$epoch, metric.knn$rollmean-90, typ='l', col='orange', lwd=4)
+abline(h=125, lwd=3, col='coral')
+text(30,128, 'Success')
 #legend('topright', legend=c('Linear', 'Lookup', 'KNN'),
 #       lwd=4, col=c('blue', 'red', 'orange'), cex=cex)
 dev.off()
