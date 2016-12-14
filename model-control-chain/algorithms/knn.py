@@ -52,7 +52,7 @@ class KNN(Base):
     def createStatePoints(self):
         stateDimArrays = []
         for d in range(len(self.minList)):
-            dimArray = np.linspace(self.minList[d], self.maxList[d], NUM_POINTS_PER_DIM)
+            dimArray = np.linspace(-1, 1, NUM_POINTS_PER_DIM)
             stateDimArrays.append(dimArray)
         return cartesian(stateDimArrays)
 
@@ -62,11 +62,10 @@ class KNN(Base):
         #stateArray = np.array([airTempForecast, solarFluxForecast])
         #stateArray = np.concatenate((logQIN.flatten(), wbTIN.flatten(), stateArray, elevations.flatten(), temps.flatten()))
         stateArray = np.concatenate((logQIN.flatten(), elevations.flatten()))
-        return stateArray
+        return self.normalizeState(stateArray)
 
     # Normalize all state dimensions on [-1,1]
-    def normalizeState(self, state):
-        stateArray = self.getStateArray(state)
+    def normalizeState(self, stateArray):
         return 2 * (stateArray - self.minList)/(self.maxList - self.minList) - 1
 
     def findNNs(self, state):
@@ -110,17 +109,18 @@ class KNN(Base):
     def incorporateObservations(self, state, actionInds, rewards, nextState):
         (neighbors, probs) = self.findNNs(state)
         for i in range(self.numDams):
+            Vopt = self.getQopt(state, actionInds[i], i, neighbors, probs)
             if not nextState: # Game over, no future rewards
-                Vopt = 0
+                nextVopt = 0
             else:
-                [nextAction, Vopt] = self.getBestAction(nextState, i)
-            print "Vopt", Vopt
+                [nextAction, nextVopt] = self.getBestAction(nextState, i)
+            print "nextVopt", nextVopt
             for k in range(NUM_NEIGHBORS):
                 neighborAction = (neighbors[k], actionInds[i])
                 oldQ = 0
                 if neighborAction in self.Qvalues[i]:
                     oldQ = self.Qvalues[i][neighborAction]
-                error = rewards[i] + self.futureDiscount * Vopt - oldQ
+                error = rewards[i] + self.futureDiscount * nextVopt - Vopt
                 self.Qvalues[i][neighborAction] = oldQ + self.stepsize * error * probs[k]
 
 
