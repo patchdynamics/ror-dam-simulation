@@ -58,7 +58,7 @@ TARGET_ELEVATION = 220
 # Set to true to stop learning
 TESTING = False
 # Randomize inputs to explore the state space (mixnmatch)
-RANDOMIZE = False 
+RANDOMIZE = False
 
 def modifyControlFile(fileDir, timeStart, timeEnd, year):
     with open(fileDir + CON_FILE, "w") as fout:
@@ -96,10 +96,8 @@ def copyInInputFiles(year, numDams, randomize=False):
     for wb in range(1, numDams + 1):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         copyfile( wbDir + "inputs/met" + str(year) +".npt", CONTROL_DIR + "wb" + str(wb) + "/met.npt")
-	copyfile( wbDir + "inputs/QOUT" + str(year) +".npt", wbDir + "qot_br1.npt" )
-        #subprocess.check_call(['./scripts/copy.qout.sh', '93', str(year)  ], shell=True)
-
-    copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
+	copyfile( wbDir + "inputs/QOUT2007.npt", wbDir + "qot_br1.npt" )
+    #copyfile( CONTROL_DIR + "wb1/inputs/QIN" + str(year) +".npt", CONTROL_DIR + "wb1/qin.npt")
     copyfile( CONTROL_DIR + "wb1/inputs/TIN" + str(year) +".npt", CONTROL_DIR + "wb1/tin.npt")
     # here we could randomize the temperature input files if we like
     if(randomize):
@@ -111,6 +109,7 @@ def copyInOutputFiles(year, numDams):
     for wb in range(1, numDams + 1):
         wbDir = CONTROL_DIR + "wb" + str(wb) + "/"
         spinupDir =  wbDir + "inputs/spinup/" + str(year) + "/"
+        spinupDir2007 =  wbDir + "inputs/spinup/2007/"
         #for f in os.listdir(spinupDir):
         #    filename = spinupDir + "/" + f
         #    if os.path.isfile(filename):
@@ -119,7 +118,7 @@ def copyInOutputFiles(year, numDams):
         for file in files:
             if file.endswith(".opt"):
                 os.remove(os.path.join(wbDir,file))
-        copyfile( spinupDir + "wl.opt", wbDir + "wl.opt" )
+        copyfile( spinupDir2007 + "wl.opt", wbDir + "wl.opt" )
         copyfile( spinupDir + "spr.opt", wbDir + "spr.opt" )
 
 def calculatePossibleActions():
@@ -165,14 +164,14 @@ def getState(currentTime, year, actionInds, numActions):
 
         # Output Structure +/- 65 F / 16 C
         seg34 = np.loadtxt('wb'+str(f)+'/spr.opt', skiprows=3, usecols=[1,4])
-        seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == currentTime)]
-        temp220 = float(seg34ForTime[seg34ForTime[:,0].size - 15,1])
-        temp202 = float(seg34ForTime[seg34ForTime[:,0].size - 11,1])
-        temp191 = float(seg34ForTime[seg34ForTime[:,0].size - 6,1])
+        #seg34ForTime = seg34[np.where(np.floor(seg34[:,0]) == currentTime)]
+        #temp220 = float(seg34ForTime[seg34ForTime[:,0].size - 15,1])
+        #temp202 = float(seg34ForTime[seg34ForTime[:,0].size - 11,1])
+        #temp191 = float(seg34ForTime[seg34ForTime[:,0].size - 6,1])
         #temp220 = 0
         #temp202 = 0
         #temp191 = 0
-        temps[f-1] = [temp220, temp202, temp191]
+        #temps[f-1] = [temp220, temp202, temp191]
 
     #gateState = np.zeros((numDams, numActions)) #numDams x numActions
     #for i in range(numDams):

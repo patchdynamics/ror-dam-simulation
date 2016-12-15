@@ -58,7 +58,7 @@ DEAD SEA   WINDC    QINC   QOUTC   HEATC
 WB 1          ON      ON      ON      ON
 
 INTERPOL   QINIC   DTRIC    HDIC
-BR1           ON      ON     OFF
+BR1          OFF      ON     OFF
 
 HEAT EXCH  SLHTC    SROC  RHEVAP   METIC  FETCHC     AFW     BFW     CFW   WINDH
 WB 1        TERM     OFF     OFF      ON     OFF 9.20000 0.46000 2.00000 10.0000

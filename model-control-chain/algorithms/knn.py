@@ -134,6 +134,6 @@ class KNN(Base):
     def loadModel(self, state):
         try:
             self.Qvalues = np.load(KNN_FILE)
-            print "Restarting with existing Qvalues"
+            print "Restarting with existing KNN Qvalues"
         except IOError:
-            print "Starting with new Qvalues"
+            print "Starting with new KNN Qvalues"
